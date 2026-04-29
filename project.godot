@@ -11,12 +11,17 @@ config_version=5
 [application]
 
 config/name="booom"
+run/main_scene="uid://dr6wkrduxjlol"
 config/features=PackedStringArray("4.6", "C#", "Mobile")
 config/icon="res://icon.svg"
 
 [dotnet]
 
 project/assembly_name="booom"
+
+[editor_plugins]
+
+enabled=PackedStringArray("res://addons/starlight_state_tree/plugin.cfg")
 
 [physics]
 

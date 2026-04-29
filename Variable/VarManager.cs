@@ -4,16 +4,17 @@ using System.Collections.Generic;
 
 public partial class VarManager : Node
 {
-    private List<Var> _vars = new();
+    private readonly List<Var> _vars = new();
     public override void _PhysicsProcess(double delta)
     {
         foreach (var var in _vars)
         {
-            var.Step(delta);
+            var.Update(delta);
         }
     }
     public void AddVar(Var var)
     {
         _vars.Add(var);
+        var.Stats.OnDeath += () => _vars.Remove(var);
     }
 }

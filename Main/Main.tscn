@@ -1,3 +1,11 @@
 [gd_scene format=3 uid="uid://dr6wkrduxjlol"]
 
-[node name="Main" type="Node2D" unique_id=435465324]
+[ext_resource type="Script" uid="uid://01fvca8ksf16" path="res://Variable/VarManager.cs" id="1_83ytx"]
+[ext_resource type="Script" uid="uid://cv2rnmqnc0dlx" path="res://Main/Main.cs" id="1_amygn"]
+
+[node name="Main" type="Node2D" unique_id=435465324 node_paths=PackedStringArray("VarManager")]
+script = ExtResource("1_amygn")
+VarManager = NodePath("Node")
+
+[node name="Node" type="Node" parent="." unique_id=650284217]
+script = ExtResource("1_83ytx")

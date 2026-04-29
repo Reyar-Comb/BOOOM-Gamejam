@@ -1,4 +1,5 @@
 using Godot;
+using StarlightBT.Data;
 using StarlightStateTree;
 using System;
 using System.Collections.Generic;
@@ -7,34 +8,47 @@ using System.Reflection.Metadata;
 public partial class Var : RefCounted
 {
     public VarStats Stats { get; set; }
-    private bool _isWalking = false;
-    private int _currentPathIndex = 0;
-    private List<Vector2I> _currentPath = null;
-
+    protected STRoot _stateTree = null!;
+    protected Blackboard _blackboard = null!;
+    public void Initialize()
+    {
+        SetupStateTree();
+    }
     public void SetPath(List<Vector2I> path)
     {
         if (path == null || path.Count == 0) return;
 
-        _currentPath = path;
-        _currentPathIndex = 0;
-        _isWalking = true;
+        _blackboard.Set("CurrentPath", path);
+        _blackboard.Set("CurrentPathIndex", 0);
+        _blackboard.Set("IsWalking", true);
     }
-    public bool Update(double delta)
+    public void PhysicsUpdate(double delta)
     {
-        if (!_isWalking || _currentPath == null || _currentPathIndex >= _currentPath.Count) return false;
-
-        Vector2I nextPos = _currentPath[_currentPathIndex] * 50;
-        Stats.Direction = (nextPos - Stats.Position).Normalized();
-        float stepLength = Stats.MoveSpeed * (float)delta;
-        Stats.Position += Stats.Direction * stepLength;
-        if (Stats.Position.DistanceSquaredTo(nextPos) > stepLength * stepLength) return true;
-
-        _currentPathIndex++;
-        if (_currentPathIndex >= _currentPath.Count)
+        _stateTree.PhysicsUpdate(delta);
+    }
+    public void FrameUpdate(double delta)
+    {
+        _stateTree.FrameUpdate(delta);
+    }
+    protected virtual void SetupStateTree()
+    {
+        _stateTree = new STRoot
         {
-            _isWalking = false;
-            return false;
-        }
-        return true;
+            InitialState = "Move",
+            AllowRepeatedEnterAndExit = false
+        };
+
+        var moveState = new Var_MoveState();
+
+        _stateTree.AddChild(moveState);
+
+        _blackboard = new();
+
+        _blackboard.Set("Stats", Stats);
+        _blackboard.Set("CurrentPath", new List<Vector2I>());
+        _blackboard.Set("IsWalking", false);
+        _blackboard.Set("CurrentPathIndex", 0);
+
+        _stateTree.Initialize(_blackboard);
     }
 }

@@ -9,12 +9,20 @@ public partial class VarManager : Node
     {
         foreach (var var in _vars)
         {
-            var.Update(delta);
+            var.PhysicsUpdate(delta);
+        }
+    }
+    public override void _Process(double delta)
+    {
+        foreach (var var in _vars)
+        {
+            var.FrameUpdate(delta);
         }
     }
     public void AddVar(Var var)
     {
         _vars.Add(var);
         var.Stats.OnDeath += () => _vars.Remove(var);
+        var.Initialize();
     }
 }

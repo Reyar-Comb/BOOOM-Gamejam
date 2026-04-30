@@ -20,8 +20,10 @@ public partial class VarStats : Resource
             CurrentHealth = Math.Min(CurrentHealth, value);
         }
     }
-    [Export] public float AttackSpeed;
+    [Export] public float AttackSpeedMult;
+    [Export] public int AttackFrameInterval;
     [Export] public float MoveSpeed;
+    [Export] public float AttackRange;
     public int CurrentHealth
     {
         get => field;

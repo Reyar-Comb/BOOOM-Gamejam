@@ -10,8 +10,16 @@ public partial class Var : RefCounted
     public VarStats Stats { get; set; }
     protected STRoot _stateTree = null!;
     protected Blackboard _blackboard = null!;
-    public void Initialize()
+    private bool _isInitialized = false;
+    public void Initialize(Blackboard parentBlackboard)
     {
+        if (_isInitialized) return;
+        _isInitialized = true;
+
+        _blackboard = new()
+        {
+            ParentBlackboard = parentBlackboard
+        };
         SetupStateTree();
     }
     public void SetPath(List<Vector2I> path)
@@ -32,15 +40,19 @@ public partial class Var : RefCounted
     }
     protected virtual void SetupStateTree()
     {
+        var idleState = new Var_IdleState();
+        var moveState = new Var_MoveState();
+        var attackState = new Var_AttackState();
+
         _stateTree = new STRoot
         {
             InitialState = "Move",
             AllowRepeatedEnterAndExit = false
         };
 
-        var moveState = new Var_MoveState();
-
+        _stateTree.AddChild(idleState);
         _stateTree.AddChild(moveState);
+        _stateTree.AddChild(attackState);
 
         _blackboard = new();
 

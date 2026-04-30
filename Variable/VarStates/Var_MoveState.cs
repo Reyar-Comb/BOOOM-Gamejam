@@ -42,7 +42,7 @@ public partial class Var_MoveState : STNode
         CurrentPathIndex++;
         if (CurrentPathIndex >= CurrentPath.Count)
         {
-            _blackboard.Set("IsWalking", false);
+            IsWalking = false;
         }
         return;
     }

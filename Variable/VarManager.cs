@@ -1,10 +1,12 @@
 using Godot;
+using StarlightBT.Data;
 using System;
 using System.Collections.Generic;
 
 public partial class VarManager : Node
 {
     private readonly List<Var> _vars = new();
+    private Blackboard _sharedBlackboard = new();
     public override void _PhysicsProcess(double delta)
     {
         foreach (var var in _vars)
@@ -23,6 +25,7 @@ public partial class VarManager : Node
     {
         _vars.Add(var);
         var.Stats.OnDeath += () => _vars.Remove(var);
-        var.Initialize();
+        _sharedBlackboard.Set("Vars", _vars.AsReadOnly<Var>());
+        var.Initialize(_sharedBlackboard);
     }
 }

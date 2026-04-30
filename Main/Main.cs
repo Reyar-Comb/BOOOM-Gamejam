@@ -11,7 +11,7 @@ public partial class Main : Node2D
 		var.Stats = new VarStats
 		{
 			MaxHealth = 100,
-			AttackSpeed = 1.5f,
+			AttackSpeedMult = 1.5f,
 			MoveSpeed = 100f,
 			Position = new Vector2(0, 0)
 		};

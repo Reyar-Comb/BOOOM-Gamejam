@@ -1,9 +1,7 @@
 using Godot;
 using StarlightBT.Data;
 using StarlightStateTree;
-using System;
 using System.Collections.Generic;
-using System.Reflection.Metadata;
 
 public partial class Var : RefCounted
 {
@@ -43,18 +41,25 @@ public partial class Var : RefCounted
         var idleState = new Var_IdleState();
         var moveState = new Var_MoveState();
         var attackState = new Var_AttackState();
+        var detectState = new Var_DetectState();
+
+        Blackboard existingBlackboard = _blackboard;
 
         _stateTree = new STRoot
         {
             InitialState = "Move",
             AllowRepeatedEnterAndExit = false
         };
-
-        _stateTree.AddChild(idleState);
-        _stateTree.AddChild(moveState);
+        _stateTree.AddChild(detectState);
+        detectState.AddChild(idleState);
+        detectState.AddChild(moveState);
+        
         _stateTree.AddChild(attackState);
 
-        _blackboard = new();
+        _blackboard = new()
+        {
+            ParentBlackboard = existingBlackboard
+        };
 
         _blackboard.Set("Stats", Stats);
         _blackboard.Set("CurrentPath", new List<Vector2I>());

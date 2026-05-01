@@ -24,6 +24,7 @@ public partial class Var : RefCounted
     {
         if (path == null || path.Count == 0) return;
 
+        InitializeFacingFromPath(path);
         _blackboard.Set("CurrentPath", path);
         _blackboard.Set("CurrentPathIndex", 0);
         _blackboard.Set("IsWalking", true);
@@ -60,5 +61,30 @@ public partial class Var : RefCounted
         _blackboard.Set("CurrentPathIndex", 0);
 
         _stateTree.Initialize(_blackboard);
+    }
+
+    private void InitializeFacingFromPath(List<Vector2I> path)
+    {
+        if (Stats == null)
+        {
+            return;
+        }
+
+        Vector2 currentPosition = Stats.Position;
+
+        foreach (Vector2I gridPoint in path)
+        {
+            Vector2 nextPosition = Grid.GridToWorld(gridPoint);
+            Vector2 nextDirection = nextPosition - currentPosition;
+
+            if (nextDirection.LengthSquared() <= MathConstants.EpsilonSquared)
+            {
+                currentPosition = nextPosition;
+                continue;
+            }
+
+            Stats.Direction = nextDirection.ToFacingDirection();
+            return;
+        }
     }
 }

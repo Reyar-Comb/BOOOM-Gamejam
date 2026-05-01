@@ -23,7 +23,7 @@ public partial class VarStats : Resource
     [Export] public float AttackSpeedMult;
     [Export] public int AttackFrameInterval;
     [Export] public float MoveSpeed;
-    [Export] public float AttackRange;
+    [Export] public VarAttackRange AttackRange { get; set; } = null!;
     public int CurrentHealth
     {
         get => field;
@@ -42,7 +42,7 @@ public partial class VarStats : Resource
         }
     }
     public Vector2 Position;
-    public Vector2 Direction;
+    public Vector2I Direction;
     private List<VarTag> _tags { get; set; } = new();
     private bool _isInitialized = false;
     private bool _isDead = false;

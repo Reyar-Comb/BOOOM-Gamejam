@@ -3,6 +3,7 @@ using System;
 using StarlightBT.Data;
 using StarlightStateTree;
 using System.Collections.Generic;
+
 public partial class Var_MoveState : STNode
 {
     public override string Name => "Move";
@@ -34,11 +35,11 @@ public partial class Var_MoveState : STNode
         if (!IsWalking || CurrentPath == null || CurrentPathIndex >= CurrentPath.Count) return;
 
         Vector2 nextPos = Grid.GridToWorld(CurrentPath[CurrentPathIndex]);
-        Stats.Direction = (nextPos - Stats.Position).Normalized();
+        Stats.Direction = (nextPos - Stats.Position).ToFacingDirection();
         float stepLength = Stats.MoveSpeed * (float)delta;
-        Stats.Position += Stats.Direction * stepLength;
+        Stats.Position += Stats.Direction.ToVector2() * stepLength;
         if (Stats.Position.DistanceSquaredTo(nextPos) > stepLength * stepLength) return;
-        
+
         Stats.Position = nextPos;
         CurrentPathIndex++;
         if (CurrentPathIndex >= CurrentPath.Count)

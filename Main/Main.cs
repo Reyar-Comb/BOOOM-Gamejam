@@ -12,6 +12,14 @@ public partial class Main : Node2D
 		{
 			MaxHealth = 100,
 			AttackSpeedMult = 1.5f,
+			AttackRange = new VarAttackRange
+			{
+				RelativeCells = new Godot.Collections.Array<Vector2I>
+				{
+					new Vector2I(0, 1),
+					new Vector2I(0, 2)
+				}
+			},
 			MoveSpeed = 100f,
 			Position = Grid.GridToWorld(0, 0)
 		};

@@ -47,7 +47,7 @@ public partial class TestAttack : Node2D
             }
 
             DrawCircle(debugVar.Var.Stats.Position, 20.0f, debugVar.Color);
-            DrawArc(debugVar.Var.Stats.Position, debugVar.Var.Stats.AttackRange, 0.0f, Mathf.Tau, 48, debugVar.Color, 2.0f);
+            DrawAttackCells(debugVar);
         }
     }
 
@@ -61,7 +61,11 @@ public partial class TestAttack : Node2D
                 AttackSpeedMult = 1.0f,
                 AttackFrameInterval = 20,
                 MoveSpeed = 120.0f,
-                AttackRange = 80.0f,
+                AttackRange = CreateAttackRange(
+                    new Vector2I(0, 1),
+                    new Vector2I(0, 2),
+                    new Vector2I(1, 1),
+                    new Vector2I(-1, 1)),
                 Position = Grid.GridToWorld(startPosition)
             }
         };
@@ -69,6 +73,40 @@ public partial class TestAttack : Node2D
         VarManager.AddVar(var);
         var.SetPath(path);
         return var;
+    }
+
+    private void DrawAttackCells(DebugVar debugVar)
+    {
+        if (debugVar.Var.Stats.AttackRange == null)
+        {
+            return;
+        }
+
+        Vector2I originCell = Grid.WorldToGrid(debugVar.Var.Stats.Position);
+        foreach (Vector2I cell in debugVar.Var.Stats.AttackRange.EnumerateTargetCells(originCell, debugVar.Var.Stats.Direction))
+        {
+            DrawAttackCell(cell, debugVar.Color);
+        }
+    }
+
+    private void DrawAttackCell(Vector2I cell, Color color)
+    {
+        Vector2 cellCenter = Grid.GridToWorld(cell);
+        Vector2 cellSize = Vector2.One * Grid.CellSize;
+        Rect2 cellRect = new(cellCenter - cellSize / 2.0f, cellSize);
+        Color fillColor = color;
+        fillColor.A = 0.15f;
+
+        DrawRect(cellRect, fillColor);
+        DrawRect(cellRect, color, false, 2.0f);
+    }
+
+    private static VarAttackRange CreateAttackRange(params Godot.Collections.Array<Vector2I> relativeCells)
+    {
+        return new VarAttackRange
+        {
+            RelativeCells = relativeCells
+        };
     }
 
     private sealed class DebugVar

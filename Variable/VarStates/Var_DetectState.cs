@@ -24,15 +24,29 @@ public partial class Var_DetectState : STNode
     }
     private bool IsEnemyInRange()
     {
+        if (Stats.AttackRange == null || Vars == null)
+        {
+            return false;
+        }
+
+        HashSet<Vector2I> enemyCells = new();
         foreach (var var in Vars)
         {
             if (var == null || var.Stats == null) continue;
             if (var.Stats == Stats) continue;
-            if (Stats.Position.DistanceSquaredTo(var.Stats.Position) <= Stats.AttackRange * Stats.AttackRange)
+
+            enemyCells.Add(Grid.WorldToGrid(var.Stats.Position));
+        }
+
+        Vector2I selfCell = Grid.WorldToGrid(Stats.Position);
+        foreach (Vector2I targetCell in Stats.AttackRange.EnumerateTargetCells(selfCell, Stats.Direction))
+        {
+            if (enemyCells.Contains(targetCell))
             {
                 return true;
             }
         }
+
         return false;
     }
 }

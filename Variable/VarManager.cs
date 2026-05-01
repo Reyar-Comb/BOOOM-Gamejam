@@ -25,7 +25,7 @@ public partial class VarManager : Node
     {
         _vars.Add(var);
         var.Stats.OnDeath += () => _vars.Remove(var);
-        _sharedBlackboard.Set("Vars", _vars.AsReadOnly<Var>());
+        _sharedBlackboard.Set("Vars", _vars.AsReadOnly());
         var.Initialize(_sharedBlackboard);
     }
 }

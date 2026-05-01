@@ -5,7 +5,7 @@ public static class Grid
 {
     private static float _offsetX = 0;
     private static float _offsetY = 0;
-    private const int CellSize = 50;
+    public const int CellSize = 50;
     public static void SetOffset(float x, float y)
     {
         _offsetX = x;

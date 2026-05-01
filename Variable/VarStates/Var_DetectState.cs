@@ -27,6 +27,7 @@ public partial class Var_DetectState : STNode
         foreach (var var in Vars)
         {
             if (var == null || var.Stats == null) continue;
+            if (var.Stats == Stats) continue;
             if (Stats.Position.DistanceSquaredTo(var.Stats.Position) <= Stats.AttackRange * Stats.AttackRange)
             {
                 return true;

@@ -43,8 +43,6 @@ public partial class Var : RefCounted
         var attackState = new Var_AttackState();
         var detectState = new Var_DetectState();
 
-        Blackboard existingBlackboard = _blackboard;
-
         _stateTree = new STRoot
         {
             InitialState = "Move",
@@ -55,11 +53,6 @@ public partial class Var : RefCounted
         detectState.AddChild(moveState);
         
         _stateTree.AddChild(attackState);
-
-        _blackboard = new()
-        {
-            ParentBlackboard = existingBlackboard
-        };
 
         _blackboard.Set("Stats", Stats);
         _blackboard.Set("CurrentPath", new List<Vector2I>());

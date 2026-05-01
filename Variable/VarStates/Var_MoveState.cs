@@ -33,12 +33,13 @@ public partial class Var_MoveState : STNode
     {
         if (!IsWalking || CurrentPath == null || CurrentPathIndex >= CurrentPath.Count) return;
 
-        Vector2I nextPos = CurrentPath[CurrentPathIndex] * 50;
+        Vector2 nextPos = Grid.GridToWorld(CurrentPath[CurrentPathIndex]);
         Stats.Direction = (nextPos - Stats.Position).Normalized();
         float stepLength = Stats.MoveSpeed * (float)delta;
         Stats.Position += Stats.Direction * stepLength;
         if (Stats.Position.DistanceSquaredTo(nextPos) > stepLength * stepLength) return;
-
+        
+        Stats.Position = nextPos;
         CurrentPathIndex++;
         if (CurrentPathIndex >= CurrentPath.Count)
         {

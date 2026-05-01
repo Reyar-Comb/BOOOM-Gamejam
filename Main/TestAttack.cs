@@ -11,7 +11,7 @@ public partial class TestAttack : Node2D
     {
         _debugVars.Add(new DebugVar(
             CreateVar(
-            new Vector2(0, 100),
+            new Vector2I(2, 2),
             new List<Vector2I>
             {
                 new(2, 2),
@@ -22,7 +22,7 @@ public partial class TestAttack : Node2D
 
         _debugVars.Add(new DebugVar(
             CreateVar(
-            new Vector2(600, 100),
+            new Vector2I(10, 2),
             new List<Vector2I>
             {
                 new(10, 2),
@@ -51,7 +51,7 @@ public partial class TestAttack : Node2D
         }
     }
 
-    private Var CreateVar(Vector2 startPosition, List<Vector2I> path)
+    private Var CreateVar(Vector2I startPosition, List<Vector2I> path)
     {
         Var var = new()
         {
@@ -62,7 +62,7 @@ public partial class TestAttack : Node2D
                 AttackFrameInterval = 20,
                 MoveSpeed = 120.0f,
                 AttackRange = 80.0f,
-                Position = startPosition
+                Position = Grid.GridToWorld(startPosition)
             }
         };
 

@@ -1,0 +1,11 @@
+[gd_scene format=3 uid="uid://dg7ckr5f2tq4e"]
+
+[ext_resource type="Script" path="res://Variable/VarManager.cs" id="1_eqex0"]
+[ext_resource type="Script" path="res://Main/TestAttack.cs" id="2_5e1xk"]
+
+[node name="TestAttack" type="Node2D" node_paths=PackedStringArray("VarManager")]
+script = ExtResource("2_5e1xk")
+VarManager = NodePath("VarManager")
+
+[node name="VarManager" type="Node" parent="."]
+script = ExtResource("1_eqex0")

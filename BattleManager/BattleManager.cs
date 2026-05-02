@@ -30,6 +30,8 @@ public partial class BattleManager : Node
 
     [Export] public float TickScale = 1f;
 
+    [Export] public VarManager VarManager { get; private set; } = null!;
+
     public long CurrentTick { get; private set; } = 0;
 
     public BattleState State { get; private set; } = BattleState.Running;
@@ -40,7 +42,10 @@ public partial class BattleManager : Node
 
     private bool _isTicking = false;
 
-    // TODO: Integrate varManager here
+    public override void _Ready()
+    {
+        VarManager.SetPhysicsProcess(false);
+    }
 
     public override void _Process(double delta)
     {
@@ -61,5 +66,7 @@ public partial class BattleManager : Node
         _isTicking = true;
 
         var context = new BattleTickContext(CurrentTick, TickInterval, this);
+
+        VarManager.Tick(TickInterval);
     }
 }

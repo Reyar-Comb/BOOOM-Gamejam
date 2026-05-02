@@ -7,7 +7,16 @@ public partial class VarManager : Node
 {
     private readonly List<Var> _vars = new();
     private Blackboard _sharedBlackboard = new();
-    public override void _PhysicsProcess(double delta)
+
+    // public override void _PhysicsProcess(double delta)
+    // {
+    //     foreach (var var in _vars)
+    //     {
+    //         var.PhysicsUpdate(delta);
+    //     }
+    // }
+
+    public void Tick(double delta)
     {
         foreach (var var in _vars)
         {

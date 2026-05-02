@@ -8,7 +8,7 @@ public partial class Slider : HSlider
 
 	public override void _Ready()
 	{
-		MinValue = 0.1;
+		MinValue = 0;
 		MaxValue = 4.0;
 		Step = 0.1;
 

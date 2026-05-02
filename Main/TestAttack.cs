@@ -5,6 +5,8 @@ public partial class TestAttack : Node2D
 {
     [Export] public VarManager VarManager { get; set; } = null!;
 
+    [Export] public BattleManager BattleManager { get; set; } = null!;
+
     private readonly List<DebugVar> _debugVars = new();
 
     public override void _Ready()

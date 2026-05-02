@@ -1,11 +1,26 @@
 [gd_scene format=3 uid="uid://dg7ckr5f2tq4e"]
 
-[ext_resource type="Script" path="res://Variable/VarManager.cs" id="1_eqex0"]
-[ext_resource type="Script" path="res://Main/TestAttack.cs" id="2_5e1xk"]
+[ext_resource type="Script" uid="uid://01fvca8ksf16" path="res://Variable/VarManager.cs" id="1_eqex0"]
+[ext_resource type="Script" uid="uid://bcq4g4xxw1tif" path="res://Main/TestAttack.cs" id="2_5e1xk"]
+[ext_resource type="Script" uid="uid://ccuvk7ii52801" path="res://BattleManager/BattleManager.cs" id="3_m5r3p"]
+[ext_resource type="Script" uid="uid://b3b5j15nukl4j" path="res://Main/TestAttack/Slider.cs" id="4_15h64"]
 
-[node name="TestAttack" type="Node2D" node_paths=PackedStringArray("VarManager")]
+[node name="TestAttack" type="Node2D" unique_id=220470703 node_paths=PackedStringArray("VarManager")]
 script = ExtResource("2_5e1xk")
 VarManager = NodePath("VarManager")
 
-[node name="VarManager" type="Node" parent="."]
+[node name="VarManager" type="Node" parent="." unique_id=363320144]
 script = ExtResource("1_eqex0")
+
+[node name="Node" type="Node" parent="." unique_id=1452766430 node_paths=PackedStringArray("VarManager")]
+script = ExtResource("3_m5r3p")
+TickScale = 0.1
+VarManager = NodePath("../VarManager")
+
+[node name="HSlider" type="HSlider" parent="." unique_id=2022733629 node_paths=PackedStringArray("BattleManager")]
+offset_left = 132.0
+offset_top = 134.0
+offset_right = 792.0
+offset_bottom = 218.0
+script = ExtResource("4_15h64")
+BattleManager = NodePath("../Node")

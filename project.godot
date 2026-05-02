@@ -21,7 +21,7 @@ project/assembly_name="booom"
 
 [editor_plugins]
 
-enabled=PackedStringArray("res://addons/starlight_state_tree/plugin.cfg")
+enabled=PackedStringArray("res://addons/range_editor/plugin.cfg", "res://addons/starlight_state_tree/plugin.cfg")
 
 [physics]
 

@@ -2,6 +2,8 @@ using Godot;
 using System;
 using System.Collections.Generic;
 using GDArray = Godot.Collections.Array<Godot.Vector2I>;
+
+[Tool]
 [GlobalClass]
 public partial class VarAttackRange : Resource
 {

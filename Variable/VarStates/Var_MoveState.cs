@@ -32,9 +32,18 @@ public partial class Var_MoveState : STNode
     }
     protected override void OnPhysicsUpdate(double delta)
     {
-        if (!IsWalking || CurrentPath == null || CurrentPathIndex >= CurrentPath.Count) return;
+        if (!IsWalking || CurrentPath == null)
+        {
+            FinishMovement();
+            return;
+        }
 
-        Vector2 nextPos = Grid.GridToWorld(CurrentPath[CurrentPathIndex]);
+        if (!TryGetNextTargetPosition(out Vector2 nextPos))
+        {
+            FinishMovement();
+            return;
+        }
+
         Stats.Direction = (nextPos - Stats.Position).ToFacingDirection();
         float stepLength = Stats.MoveSpeed * (float)delta;
         Stats.Position += Stats.Direction.ToVector2() * stepLength;
@@ -44,8 +53,33 @@ public partial class Var_MoveState : STNode
         CurrentPathIndex++;
         if (CurrentPathIndex >= CurrentPath.Count)
         {
-            IsWalking = false;
+            FinishMovement();
         }
         return;
+    }
+
+    private void FinishMovement()
+    {
+        IsWalking = false;
+        RequestTransition("Idle");
+    }
+
+    private bool TryGetNextTargetPosition(out Vector2 nextPos)
+    {
+        while (CurrentPathIndex < CurrentPath.Count)
+        {
+            Vector2 candidatePos = Grid.GridToWorld(CurrentPath[CurrentPathIndex]);
+            if (Stats.Position.DistanceSquaredTo(candidatePos) > MathConstants.EpsilonSquared)
+            {
+                nextPos = candidatePos;
+                return true;
+            }
+
+            Stats.Position = candidatePos;
+            CurrentPathIndex++;
+        }
+
+        nextPos = Vector2.Zero;
+        return false;
     }
 }

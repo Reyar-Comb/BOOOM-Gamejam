@@ -43,6 +43,7 @@ public partial class VarStats : Resource
     }
     public Vector2 Position;
     public Vector2I Direction;
+    public Vector2 AttackDirection;
     private List<VarTag> _tags { get; set; } = new();
     private bool _isInitialized = false;
     private bool _isDead = false;

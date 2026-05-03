@@ -23,7 +23,8 @@ public partial class VarStats : Resource
     [Export] public float AttackSpeedMult;
     [Export] public int AttackFrameInterval;
     [Export] public float MoveSpeed;
-    [Export] public VarAttackRange AttackRange { get; set; } = null!;
+    [Export] public VarRange AttackRange { get; set; } = null!;
+    [Export] public VarRange DetectRange { get; set; } = null!;
     public int CurrentHealth
     {
         get => field;

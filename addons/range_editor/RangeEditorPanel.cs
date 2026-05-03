@@ -9,7 +9,7 @@ namespace Booooom.Editor.RangeEditor;
 [Tool]
 public partial class RangeEditorPanel : VBoxContainer
 {
-    private const string DefaultFileName = "VarAttackRange.tres";
+    private const string DefaultFileName = "VarRange.tres";
 
     private enum PendingAction
     {
@@ -29,7 +29,7 @@ public partial class RangeEditorPanel : VBoxContainer
     private ConfirmationDialog _discardChangesDialog = null!;
     private AcceptDialog _messageDialog = null!;
 
-    private VarAttackRange _currentResource = null!;
+    private VarRange _currentResource = null!;
     private string _currentPath = string.Empty;
     private bool _hasUnsavedChanges;
     private PendingAction _pendingAction = PendingAction.None;
@@ -66,10 +66,10 @@ public partial class RangeEditorPanel : VBoxContainer
         HBoxContainer toolbar = new();
         margin.AddChild(toolbar);
 
-        toolbar.AddChild(CreateButton("New", "Create a new empty VarAttackRange resource.", OnNewPressed));
-        toolbar.AddChild(CreateButton("Open", "Open an existing VarAttackRange resource from the project.", OnOpenPressed));
-        toolbar.AddChild(CreateButton("Save", "Save the current VarAttackRange resource.", OnSavePressed));
-        toolbar.AddChild(CreateButton("Save As", "Save the current VarAttackRange resource under a new path.", OnSaveAsPressed));
+        toolbar.AddChild(CreateButton("New", "Create a new empty VarRange resource.", OnNewPressed));
+        toolbar.AddChild(CreateButton("Open", "Open an existing VarRange resource from the project.", OnOpenPressed));
+        toolbar.AddChild(CreateButton("Save", "Save the current VarRange resource.", OnSavePressed));
+        toolbar.AddChild(CreateButton("Save As", "Save the current VarRange resource under a new path.", OnSaveAsPressed));
 
         toolbar.AddChild(new VSeparator());
 
@@ -151,7 +151,7 @@ public partial class RangeEditorPanel : VBoxContainer
         {
             Access = FileDialog.AccessEnum.Resources,
             FileMode = FileDialog.FileModeEnum.OpenFile,
-            Title = "Open VarAttackRange",
+            Title = "Open VarRange",
             UseNativeDialog = true
         };
         _openDialog.Filters = new[] { "*.tres;Godot Text Resource", "*.res;Godot Binary Resource" };
@@ -162,7 +162,7 @@ public partial class RangeEditorPanel : VBoxContainer
         {
             Access = FileDialog.AccessEnum.Resources,
             FileMode = FileDialog.FileModeEnum.SaveFile,
-            Title = "Save VarAttackRange As",
+            Title = "Save VarRange As",
             UseNativeDialog = true
         };
         _saveDialog.Filters = new[] { "*.tres;Godot Text Resource", "*.res;Godot Binary Resource" };
@@ -248,9 +248,9 @@ public partial class RangeEditorPanel : VBoxContainer
     private void OnOpenFileSelected(string path)
     {
         Resource loadedResource = ResourceLoader.Load(path);
-        if (loadedResource is not VarAttackRange attackRange)
+        if (loadedResource is not VarRange attackRange)
         {
-            ShowMessage($"Selected resource is not a VarAttackRange:\n{path}");
+            ShowMessage($"Selected resource is not a VarRange:\n{path}");
             return;
         }
 
@@ -297,7 +297,7 @@ public partial class RangeEditorPanel : VBoxContainer
 
     private void CreateNewResource()
     {
-        _currentResource = new VarAttackRange
+        _currentResource = new VarRange
         {
             RelativeCells = new Godot.Collections.Array<Vector2I>()
         };
@@ -310,7 +310,7 @@ public partial class RangeEditorPanel : VBoxContainer
         OnGridHoverCellChanged(null);
     }
 
-    private void LoadResource(VarAttackRange resource, string path)
+    private void LoadResource(VarRange resource, string path)
     {
         _currentResource = resource;
         _currentPath = path;
@@ -375,7 +375,7 @@ public partial class RangeEditorPanel : VBoxContainer
 
     private void UpdateResourceLabel()
     {
-        string labelPath = string.IsNullOrEmpty(_currentPath) ? "[Unsaved] VarAttackRange" : _currentPath;
+        string labelPath = string.IsNullOrEmpty(_currentPath) ? "[Unsaved] VarRange" : _currentPath;
         if (_hasUnsavedChanges)
         {
             labelPath += " *";
@@ -410,7 +410,7 @@ public partial class RangeEditorPanel : VBoxContainer
         return string.IsNullOrEmpty(_currentPath) ? DefaultFileName : GetFileName(_currentPath);
     }
 
-    private static IEnumerable<Vector2I> EnumerateResourceCells(VarAttackRange resource)
+    private static IEnumerable<Vector2I> EnumerateResourceCells(VarRange resource)
     {
         if (resource.RelativeCells == null)
         {

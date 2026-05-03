@@ -1,0 +1,36 @@
+[gd_scene format=3 uid="uid://ch70emjf7i5tc"]
+
+[ext_resource type="Script" uid="uid://01fvca8ksf16" path="res://Variable/VarManager.cs" id="1_wq635"]
+[ext_resource type="Script" uid="uid://bmid5sb2kpif" path="res://Main/TestChaseOutOfRange.cs" id="2_7h0hx"]
+[ext_resource type="Script" uid="uid://ccuvk7ii52801" path="res://BattleManager/BattleManager.cs" id="3_fgvv2"]
+[ext_resource type="Script" uid="uid://b3b5j15nukl4j" path="res://Main/TestAttack/Slider.cs" id="4_31fv8"]
+
+[node name="TestChaseOutOfRange" type="Node2D" unique_id=627854582 node_paths=PackedStringArray("VarManager", "BattleManager")]
+script = ExtResource("2_7h0hx")
+VarManager = NodePath("VarManager")
+BattleManager = NodePath("BattleManager")
+
+[node name="VarManager" type="Node" parent="." unique_id=1300697508]
+script = ExtResource("1_wq635")
+
+[node name="BattleManager" type="Node" parent="." unique_id=1509243268 node_paths=PackedStringArray("VarManager")]
+script = ExtResource("3_fgvv2")
+VarManager = NodePath("../VarManager")
+
+[node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=376842020]
+
+[node name="InfoLabel" type="Label" parent="CanvasLayer" unique_id=1636955255]
+offset_left = 24.0
+offset_top = 24.0
+offset_right = 538.0
+offset_bottom = 144.0
+theme_override_font_sizes/font_size = 18
+text = "Loading..."
+
+[node name="HSlider" type="HSlider" parent="CanvasLayer" unique_id=1705353017 node_paths=PackedStringArray("BattleManager")]
+offset_left = 24.0
+offset_top = 202.84
+offset_right = 320.0
+offset_bottom = 234.84
+script = ExtResource("4_31fv8")
+BattleManager = NodePath("../../BattleManager")

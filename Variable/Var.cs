@@ -61,6 +61,7 @@ public partial class Var : RefCounted
         _blackboard.Set("HasPendingMove", false);
         _blackboard.Set("CurrentPathIndex", 0);
         _blackboard.Set("CurrentAttackTarget", (Var)null);
+        _blackboard.Set("Self", this);
 
         _stateTree.Initialize(_blackboard);
     }

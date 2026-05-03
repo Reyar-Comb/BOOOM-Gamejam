@@ -1,11 +1,14 @@
+using Cosmosity.Pathfinders;
 using Godot;
 using StarlightBT.Data;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 
 public partial class VarManager : Node
 {
     private readonly List<Var> _vars = new();
+    private ReadOnlyCollection<Var> ReadOnlyVars => field ??= _vars.AsReadOnly();
     private Blackboard _sharedBlackboard = new();
 
     // public override void _PhysicsProcess(double delta)
@@ -34,7 +37,16 @@ public partial class VarManager : Node
     {
         _vars.Add(var);
         var.Stats.OnDeath += () => _vars.Remove(var);
-        _sharedBlackboard.Set("Vars", _vars.AsReadOnly());
+
+        _sharedBlackboard.Set("Vars", ReadOnlyVars);
+
+        AStarPathfinder pathfinder = AStarPathfinder.CreateBuilder()
+            .SetRect(-200, -200, 400, 400)
+            .UseDiagonal(Pathfinder.DiagonalType.Never)
+            .UseHeuristic(Pathfinder.HeuristicType.Manhattan)
+            .Build();
+        _sharedBlackboard.Set("Pathfinder", pathfinder);
+        
         var.Initialize(_sharedBlackboard);
     }
 }

@@ -2,6 +2,7 @@ using Godot;
 using System;
 using StarlightBT.Data;
 using StarlightStateTree;
+using Cosmosity.Pathfinders;
 public partial class Var_AttackState : STNode
 {
     public override string Name => "Attack";
@@ -19,29 +20,58 @@ public partial class Var_AttackState : STNode
         set => _blackboard.Set("CurrentAttackTarget", value);
     }
 
+    private Var Self
+    {
+        get => _blackboard.Get<Var>("Self");
+    }
+
+    private Pathfinder Pathfinder
+    {
+        get => _blackboard.Get<Pathfinder>("Pathfinder");
+    }
+
+    private bool IsWalking
+    {
+        get => _blackboard.Get<bool>("IsWalking");
+        set => _blackboard.Set("IsWalking", value);
+    }
     protected override void OnEnter()
     {
         _timer = 0;
+        IsWalking = false;
     }
 
     protected override void OnPhysicsUpdate(double delta)
     {
         if (!IsCurrentTargetInRange())
         {
-            CurrentAttackTarget = null;
-            RequestTransition("Detect");
+            Var chaseTarget = CurrentAttackTarget;
+            if (chaseTarget?.Stats == null || Pathfinder == null)
+            {
+                CurrentAttackTarget = null;
+                RequestTransition("Idle");
+                return;
+            }
+
+            RequestTransition("Move");
             return;
         }
 
         if (_timer == 0)
         {
-            GD.Print("Attack!");
+            Attack();
             _timer = (int)(Stats.AttackFrameInterval / Stats.AttackSpeedMult);
         }
         else
         {
             _timer--;
         }
+    }
+    private void Attack()
+    {
+        if (CurrentAttackTarget == null || CurrentAttackTarget.Stats == null) return;
+
+        GD.Print("Attack!");
     }
     protected override void OnExit()
     {

@@ -3,6 +3,7 @@ using System;
 using StarlightBT.Data;
 using StarlightStateTree;
 using System.Collections.Generic;
+using Cosmosity.Pathfinders;
 public partial class Var_DetectState : STNode
 {
     public override string Name => "Detect";
@@ -24,19 +25,26 @@ public partial class Var_DetectState : STNode
         set => _blackboard.Set("CurrentAttackTarget", value);
     }
 
+    private Pathfinder Pathfinder
+    {
+        get => _blackboard.Get<Pathfinder>("Pathfinder");
+    }
+
+    private Var Self
+    {
+        get => _blackboard.Get<Var>("Self");
+    }
     protected override void OnPhysicsUpdate(double delta)
     {
-        if (TryGetEnemyInRange(out Var target))
+        if (TryGetEnemyInRange())
         {
-            CurrentAttackTarget = target;
             RequestTransition("Attack");
         }
     }
 
-    private bool TryGetEnemyInRange(out Var target)
+    private bool TryGetEnemyInRange()
     {
-        target = null;
-        if (Stats.AttackRange == null || Vars == null)
+        if (Stats.AttackRange == null || Stats.DetectRange == null || Vars == null)
         {
             return false;
         }
@@ -56,12 +64,21 @@ public partial class Var_DetectState : STNode
         {
             if (enemiesByCell.TryGetValue(targetCell, out Var enemy))
             {
-                Stats.AttackDirection = (enemy.Stats.Position - Stats.Position).Normalized();
-                target = enemy;
+                CurrentAttackTarget = enemy;
                 return true;
             }
         }
 
+        foreach (Vector2I targetCell in Stats.DetectRange.EnumerateTargetCells(selfCell, Stats.Direction))
+        {
+            if (enemiesByCell.TryGetValue(targetCell, out Var enemy2))
+            {
+                Self.SetPath(Pathfinder.Run(selfCell, targetCell));
+                CurrentAttackTarget = enemy2;
+                return false;
+            }
+        }
+        CurrentAttackTarget = null;
         return false;
     }
 }

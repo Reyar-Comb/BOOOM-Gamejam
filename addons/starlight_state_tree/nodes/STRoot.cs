@@ -11,6 +11,10 @@ public partial class STRoot : STNode
     public bool AllowRepeatedEnterAndExit = false;
     protected Dictionary<string, STNode> _statesByName = new();
     public STNode CurrentState { get; set; } = null;
+    internal bool HasPendingTransition => _hasPendingTransition;
+
+    private bool _hasPendingTransition = false;
+    private string _pendingTransitionTarget = "";
 
     public void Shutdown()
     {
@@ -49,7 +53,8 @@ public partial class STRoot : STNode
 
     protected void OnStateTransitionRequested(string targetStateName)
     {
-        Callable.From(() => TransitionTo(targetStateName)).CallDeferred();
+        _pendingTransitionTarget = targetStateName;
+        _hasPendingTransition = true;
     }
 
     protected void UnregisterAllStateHandlers()
@@ -138,5 +143,30 @@ public partial class STRoot : STNode
         {
             stateStack.Pop().Enter();
         }
+    }
+
+    public override void PhysicsUpdate(double delta)
+    {
+        base.PhysicsUpdate(delta);
+        FlushPendingTransition();
+    }
+
+    public override void FrameUpdate(double delta)
+    {
+        base.FrameUpdate(delta);
+        FlushPendingTransition();
+    }
+
+    private void FlushPendingTransition()
+    {
+        if (!_hasPendingTransition)
+        {
+            return;
+        }
+
+        string targetStateName = _pendingTransitionTarget;
+        _pendingTransitionTarget = "";
+        _hasPendingTransition = false;
+        TransitionTo(targetStateName);
     }
 }

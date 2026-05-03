@@ -55,6 +55,20 @@ public partial class TestAttack : Node2D
 
     private Var CreateVar(Vector2I startPosition, List<Vector2I> path)
     {
+        VarRange attackRange = CreateRange(
+            new Vector2I(0, 1),
+            new Vector2I(0, 2),
+            new Vector2I(1, 1),
+            new Vector2I(-1, 1));
+        VarRange detectRange = CreateRange(
+            new Vector2I(0, 1),
+            new Vector2I(0, 2),
+            new Vector2I(0, 3),
+            new Vector2I(1, 1),
+            new Vector2I(-1, 1),
+            new Vector2I(1, 2),
+            new Vector2I(-1, 2));
+
         Var var = new()
         {
             Stats = new VarStats
@@ -63,11 +77,8 @@ public partial class TestAttack : Node2D
                 AttackSpeedMult = 1.0f,
                 AttackFrameInterval = 20,
                 MoveSpeed = 120.0f,
-                AttackRange = CreateAttackRange(
-                    new Vector2I(0, 1),
-                    new Vector2I(0, 2),
-                    new Vector2I(1, 1),
-                    new Vector2I(-1, 1)),
+                AttackRange = attackRange,
+                DetectRange = detectRange,
                 Position = Grid.GridToWorld(startPosition)
             }
         };
@@ -103,11 +114,17 @@ public partial class TestAttack : Node2D
         DrawRect(cellRect, color, false, 2.0f);
     }
 
-    private static VarRange CreateAttackRange(params Godot.Collections.Array<Vector2I> relativeCells)
+    private static VarRange CreateRange(params Vector2I[] relativeCells)
     {
+        var cells = new Godot.Collections.Array<Vector2I>();
+        foreach (Vector2I relativeCell in relativeCells)
+        {
+            cells.Add(relativeCell);
+        }
+
         return new VarRange
         {
-            RelativeCells = relativeCells
+            RelativeCells = cells
         };
     }
 

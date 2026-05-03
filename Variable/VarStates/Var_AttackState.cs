@@ -53,7 +53,19 @@ public partial class Var_AttackState : STNode
                 return;
             }
 
-            RequestTransition("Move");
+            Vector2I selfCell = Grid.WorldToGrid(Stats.Position);
+            Vector2I targetCell = Grid.WorldToGrid(chaseTarget.Stats.Position);
+            var chasePath = Pathfinder.Run(selfCell, targetCell);
+            if (chasePath == null || chasePath.Count == 0)
+            {
+                CurrentAttackTarget = null;
+                RequestTransition("Idle");
+                return;
+            }
+
+            // Resume movement through the usual Idle -> Move chain.
+            Self.SetPath(chasePath);
+            RequestTransition("Idle");
             return;
         }
 

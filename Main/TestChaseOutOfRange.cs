@@ -26,12 +26,14 @@ public partial class TestChaseOutOfRange : Node2D
             AttackerStartCell,
             Colors.OrangeRed,
             moveSpeed: 130.0f,
-            attackRange: CreateAttackRange(new Vector2I(0, 1)));
+            attackRange: CreateAttackRange(new Vector2I(0, 1)),
+            detectRange: CreateAttackRange(new Vector2I(0, 1), new Vector2I(0, 2)));
         _runner = CreateVar(
             RunnerStartCell,
             Colors.DeepSkyBlue,
             moveSpeed: 80.0f,
-            attackRange: CreateAttackRange());
+            attackRange: CreateAttackRange(),
+            detectRange: CreateAttackRange());
 
         UpdateInfoLabel();
     }
@@ -66,7 +68,7 @@ public partial class TestChaseOutOfRange : Node2D
         DrawTargetLink();
     }
 
-    private Var CreateVar(Vector2I startCell, Color color, float moveSpeed, VarRange attackRange)
+    private Var CreateVar(Vector2I startCell, Color color, float moveSpeed, VarRange attackRange, VarRange detectRange = null)
     {
         Var var = new()
         {
@@ -77,6 +79,7 @@ public partial class TestChaseOutOfRange : Node2D
                 AttackFrameInterval = 20,
                 MoveSpeed = moveSpeed,
                 AttackRange = attackRange,
+                DetectRange = detectRange ?? attackRange,
                 Position = Grid.GridToWorld(startCell)
             }
         };

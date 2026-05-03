@@ -27,7 +27,7 @@ public partial class Var : RefCounted
         InitializeFacingFromPath(path);
         _blackboard.Set("CurrentPath", path);
         _blackboard.Set("CurrentPathIndex", 0);
-        _blackboard.Set("IsWalking", true);
+        _blackboard.Set("HasPendingMove", true);
     }
     public void PhysicsUpdate(double delta)
     {
@@ -46,7 +46,7 @@ public partial class Var : RefCounted
 
         _stateTree = new STRoot
         {
-            InitialState = "Move",
+            InitialState = "Idle",
             AllowRepeatedEnterAndExit = false
         };
         _stateTree.AddChild(detectState);
@@ -58,7 +58,9 @@ public partial class Var : RefCounted
         _blackboard.Set("Stats", Stats);
         _blackboard.Set("CurrentPath", new List<Vector2I>());
         _blackboard.Set("IsWalking", false);
+        _blackboard.Set("HasPendingMove", false);
         _blackboard.Set("CurrentPathIndex", 0);
+        _blackboard.Set("CurrentAttackTarget", (Var)null);
 
         _stateTree.Initialize(_blackboard);
     }

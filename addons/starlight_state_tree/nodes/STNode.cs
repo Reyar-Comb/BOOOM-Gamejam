@@ -47,27 +47,23 @@ public partial class STNode : RefCounted
 		}
 	}
 
-	public virtual void PhysicsUpdate(double delta)
+	public void PhysicsUpdate(double delta)
 	{
 		if (!_isActive) return;
 		OnPhysicsUpdate(delta);
-		if (IsTransitionPending()) return;
 		foreach (var child in Children)
 		{
 			child.PhysicsUpdate(delta);
-			if (IsTransitionPending()) break;
 		}
 	}
 
-	public virtual void FrameUpdate(double delta)
+	public void FrameUpdate(double delta)
 	{
 		if (!_isActive) return;
 		OnFrameUpdate(delta);
-		if (IsTransitionPending()) return;
 		foreach (var child in Children)
 		{
 			child.FrameUpdate(delta);
-			if (IsTransitionPending()) break;
 		}
 	}
 
@@ -93,20 +89,4 @@ public partial class STNode : RefCounted
 	protected virtual void OnInit() { }
 	protected virtual void OnEnterTree() { }
 	protected virtual void OnExitTree() { }
-
-	private bool IsTransitionPending()
-	{
-		return GetRootState()?.HasPendingTransition ?? false;
-	}
-
-	private STRoot GetRootState()
-	{
-		STNode current = this;
-		while (current.ParentState != null)
-		{
-			current = current.ParentState;
-		}
-
-		return current as STRoot;
-	}
 }

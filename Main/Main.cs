@@ -12,7 +12,7 @@ public partial class Main : Node2D
 		{
 			MaxHealth = 100,
 			AttackSpeedMult = 1.5f,
-			AttackRange = new VarAttackRange
+			AttackRange = new VarRange
 			{
 				RelativeCells = new Godot.Collections.Array<Vector2I>
 				{

@@ -103,9 +103,9 @@ public partial class TestAttack : Node2D
         DrawRect(cellRect, color, false, 2.0f);
     }
 
-    private static VarAttackRange CreateAttackRange(params Godot.Collections.Array<Vector2I> relativeCells)
+    private static VarRange CreateAttackRange(params Godot.Collections.Array<Vector2I> relativeCells)
     {
-        return new VarAttackRange
+        return new VarRange
         {
             RelativeCells = relativeCells
         };

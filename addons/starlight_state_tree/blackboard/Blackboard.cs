@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 namespace StarlightBT.Data;
 
-public partial class Blackboard : RefCounted
+public class Blackboard
 {
     public Blackboard ParentBlackboard { get; set; }
     private Dictionary<string, object> _data = new();

@@ -42,17 +42,19 @@ public partial class Var : RefCounted
         var idleState = new Var_IdleState();
         var moveState = new Var_MoveState();
         var attackState = new Var_AttackState();
-        var detectState = new Var_DetectState();
         var detectOutOfRangeState = new Var_DetectOutOfRangeState();
+        var detectInDetectRangeState = new Var_DetectInDetectRangeState();
+        var detectInAttackRangeState = new Var_DetectInAttackRange();
         _stateTree = new STRoot
         {
             InitialState = "Idle",
             AllowRepeatedEnterAndExit = false
         };
-        _stateTree.AddChild(detectState);
-        detectState.AddChild(idleState);
-        detectState.AddChild(moveState);
-        
+        _stateTree.AddChild(detectInAttackRangeState);
+        detectInAttackRangeState.AddChild(detectInDetectRangeState);
+        detectInDetectRangeState.AddChild(idleState);
+        detectInDetectRangeState.AddChild(moveState);
+
         _stateTree.AddChild(detectOutOfRangeState);
         detectOutOfRangeState.AddChild(attackState);
 

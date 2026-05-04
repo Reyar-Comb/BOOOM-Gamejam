@@ -25,11 +25,6 @@ public partial class Var_AttackState : STNode
         get => _blackboard.Get<Var>("Self");
     }
 
-    private Pathfinder Pathfinder
-    {
-        get => _blackboard.Get<Pathfinder>("Pathfinder");
-    }
-
     private bool IsWalking
     {
         get => _blackboard.Get<bool>("IsWalking");

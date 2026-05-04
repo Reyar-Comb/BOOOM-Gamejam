@@ -50,17 +50,20 @@ public partial class Var_DetectOutOfRangeState : STNode
             return;
         }
 
-        Vector2I selfCell = Grid.WorldToGrid(Stats.Position);
-        Vector2I targetCell = Grid.WorldToGrid(chaseTarget.Stats.Position);
-        var chasePath = Pathfinder.Run(selfCell, targetCell);
-        if (chasePath == null || chasePath.Count == 0)
-        {
-            CurrentAttackTarget = null;
-            RequestTransition("Idle");
-            return;
-        }
+        // Vector2I selfCell = Grid.WorldToGrid(Stats.Position);
+        // Vector2I targetCell = Grid.WorldToGrid(chaseTarget.Stats.Position);
+        // var chasePath = Pathfinder.Run(selfCell, targetCell);
+        // if (chasePath == null || chasePath.Count == 0)
+        // {
+        //     CurrentAttackTarget = null;
+        //     RequestTransition("Idle");
+        //     return;
+        // }
 
-        Self.SetPath(chasePath);
+        // Self.SetPath(chasePath);
+
+        // Delegate pathfinding task to the DetectInDetectRangeState
+        // Set IsWalkng = true in advance to avoid 1-frame delay in movement if transit to Idle
         IsWalking = true;
         RequestTransition("Move");
         return;

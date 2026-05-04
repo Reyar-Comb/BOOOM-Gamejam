@@ -7,9 +7,9 @@ public partial class TestChaseOutOfRange : Node2D
     [Export] public BattleManager BattleManager { get; set; } = null!;
 
     private const long EscapeTick = 12;
-    private static readonly Vector2I AttackerStartCell = new(5, 4);
-    private static readonly Vector2I RunnerStartCell = new(5, 5);
-    private static readonly Vector2I RunnerEscapeCell = new(5, 6);
+    private static readonly Vector2I AttackerStartCell = new(5, 1);
+    private static readonly Vector2I RunnerStartCell = new(5, 2);
+    private static readonly Vector2I RunnerEscapeCell = new(5, 8);
 
     private readonly List<DebugVar> _debugVars = new();
 
@@ -31,7 +31,7 @@ public partial class TestChaseOutOfRange : Node2D
         _runner = CreateVar(
             RunnerStartCell,
             Colors.DeepSkyBlue,
-            moveSpeed: 80.0f,
+            moveSpeed: 170.0f,
             attackRange: CreateAttackRange(),
             detectRange: CreateAttackRange());
 

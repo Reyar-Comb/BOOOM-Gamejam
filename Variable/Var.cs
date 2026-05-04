@@ -43,7 +43,7 @@ public partial class Var : RefCounted
         var moveState = new Var_MoveState();
         var attackState = new Var_AttackState();
         var detectState = new Var_DetectState();
-
+        var detectOutOfRangeState = new Var_DetectOutOfRangeState();
         _stateTree = new STRoot
         {
             InitialState = "Idle",
@@ -53,7 +53,8 @@ public partial class Var : RefCounted
         detectState.AddChild(idleState);
         detectState.AddChild(moveState);
         
-        _stateTree.AddChild(attackState);
+        _stateTree.AddChild(detectOutOfRangeState);
+        detectOutOfRangeState.AddChild(attackState);
 
         _blackboard.Set("Stats", Stats);
         _blackboard.Set("CurrentPath", new List<Vector2I>());

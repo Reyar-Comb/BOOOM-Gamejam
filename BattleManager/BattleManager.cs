@@ -26,6 +26,9 @@ public readonly struct BattleTickContext
 
 public partial class BattleManager : Node
 {
+
+    public static BattleManager Instance { get; private set; } = null!;
+
     [Export] public int TickRate = 20;
 
     [Export] public float TickScale = 1f;
@@ -42,8 +45,11 @@ public partial class BattleManager : Node
 
     private bool _isTicking = false;
 
+    public long GameTime = 0;
+
     public override void _Ready()
     {
+        Instance = this;
         VarManager.SetPhysicsProcess(false);
     }
 
@@ -68,5 +74,12 @@ public partial class BattleManager : Node
         var context = new BattleTickContext(CurrentTick, TickInterval, this);
 
         VarManager.Tick(TickInterval);
+        GameTime += (long)(TickInterval * 1000); // Convert to milliseconds
+    }
+
+    public String GetTimeString()
+    {
+        TimeSpan timeSpan = TimeSpan.FromMilliseconds(GameTime);
+        return timeSpan.ToString(@"mm\:ss\.fff");
     }
 }

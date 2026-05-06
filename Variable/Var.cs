@@ -2,6 +2,7 @@ using Godot;
 using StarlightBT.Data;
 using StarlightStateTree;
 using System.Collections.Generic;
+using System;
 
 public partial class Var : RefCounted, ICleanable
 {
@@ -13,6 +14,22 @@ public partial class Var : RefCounted, ICleanable
     private Callable _onDeathCallable;
     private bool _hasOnDeathCallable = false;
     private bool _isCleanedUp = false;
+
+    private readonly HashSet<Var> _attackers = new();
+
+
+
+
+    [Signal] 
+    public delegate void OnDetectedEventHandler(Var detectedVar);
+    
+    [Signal] 
+    public delegate void OnAttackedEventHandler(int damage, Var source);
+
+    [Signal]
+    public delegate void OnOutOfDetectEventHandler(Var target);
+
+
     public void Initialize(Blackboard parentBlackboard)
     {
         if (_isInitialized) return;
@@ -85,6 +102,12 @@ public partial class Var : RefCounted, ICleanable
         float directionFactor = atkInfo.GetFromDirection(Stats.Position).Dot(facingDirection) * -0.5f + 1.5f;
         finalDamage = (int)(finalDamage * directionFactor);
 
+        if (!_attackers.Contains(atkInfo.Source))
+        {
+            _attackers.Add(atkInfo.Source);
+            EmitSignal(SignalName.OnAttacked, finalDamage, atkInfo.Source);
+        }
+
         Stats.CurrentHealth -= finalDamage;
     }
     protected virtual void SetupStateTree()
@@ -119,6 +142,7 @@ public partial class Var : RefCounted, ICleanable
         _blackboard.Set("CurrentPathIndex", 0);
         _blackboard.Set("CurrentAttackTarget", (Var)null);
         _blackboard.Set("Self", this);
+        _blackboard.Set("IsAttacked", false);
 
         _stateTree.Initialize(_blackboard);
     }

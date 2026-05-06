@@ -65,6 +65,7 @@ public partial class Var_DetectOutOfRangeState : STNode
         // Delegate pathfinding task to the DetectInDetectRangeState
         // Set IsWalkng = true in advance to avoid 1-frame delay in movement if transit to Idle
         IsWalking = true;
+        EmitSignal(Var.SignalName.OnOutOfDetect, chaseTarget);
         RequestTransition("Move");
         return;
     }

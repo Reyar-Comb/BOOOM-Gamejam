@@ -8,6 +8,8 @@ public partial class Var_DetectInDetectRangeState : STNode
 {
     public override string Name => "DetectInDetectRange";
 
+    private readonly List<int> _detectionOrder = new();
+    private readonly HashSet<int> _seenEnemyIds = new();
     private VarStats Stats
     {
         get => _blackboard.Get<VarStats>("Stats");
@@ -49,15 +51,59 @@ public partial class Var_DetectInDetectRangeState : STNode
         var enemiesByCell = _blackboard.Get<IReadOnlyDictionary<Vector2I, Var>>("EnemiesByCell");
 
         Vector2I selfCell = Grid.WorldToGrid(Stats.Position);
+
+        var found = new List<(Var enemy, Vector2I cell)>();
+        var foundIds = new HashSet<int>();
+
+
         foreach (Vector2I targetCell in Stats.DetectRange.EnumerateTargetCells(selfCell, Stats.Direction))
         {
-            if (enemiesByCell.TryGetValue(targetCell, out Var enemy))
+            if (enemiesByCell != null && enemiesByCell.TryGetValue(targetCell, out Var enemy))
             {
-                Self.SetPath(Pathfinder.Run(selfCell, targetCell));
-                CurrentAttackTarget = enemy;
-                return;
+                if (enemy == null || enemy.IsDead) continue;
+
+                int id = (int)enemy.GetInstanceId();
+                if (!foundIds.Contains(id))
+                {
+                    found.Add((enemy, targetCell));
+                    foundIds.Add(id);
+                }
             }
         }
-        CurrentAttackTarget = null;
+
+        foreach (var (enemy, cell) in found)
+        {
+            int id = (int)enemy.GetInstanceId();
+            if (!_seenEnemyIds.Contains(id))
+            {
+                _seenEnemyIds.Add(id);
+                _detectionOrder.Add(id);
+                Self.EmitSignal(Var.SignalName.OnDetected, enemy);
+            }
+        }
+
+        _detectionOrder.RemoveAll(id => !foundIds.Contains(id));
+
+        var currentTarget = CurrentAttackTarget;
+        if (currentTarget != null)
+        {
+            if (currentTarget.IsDead || !foundIds.Contains((int)currentTarget.GetInstanceId()))
+            {
+                CurrentAttackTarget = null;
+            }
+        }
+        if (CurrentAttackTarget == null)
+        {
+            foreach (int id in _detectionOrder)
+            {
+                var tuple = found.Find(t => (int)t.enemy.GetInstanceId() == id);
+                if (tuple.enemy != null)
+                {
+                    CurrentAttackTarget = tuple.enemy;
+                    Self.SetPath(Pathfinder.Run(selfCell, tuple.cell));
+                    return;
+                }
+            }
+        }
     }
 }

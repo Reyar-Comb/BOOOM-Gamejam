@@ -22,15 +22,15 @@ VarManager = NodePath("../VarManager")
 [node name="InfoLabel" type="Label" parent="CanvasLayer" unique_id=1636955255]
 offset_left = 24.0
 offset_top = 24.0
-offset_right = 538.0
-offset_bottom = 144.0
+offset_right = 900.0
+offset_bottom = 190.0
 theme_override_font_sizes/font_size = 18
 text = "Loading..."
 
 [node name="HSlider" type="HSlider" parent="CanvasLayer" unique_id=1705353017 node_paths=PackedStringArray("BattleManager")]
 offset_left = 24.0
-offset_top = 202.84
+offset_top = 248.84
 offset_right = 320.0
-offset_bottom = 234.84
+offset_bottom = 280.84
 script = ExtResource("4_31fv8")
 BattleManager = NodePath("../../BattleManager")

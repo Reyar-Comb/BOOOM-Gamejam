@@ -26,12 +26,12 @@ public partial class VarStats : Resource
             CurrentHealth = Math.Min(CurrentHealth, value);
         }
     }
-    [Export] public float AttackSpeedMult;
-    [Export] public int AttackFrameInterval;
-    [Export] public float MoveSpeed;
+    [Export] public float AttackSpeedMult { get; set; }
+    [Export] public int AttackFrameInterval { get; set; }
+    [Export] public float MoveSpeed { get; set; }
     [Export] public VarRange AttackRange { get; set; } = null!;
     [Export] public VarRange DetectRange { get; set; } = null!;
-    [Export] public int AttackDamage;
+    [Export] public int AttackDamage { get; set; }
 
     public int CurrentHealth
     {
@@ -39,10 +39,10 @@ public partial class VarStats : Resource
         set
         {
             field = value;
-            if (field <= 0 && !_isDead)
+            if (field <= 0 && !IsDead)
             {
                 EmitSignal(SignalName.OnDeath);
-                _isDead = true;
+                IsDead = true;
                 foreach (var tag in _tags)
                 {
                     tag.OnDeath();
@@ -50,13 +50,13 @@ public partial class VarStats : Resource
             }
         }
     }
-    public Vector2 Position;
-    public Vector2 Direction;
+    public Vector2 Position { get; set; }
+    public Vector2 Direction { get; set; }
     // public Vector2 AttackDirection;
-    public Team VarTeam;
+    public Team VarTeam { get; set; }
+    public bool IsDead { get; set; } = false;
     private List<VarTag> _tags { get; set; } = new();
     private bool _isInitialized = false;
-    private bool _isDead = false;
     public void AddTag(VarTag tag)
     {
         _tags.Add(tag);

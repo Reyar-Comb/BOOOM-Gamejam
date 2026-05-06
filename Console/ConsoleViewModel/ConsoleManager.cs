@@ -48,15 +48,14 @@ public partial class ConsoleManager : Node
 
         var callables = new List<Callable>();
 
-        var onDetectedCallable = Callable.From((object detectedObj) => {
-            var detectedVar = detectedObj as Var;
+        var onDetectedCallable = Callable.From((Var detectedVar) => {
             AddLog(new DetectedWarning(v, detectedVar));
         });
         v.Connect(Var.SignalName.OnDetected, onDetectedCallable);
         callables.Add(onDetectedCallable);
 
-        var onAttackedCallable = Callable.From((object dmgObj, object srcObj) => {
-            AddLog(new AttackedWarning(v, new AttackInfo { Source = srcObj as Var, Damage = (int)dmgObj }));
+        var onAttackedCallable = Callable.From((int dmg, Var srcVar) => {
+            AddLog(new AttackedWarning(v, new AttackInfo { Source = srcVar, Damage = dmg }));
         });
         v.Connect(Var.SignalName.OnAttacked, onAttackedCallable);
         callables.Add(onAttackedCallable);
@@ -100,6 +99,7 @@ public partial class ConsoleManager : Node
     public void MoveVar(Var v, Vector2 newPosition)
     {
         if (v == null) return;
+        v.MoveTo(newPosition);
         AddLog(new MoveAck(v, newPosition));
     }
 

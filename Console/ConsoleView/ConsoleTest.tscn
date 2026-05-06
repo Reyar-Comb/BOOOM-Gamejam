@@ -1,0 +1,24 @@
+[gd_scene format=3 uid="uid://cdtouj34mmuhc"]
+
+[ext_resource type="Script" uid="uid://ctest123456789" path="res://Console/ConsoleView/ConsoleTest.cs" id="1_script"]
+[ext_resource type="Script" uid="uid://01fvca8ksf16" path="res://Variable/VarManager.cs" id="2_varmanager"]
+[ext_resource type="Script" uid="uid://ccuvk7ii52801" path="res://BattleManager/BattleManager.cs" id="3_battlemanager"]
+[ext_resource type="Script" uid="uid://bocfjfs3ip7pw" path="res://Console/ConsoleViewModel/ConsoleManager.cs" id="4_consolemanager"]
+[ext_resource type="Script" uid="uid://b3b5j15nukl4j" path="res://Main/TestAttack/Slider.cs" id="5_slider"]
+
+[node name="ConsoleTest" type="Node2D" node_paths=PackedStringArray("VarManager", "BattleManager", "ConsoleManager")]
+script = ExtResource("1_script")
+VarManager = NodePath("VarManager")
+BattleManager = NodePath("BattleManager")
+ConsoleManager = NodePath("ConsoleManager")
+
+[node name="VarManager" type="Node" parent="."]
+script = ExtResource("2_varmanager")
+
+[node name="BattleManager" type="Node" parent="." node_paths=PackedStringArray("VarManager")]
+script = ExtResource("3_battlemanager")
+TickScale = 0.25
+VarManager = NodePath("../VarManager")
+
+[node name="ConsoleManager" type="Node" parent="."]
+script = ExtResource("4_consolemanager")

@@ -15,6 +15,10 @@ run/main_scene="uid://dr6wkrduxjlol"
 config/features=PackedStringArray("4.6", "C#", "Mobile")
 config/icon="res://icon.svg"
 
+[autoload]
+
+ConsoleManager="*uid://bocfjfs3ip7pw"
+
 [dotnet]
 
 project/assembly_name="booom"

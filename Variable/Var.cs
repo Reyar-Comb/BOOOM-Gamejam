@@ -3,6 +3,7 @@ using StarlightBT.Data;
 using StarlightStateTree;
 using System.Collections.Generic;
 using System;
+using Cosmosity.Pathfinders;
 
 public partial class Var : RefCounted, ICleanable
 {
@@ -84,6 +85,20 @@ public partial class Var : RefCounted, ICleanable
         _blackboard.Set("CurrentPath", path);
         _blackboard.Set("CurrentPathIndex", 0);
         _blackboard.Set("HasPendingMove", true);
+    }
+
+
+    public void MoveTo(Vector2 worldTarget)
+    {
+        var pathfinder = _blackboard.Get<Pathfinder>("Pathfinder");
+        if (pathfinder == null) return;
+
+        Vector2I selfCell = Grid.WorldToGrid(Stats.Position);
+        Vector2I targetCell = Grid.WorldToGrid(worldTarget);
+        if (selfCell == targetCell) return;
+
+        var path = pathfinder.Run(selfCell, targetCell);
+        SetPath(path);
     }
     public void PhysicsUpdate(double delta)
     {

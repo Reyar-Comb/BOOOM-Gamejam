@@ -44,7 +44,7 @@ public partial class Var_DetectInAttackRange : STNode
         Dictionary<Vector2I, Var> enemiesByCell = new();
         foreach (var var in Vars)
         {
-            if (var == null || var.Stats == null) continue;
+            if (var == null || var.IsDead) continue;
             if (var.Stats.VarTeam == Stats.VarTeam) continue;
 
             Vector2I enemyCell = Grid.WorldToGrid(var.Stats.Position);

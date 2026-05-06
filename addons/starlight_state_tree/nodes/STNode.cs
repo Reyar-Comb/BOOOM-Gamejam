@@ -4,7 +4,7 @@ using StarlightBT.Data;
 namespace StarlightStateTree;
 
 [GlobalClass]
-public partial class STNode : RefCounted
+public partial class STNode : RefCounted, ICleanable
 {
 	[Signal] public delegate void TransitionRequestedEventHandler(string targetStateName);
 
@@ -14,6 +14,18 @@ public partial class STNode : RefCounted
 	public List<STNode> Children { get; private set; } = new();
 	protected bool _isActive { get; private set; } = false;
 	protected Blackboard _blackboard { get; private set; } = new();
+	public virtual void Cleanup()
+	{
+		foreach (var child in Children)
+		{
+			child.Cleanup();
+		}
+		Children.Clear();
+		Children = null;
+		_blackboard = null;
+		PreviousState = null;
+		ParentState = null;
+	}
 	public void AddChild(STNode child)
 	{
 		if (child.ParentState != null)
@@ -72,7 +84,7 @@ public partial class STNode : RefCounted
 	}
 
 	protected void RequestTransition(string targetStateName) => EmitSignal(SignalName.TransitionRequested, targetStateName);
-
+	public void ForceTransition(string targetStateName) => RequestTransition(targetStateName);
 	public void Enter()
 	{
 		_isActive = true;

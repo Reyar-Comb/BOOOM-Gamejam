@@ -4,7 +4,7 @@ using StarlightBT.Data;
 namespace StarlightStateTree;
 
 [GlobalClass]
-public partial class STRoot : STNode
+public partial class STRoot : STNode, ICleanable
 {
     public string InitialState = "";
     public override string Name => "STRoot";
@@ -16,9 +16,12 @@ public partial class STRoot : STNode
     private bool _hasPendingTransition = false;
     private string _pendingTransitionTarget = "";
 
-    public void Shutdown()
+    public override void Cleanup()
     {
+        base.Cleanup();
         UnregisterAllStateHandlers();
+        _statesByName.Clear();
+        _statesByName = null;
         CurrentState = null;
     }
 

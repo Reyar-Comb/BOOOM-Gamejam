@@ -51,10 +51,10 @@ public partial class Var_DetectInDetectRangeState : STNode
         Vector2I selfCell = Grid.WorldToGrid(Stats.Position);
         foreach (Vector2I targetCell in Stats.DetectRange.EnumerateTargetCells(selfCell, Stats.Direction))
         {
-            if (enemiesByCell.TryGetValue(targetCell, out Var enemy2))
+            if (enemiesByCell.TryGetValue(targetCell, out Var enemy))
             {
                 Self.SetPath(Pathfinder.Run(selfCell, targetCell));
-                CurrentAttackTarget = enemy2;
+                CurrentAttackTarget = enemy;
                 return;
             }
         }

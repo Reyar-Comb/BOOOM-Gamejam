@@ -44,7 +44,6 @@ public partial class VarRenderer : Node2D, IVarRenderer
     private double _timeSinceLastPositionChange;
     private double _timeSinceInterpolationFinished;
     private bool _hasInterpolationState = false;
-
     public Var RenderedVar
     {
         get => _renderedVar;
@@ -68,17 +67,23 @@ public partial class VarRenderer : Node2D, IVarRenderer
 
     public override void _Process(double delta)
     {
+        if (_renderedVar?.IsDead ?? true)
+        {
+            ClearVar();
+            QueueFree();
+            return;
+        }
         UpdateRenderPosition(delta);
         QueueRedraw();
     }
 
     public override void _Draw()
     {
-        if (_renderedVar?.Stats == null)
+        if (_renderedVar?.IsDead ?? true)
         {
             return;
         }
-
+        
         VarStats stats = _renderedVar.Stats;
         UpdateRenderPosition(0.0);
         Vector2 renderPosition = _displayPosition;

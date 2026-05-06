@@ -70,7 +70,8 @@ public partial class TestChaseOutOfRange : Node2D
                 AttackRange = attackRange,
                 DetectRange = detectRange ?? attackRange,
                 Position = Grid.GridToWorld(startCell),
-                VarTeam = team
+                VarTeam = team,
+                AttackDamage = 30
             }
         };
 

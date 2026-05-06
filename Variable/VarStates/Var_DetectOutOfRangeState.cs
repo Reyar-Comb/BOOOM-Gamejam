@@ -43,7 +43,7 @@ public partial class Var_DetectOutOfRangeState : STNode
         if (IsCurrentTargetInRange()) return;
 
         Var chaseTarget = CurrentAttackTarget;
-        if (chaseTarget?.Stats == null || Pathfinder == null)
+        if (chaseTarget == null || chaseTarget.IsDead || Pathfinder == null)
         {
             CurrentAttackTarget = null;
             RequestTransition("Idle");
@@ -71,8 +71,9 @@ public partial class Var_DetectOutOfRangeState : STNode
 
     private bool IsCurrentTargetInRange()
     {
-        if (Stats.AttackRange == null || CurrentAttackTarget?.Stats == null)
+        if (Stats.AttackRange == null || CurrentAttackTarget == null || CurrentAttackTarget.IsDead)
         {
+            CurrentAttackTarget = null;
             return false;
         }
 

@@ -49,7 +49,11 @@ public partial class Var_AttackState : STNode
     }
     private void Attack()
     {
-        if (CurrentAttackTarget == null || CurrentAttackTarget.Stats == null) return;
+        if (CurrentAttackTarget == null || CurrentAttackTarget.IsDead)
+        {
+            CurrentAttackTarget = null;
+            return;
+        }
 
         AttackInfo atkInfo = new()
         {

@@ -26,10 +26,6 @@ public partial class Var_MoveState : STNode
         get => _blackboard.Get<VarStats>("Stats");
         set => _blackboard.Set("Stats", value);
     }
-    protected override void OnEnter()
-    {
-        GD.Print("Entered Move State");
-    }
     protected override void OnPhysicsUpdate(double delta)
     {
         if (!IsWalking || CurrentPath == null)

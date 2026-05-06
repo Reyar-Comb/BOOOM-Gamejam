@@ -3,12 +3,16 @@ using StarlightBT.Data;
 using StarlightStateTree;
 using System.Collections.Generic;
 
-public partial class Var : RefCounted
+public partial class Var : RefCounted, ICleanable
 {
     public VarStats Stats { get; set; }
+    public bool IsDead { get; set; } = false;
     protected STRoot _stateTree = null!;
     protected Blackboard _blackboard = null!;
     private bool _isInitialized = false;
+    private Callable _onDeathCallable;
+    private bool _hasOnDeathCallable = false;
+    private bool _isCleanedUp = false;
     public void Initialize(Blackboard parentBlackboard)
     {
         if (_isInitialized) return;
@@ -19,6 +23,41 @@ public partial class Var : RefCounted
             ParentBlackboard = parentBlackboard
         };
         SetupStateTree();
+
+        _onDeathCallable = Callable.From(OnDeath);
+        Stats.Connect(VarStats.SignalName.OnDeath, _onDeathCallable);
+        _hasOnDeathCallable = true;
+    }
+    public void Cleanup()
+    {
+        if (_isCleanedUp) return;
+        _isCleanedUp = true;
+
+        DisconnectOnDeath();
+        Stats = null;
+        _stateTree?.Cleanup();
+        _stateTree = null;
+        _blackboard?.Cleanup();
+        _blackboard = null;
+    }
+    private void OnDeath()
+    {
+        _stateTree?.ForceTransition("Death");
+    }
+    private void DisconnectOnDeath()
+    {
+        if (Stats == null || !_hasOnDeathCallable)
+        {
+            return;
+        }
+
+        if (Stats.IsConnected(VarStats.SignalName.OnDeath, _onDeathCallable))
+        {
+            Stats.Disconnect(VarStats.SignalName.OnDeath, _onDeathCallable);
+        }
+
+        _onDeathCallable = default;
+        _hasOnDeathCallable = false;
     }
     public void SetPath(List<Vector2I> path)
     {
@@ -56,6 +95,8 @@ public partial class Var : RefCounted
         var detectOutOfRangeState = new Var_DetectOutOfRangeState();
         var detectInDetectRangeState = new Var_DetectInDetectRangeState();
         var detectInAttackRangeState = new Var_DetectInAttackRange();
+        var deathState = new Var_DeathState();
+
         _stateTree = new STRoot
         {
             InitialState = "Idle",
@@ -69,6 +110,8 @@ public partial class Var : RefCounted
         _stateTree.AddChild(detectOutOfRangeState);
         detectOutOfRangeState.AddChild(attackState);
 
+        _stateTree.AddChild(deathState);
+
         _blackboard.Set("Stats", Stats);
         _blackboard.Set("CurrentPath", new List<Vector2I>());
         _blackboard.Set("IsWalking", false);
@@ -79,7 +122,6 @@ public partial class Var : RefCounted
 
         _stateTree.Initialize(_blackboard);
     }
-
     private void InitializeFacingFromPath(List<Vector2I> path)
     {
         if (Stats == null)

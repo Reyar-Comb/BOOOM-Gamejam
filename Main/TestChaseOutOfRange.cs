@@ -11,8 +11,6 @@ public partial class TestChaseOutOfRange : Node2D
     private static readonly Vector2I RunnerStartCell = new(5, 2);
     private static readonly Vector2I RunnerEscapeCell = new(5, 8);
 
-    private readonly List<DebugVar> _debugVars = new();
-
     private Var _attacker = null!;
     private Var _runner = null!;
     private Label _infoLabel = null!;
@@ -21,6 +19,7 @@ public partial class TestChaseOutOfRange : Node2D
     public override void _Ready()
     {
         _infoLabel = GetNode<Label>("CanvasLayer/InfoLabel");
+        BattleManager ??= GetNodeOrNull<BattleManager>("BattleManager");
 
         _attacker = CreateVar(
             AttackerStartCell,
@@ -55,18 +54,6 @@ public partial class TestChaseOutOfRange : Node2D
     public override void _Draw()
     {
         DrawGrid(new Rect2I(3, 2, 5, 6));
-
-        foreach (DebugVar debugVar in _debugVars)
-        {
-            if (debugVar.Var?.Stats == null)
-            {
-                continue;
-            }
-
-            DrawCircle(debugVar.Var.Stats.Position, 18.0f, debugVar.Color);
-        }
-
-        DrawAttackCells(_attacker, Colors.OrangeRed);
         DrawTargetLink();
     }
 
@@ -88,7 +75,7 @@ public partial class TestChaseOutOfRange : Node2D
         };
 
         VarManager.AddVar(var);
-        _debugVars.Add(new DebugVar(var, color));
+        CreateRenderer(var, color);
         return var;
     }
 
@@ -104,25 +91,24 @@ public partial class TestChaseOutOfRange : Node2D
         }
     }
 
-    private void DrawAttackCells(Var var, Color color)
+    private void CreateRenderer(Var var, Color color)
     {
-        if (var?.Stats?.AttackRange == null)
+        VarRenderer renderer = new()
         {
-            return;
-        }
+            BodyRadius = 18.0f,
+            BodyColor = color,
+            AttackRangeColor = color,
+            DetectRangeColor = WithAlpha(color, 0.65f),
+            DirectionColor = Colors.White,
+            BattleManager = BattleManager,
+            RenderVarBody = true,
+            RenderAttackRange = true,
+            RenderDetectRange = true,
+            RenderDirection = true
+        };
 
-        Vector2I originCell = Grid.WorldToGrid(var.Stats.Position);
-        foreach (Vector2I cell in var.Stats.AttackRange.EnumerateTargetCells(originCell, var.Stats.Direction))
-        {
-            Vector2 cellCenter = Grid.GridToWorld(cell);
-            Vector2 cellSize = Vector2.One * Grid.CellSize;
-            Rect2 cellRect = new(cellCenter - cellSize / 2.0f, cellSize);
-            Color fillColor = color;
-            fillColor.A = 0.15f;
-
-            DrawRect(cellRect, fillColor);
-            DrawRect(cellRect, color, false, 2.0f);
-        }
+        AddChild(renderer);
+        renderer.SetVar(var);
     }
 
     private void DrawTargetLink()
@@ -176,15 +162,9 @@ public partial class TestChaseOutOfRange : Node2D
         };
     }
 
-    private sealed class DebugVar
+    private static Color WithAlpha(Color color, float alpha)
     {
-        public DebugVar(Var var, Color color)
-        {
-            Var = var;
-            Color = color;
-        }
-
-        public Var Var { get; }
-        public Color Color { get; }
+        color.A = alpha;
+        return color;
     }
 }

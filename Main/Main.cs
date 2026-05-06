@@ -1,39 +1,47 @@
 using Godot;
-using System;
 using System.Collections.Generic;
+
 public partial class Main : Node2D
 {
-	[Export] public VarManager VarManager { get; set; }
-	private Var _var;
-	public override void _Ready()
-	{
-		Var var = new Var();
-		var.Stats = new VarStats
-		{
-			MaxHealth = 100,
-			AttackSpeedMult = 1.5f,
-			AttackRange = new VarRange
-			{
-				RelativeCells = new Godot.Collections.Array<Vector2I>
-				{
-					new Vector2I(0, 1),
-					new Vector2I(0, 2)
-				}
-			},
-			MoveSpeed = 100f,
-			Position = Grid.GridToWorld(0, 0)
-		};
-		VarManager.AddVar(var);
-		var.SetPath(new List<Vector2I> { new Vector2I(1, 0), new Vector2I(1, 1), new Vector2I(0, 1) });
-		
-		_var = var;
-	}
-	public override void _Process(double delta)
-	{
-		QueueRedraw();
-	}
-    public override void _Draw()
+    [Export] public VarManager VarManager { get; set; }
+
+    public override void _Ready()
     {
-        DrawCircle(_var.Stats.Position, 50, Colors.Red);
+        Var var = new Var();
+        var.Stats = new VarStats
+        {
+            MaxHealth = 100,
+            AttackSpeedMult = 1.5f,
+            AttackRange = new VarRange
+            {
+                RelativeCells = new Godot.Collections.Array<Vector2I>
+                {
+                    new Vector2I(0, 1),
+                    new Vector2I(0, 2)
+                }
+            },
+            MoveSpeed = 100f,
+            Position = Grid.GridToWorld(0, 0)
+        };
+        VarManager.AddVar(var);
+        var.SetPath(new List<Vector2I> { new Vector2I(1, 0), new Vector2I(1, 1), new Vector2I(0, 1) });
+
+        CreateRenderer(var);
+    }
+
+    private void CreateRenderer(Var var)
+    {
+        VarRenderer renderer = new()
+        {
+            BodyRadius = 50.0f,
+            BodyColor = Colors.Red,
+            DirectionColor = Colors.White,
+            DirectionLength = 60.0f,
+            RenderVarBody = true,
+            RenderDirection = true
+        };
+
+        AddChild(renderer);
+        renderer.SetVar(var);
     }
 }

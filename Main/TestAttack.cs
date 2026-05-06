@@ -7,12 +7,11 @@ public partial class TestAttack : Node2D
 
     [Export] public BattleManager BattleManager { get; set; } = null!;
 
-    private readonly List<DebugVar> _debugVars = new();
-
     public override void _Ready()
     {
-        _debugVars.Add(new DebugVar(
-            CreateVar(
+        BattleManager ??= GetNodeOrNull<BattleManager>("Node");
+
+        Var friendly = CreateVar(
             new Vector2I(2, 2),
             new List<Vector2I>
             {
@@ -21,13 +20,10 @@ public partial class TestAttack : Node2D
                 new(5, 2)
             },
             VarStats.Team.Friendly
-            ),
-            Colors.OrangeRed
-            )
             );
+        CreateRenderer(friendly, Colors.OrangeRed);
 
-        _debugVars.Add(new DebugVar(
-            CreateVar(
+        Var hostile = CreateVar(
             new Vector2I(10, 2),
             new List<Vector2I>
             {
@@ -36,29 +32,8 @@ public partial class TestAttack : Node2D
                 new(6, 2)
             },
             VarStats.Team.Hostile
-            ),
-            Colors.DeepSkyBlue
-            )
             );
-    }
-
-    public override void _Process(double delta)
-    {
-        QueueRedraw();
-    }
-
-    public override void _Draw()
-    {
-        foreach (DebugVar debugVar in _debugVars)
-        {
-            if (debugVar.Var?.Stats == null)
-            {
-                continue;
-            }
-
-            DrawCircle(debugVar.Var.Stats.Position, 20.0f, debugVar.Color);
-            DrawAttackCells(debugVar);
-        }
+        CreateRenderer(hostile, Colors.DeepSkyBlue);
     }
 
     private Var CreateVar(Vector2I startPosition, List<Vector2I> path, VarStats.Team team = VarStats.Team.Friendly)
@@ -97,30 +72,24 @@ public partial class TestAttack : Node2D
         return var;
     }
 
-    private void DrawAttackCells(DebugVar debugVar)
+    private void CreateRenderer(Var var, Color color)
     {
-        if (debugVar.Var.Stats.AttackRange == null)
+        VarRenderer renderer = new()
         {
-            return;
-        }
+            BodyRadius = 20.0f,
+            BodyColor = color,
+            AttackRangeColor = color,
+            DetectRangeColor = WithAlpha(color, 0.65f),
+            DirectionColor = Colors.White,
+            BattleManager = BattleManager,
+            RenderVarBody = true,
+            RenderAttackRange = true,
+            RenderDetectRange = true,
+            RenderDirection = true
+        };
 
-        Vector2I originCell = Grid.WorldToGrid(debugVar.Var.Stats.Position);
-        foreach (Vector2I cell in debugVar.Var.Stats.AttackRange.EnumerateTargetCells(originCell, debugVar.Var.Stats.Direction))
-        {
-            DrawAttackCell(cell, debugVar.Color);
-        }
-    }
-
-    private void DrawAttackCell(Vector2I cell, Color color)
-    {
-        Vector2 cellCenter = Grid.GridToWorld(cell);
-        Vector2 cellSize = Vector2.One * Grid.CellSize;
-        Rect2 cellRect = new(cellCenter - cellSize / 2.0f, cellSize);
-        Color fillColor = color;
-        fillColor.A = 0.15f;
-
-        DrawRect(cellRect, fillColor);
-        DrawRect(cellRect, color, false, 2.0f);
+        AddChild(renderer);
+        renderer.SetVar(var);
     }
 
     private static VarRange CreateRange(params Vector2I[] relativeCells)
@@ -137,15 +106,9 @@ public partial class TestAttack : Node2D
         };
     }
 
-    private sealed class DebugVar
+    private static Color WithAlpha(Color color, float alpha)
     {
-        public DebugVar(Var var, Color color)
-        {
-            Var = var;
-            Color = color;
-        }
-
-        public Var Var { get; }
-        public Color Color { get; }
+        color.A = alpha;
+        return color;
     }
 }

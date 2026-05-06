@@ -19,8 +19,12 @@ public partial class TestAttack : Node2D
                 new(2, 2),
                 new(4, 2),
                 new(5, 2)
-            }),
-            Colors.OrangeRed));
+            },
+            VarStats.Team.Friendly
+            ),
+            Colors.OrangeRed
+            )
+            );
 
         _debugVars.Add(new DebugVar(
             CreateVar(
@@ -30,8 +34,12 @@ public partial class TestAttack : Node2D
                 new(10, 2),
                 new(8, 2),
                 new(6, 2)
-            }),
-            Colors.DeepSkyBlue));
+            },
+            VarStats.Team.Hostile
+            ),
+            Colors.DeepSkyBlue
+            )
+            );
     }
 
     public override void _Process(double delta)
@@ -53,7 +61,7 @@ public partial class TestAttack : Node2D
         }
     }
 
-    private Var CreateVar(Vector2I startPosition, List<Vector2I> path)
+    private Var CreateVar(Vector2I startPosition, List<Vector2I> path, VarStats.Team team = VarStats.Team.Friendly)
     {
         VarRange attackRange = CreateRange(
             new Vector2I(0, 1),
@@ -79,7 +87,8 @@ public partial class TestAttack : Node2D
                 MoveSpeed = 120.0f,
                 AttackRange = attackRange,
                 DetectRange = detectRange,
-                Position = Grid.GridToWorld(startPosition)
+                Position = Grid.GridToWorld(startPosition),
+                VarTeam = team
             }
         };
 

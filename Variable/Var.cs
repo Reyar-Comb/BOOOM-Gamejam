@@ -37,6 +37,17 @@ public partial class Var : RefCounted
     {
         _stateTree.FrameUpdate(delta);
     }
+    public void ReceiveDamage(AttackInfo atkInfo)
+    {
+        int finalDamage = atkInfo.Damage;
+
+        //directionFactor is in [1, 2], 1 if attacked from front, 2 if from back.
+        Vector2 facingDirection = Stats.Direction;
+        float directionFactor = atkInfo.GetFromDirection(Stats.Position).Dot(facingDirection) * -0.5f + 1.5f;
+        finalDamage = (int)(finalDamage * directionFactor);
+
+        Stats.CurrentHealth -= finalDamage;
+    }
     protected virtual void SetupStateTree()
     {
         var idleState = new Var_IdleState();

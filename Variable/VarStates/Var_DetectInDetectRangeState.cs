@@ -46,7 +46,7 @@ public partial class Var_DetectInDetectRangeState : STNode
             return;
         }
 
-        var enemiesByCell = _blackboard.Get<Dictionary<Vector2I, Var>>("EnemiesByCell");
+        var enemiesByCell = _blackboard.Get<IReadOnlyDictionary<Vector2I, Var>>("EnemiesByCell");
 
         Vector2I selfCell = Grid.WorldToGrid(Stats.Position);
         foreach (Vector2I targetCell in Stats.DetectRange.EnumerateTargetCells(selfCell, Stats.Direction))

@@ -45,13 +45,13 @@ public partial class Var_DetectInAttackRange : STNode
         foreach (var var in Vars)
         {
             if (var == null || var.Stats == null) continue;
-            if (var.Stats == Stats) continue;
+            if (var.Stats.VarTeam == Stats.VarTeam) continue;
 
             Vector2I enemyCell = Grid.WorldToGrid(var.Stats.Position);
             enemiesByCell.TryAdd(enemyCell, var);
         }
 
-        _blackboard.Set("EnemiesByCell", enemiesByCell);
+        _blackboard.Set("EnemiesByCell", enemiesByCell.AsReadOnly());
 
         Vector2I selfCell = Grid.WorldToGrid(Stats.Position);
         foreach (Vector2I targetCell in Stats.AttackRange.EnumerateTargetCells(selfCell, Stats.Direction))

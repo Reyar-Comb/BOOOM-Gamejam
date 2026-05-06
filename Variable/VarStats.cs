@@ -4,6 +4,12 @@ using System.Collections.Generic;
 [GlobalClass]
 public partial class VarStats : Resource
 {
+    public enum Team
+    {
+        Friendly,
+        Hostile,
+        Neutral
+    }
     [Signal] public delegate void OnDeathEventHandler();
     [Export]
     public int MaxHealth
@@ -25,6 +31,8 @@ public partial class VarStats : Resource
     [Export] public float MoveSpeed;
     [Export] public VarRange AttackRange { get; set; } = null!;
     [Export] public VarRange DetectRange { get; set; } = null!;
+    [Export] public int AttackDamage;
+
     public int CurrentHealth
     {
         get => field;
@@ -43,8 +51,9 @@ public partial class VarStats : Resource
         }
     }
     public Vector2 Position;
-    public Vector2I Direction;
-    public Vector2 AttackDirection;
+    public Vector2 Direction;
+    // public Vector2 AttackDirection;
+    public Team VarTeam;
     private List<VarTag> _tags { get; set; } = new();
     private bool _isInitialized = false;
     private bool _isDead = false;

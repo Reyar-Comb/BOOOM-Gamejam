@@ -27,13 +27,15 @@ public partial class TestChaseOutOfRange : Node2D
             Colors.OrangeRed,
             moveSpeed: 130.0f,
             attackRange: CreateAttackRange(new Vector2I(0, 1)),
-            detectRange: CreateAttackRange(new Vector2I(0, 1), new Vector2I(0, 2)));
+            detectRange: CreateAttackRange(new Vector2I(0, 1), new Vector2I(0, 2)),
+            team: VarStats.Team.Friendly);
         _runner = CreateVar(
             RunnerStartCell,
             Colors.DeepSkyBlue,
             moveSpeed: 170.0f,
             attackRange: CreateAttackRange(),
-            detectRange: CreateAttackRange());
+            detectRange: CreateAttackRange(),
+            team: VarStats.Team.Hostile);
 
         UpdateInfoLabel();
     }
@@ -68,7 +70,7 @@ public partial class TestChaseOutOfRange : Node2D
         DrawTargetLink();
     }
 
-    private Var CreateVar(Vector2I startCell, Color color, float moveSpeed, VarRange attackRange, VarRange detectRange = null)
+    private Var CreateVar(Vector2I startCell, Color color, float moveSpeed, VarRange attackRange, VarRange detectRange = null, VarStats.Team team = VarStats.Team.Friendly)
     {
         Var var = new()
         {
@@ -80,7 +82,8 @@ public partial class TestChaseOutOfRange : Node2D
                 MoveSpeed = moveSpeed,
                 AttackRange = attackRange,
                 DetectRange = detectRange ?? attackRange,
-                Position = Grid.GridToWorld(startCell)
+                Position = Grid.GridToWorld(startCell),
+                VarTeam = team
             }
         };
 
@@ -109,7 +112,7 @@ public partial class TestChaseOutOfRange : Node2D
         }
 
         Vector2I originCell = Grid.WorldToGrid(var.Stats.Position);
-        foreach (Vector2I cell in var.Stats.AttackRange.EnumerateTargetCells(originCell, var.Stats.Direction.ToVector2()))
+        foreach (Vector2I cell in var.Stats.AttackRange.EnumerateTargetCells(originCell, var.Stats.Direction))
         {
             Vector2 cellCenter = Grid.GridToWorld(cell);
             Vector2 cellSize = Vector2.One * Grid.CellSize;
@@ -142,7 +145,7 @@ public partial class TestChaseOutOfRange : Node2D
         Vector2I attackerCell = Grid.WorldToGrid(_attacker.Stats.Position);
         Vector2I runnerCell = Grid.WorldToGrid(_runner.Stats.Position);
         bool runnerInRange = _attacker.Stats.AttackRange != null
-            && _attacker.Stats.AttackRange.ContainsCell(attackerCell, _attacker.Stats.Direction.ToVector2(), runnerCell);
+            && _attacker.Stats.AttackRange.ContainsCell(attackerCell, _attacker.Stats.Direction, runnerCell);
 
         string phase = !_escapeIssued
             ? $"Waiting for runner to leave on tick {EscapeTick}."

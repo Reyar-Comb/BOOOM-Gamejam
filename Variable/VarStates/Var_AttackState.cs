@@ -51,10 +51,15 @@ public partial class Var_AttackState : STNode
     {
         if (CurrentAttackTarget == null || CurrentAttackTarget.Stats == null) return;
 
-        GD.Print("Attack!");
+        AttackInfo atkInfo = new()
+        {
+            Damage = Stats.AttackDamage,
+            Source = Self
+        };
+        CurrentAttackTarget.ReceiveDamage(atkInfo);
     }
     protected override void OnExit()
     {
-        Stats.Direction = Stats.AttackDirection.ToFacingDirection();
+        Stats.Direction = Stats.Direction.ToFacingDirection();
     }
 }

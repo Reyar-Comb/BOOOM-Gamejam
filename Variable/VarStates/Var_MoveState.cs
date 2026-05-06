@@ -46,7 +46,7 @@ public partial class Var_MoveState : STNode
 
         Stats.Direction = (nextPos - Stats.Position).ToFacingDirection();
         float stepLength = Stats.MoveSpeed * (float)delta;
-        Stats.Position += Stats.Direction.ToVector2() * stepLength;
+        Stats.Position += Stats.Direction * stepLength;
         if (Stats.Position.DistanceSquaredTo(nextPos) > stepLength * stepLength) return;
 
         Stats.Position = nextPos;

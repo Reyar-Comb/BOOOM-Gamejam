@@ -86,7 +86,7 @@ public partial class Var_DetectOutOfRangeState : STNode
                 continue;
             }
 
-            Stats.AttackDirection = (CurrentAttackTarget.Stats.Position - Stats.Position).Normalized();
+            Stats.Direction = (CurrentAttackTarget.Stats.Position - Stats.Position).Normalized();
             return true;
         }
 

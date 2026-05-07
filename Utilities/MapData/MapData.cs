@@ -4,6 +4,18 @@ using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 public class MapData
 {
+    public readonly struct BridgeConnection
+    {
+        public readonly Vector2I A;
+        public readonly Vector2I B;
+
+        public BridgeConnection(Vector2I a, Vector2I b)
+        {
+            A = a;
+            B = b;
+        }
+    }
+
     private readonly struct TileExpansion
     {
         public readonly int Index;
@@ -18,10 +30,39 @@ public class MapData
         }
     }
 
+    private readonly struct BoundaryKey : IEquatable<BoundaryKey>
+    {
+        public readonly int RegionA;
+        public readonly int RegionB;
+
+        public BoundaryKey(int regionA, int regionB)
+        {
+            RegionA = Math.Min(regionA, regionB);
+            RegionB = Math.Max(regionA, regionB);
+        }
+
+        public bool Equals(BoundaryKey other)
+        {
+            return RegionA == other.RegionA && RegionB == other.RegionB;
+        }
+
+        public override bool Equals(object obj)
+        {
+            return obj is BoundaryKey other && Equals(other);
+        }
+
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(RegionA, RegionB);
+        }
+    }
+
     public int Width { get; init; }
     public int Height { get; init; }
     // ID starts from 1, 0 means unassigned.
     private int[] _regionId;
+    private bool[] _isBridge;
+    private List<BridgeConnection> _bridges;
     private List<PriorityQueue<TileExpansion, float>> _nextTileDeciders;
     private readonly int _regionSeedTileDistance;
     private RandomNumberGenerator _rg;
@@ -31,6 +72,8 @@ public class MapData
         Width = width;
         Height = height;
         _regionId = new int[Width * Height];
+        _isBridge = new bool[Width * Height];
+        _bridges = new();
         _nextTileDeciders = new();
         _regionSeedTileDistance = regionSeedTileDistance;
         _rg = new();
@@ -46,12 +89,23 @@ public class MapData
         return x >= 0 && x < Width && y >= 0 && y < Height;
     }
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public int GetIndex(int x, int y)
+    public int GetRegion(int x, int y)
     {
         return _regionId[x + y * Width];
     }
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private void SetIndex(int x, int y, int regionId)
+    public bool IsBridge(int x, int y)
+    {
+        return IsValid(x, y) && _isBridge[x + y * Width];
+    }
+
+    public IReadOnlyList<BridgeConnection> GetBridges()
+    {
+        return _bridges;
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private void SetRegion(int x, int y, int regionId)
     {
         _regionId[x + y * Width] = regionId;
     }
@@ -60,7 +114,9 @@ public class MapData
         for (int i = 0; i < _regionId.Length; i++)
         {
             _regionId[i] = 0;
+            _isBridge[i] = false;
         }
+        _bridges.Clear();
     }
     public void CreateRegions(int regionCount, float randomness = 0.5f)
     {
@@ -74,6 +130,7 @@ public class MapData
             DecideSeedPositions(regionSeedPositions, i);
         }
         Expand(randomness);
+        CreateBridges();
     }
     private void DecideSeedPositions(Vector2I[] seedPositions, int currentRegionId)
     {
@@ -94,7 +151,7 @@ public class MapData
             if (canPlace)
             {
                 seedPositions[currentRegionId - 1] = randomPos;
-                SetIndex(rx, ry, currentRegionId);
+                SetRegion(rx, ry, currentRegionId);
                 EnqueueNeighbors(rx, ry, currentRegionId, 0.0f, 0.0f);
                 break;
             }
@@ -142,12 +199,12 @@ public class MapData
             int x = currentIndex % Width;
             int y = currentIndex / Width;
 
-            if (!IsValid(x, y) || GetIndex(x, y) != 0)
+            if (!IsValid(x, y) || GetRegion(x, y) != 0)
             {
                 continue;
             }
 
-            SetIndex(x, y, current.RegionId);
+            SetRegion(x, y, current.RegionId);
             EnqueueNeighbors(x, y, current.RegionId, current.Cost, randomness);
             return true;
         }
@@ -174,7 +231,7 @@ public class MapData
                     continue;
                 }
 
-                if (GetIndex(newX, newY) == 0)
+                if (GetRegion(newX, newY) == 0)
                 {
                     int nextIndex = newX + newY * Width;
                     float nextCost = currentCost + GetStepCost(newX, newY, randomness);
@@ -187,5 +244,61 @@ public class MapData
     private float GetStepCost(int x, int y, float randomness)
     {
         return 1f + _noise.Noise.GetNoise2D(x, y) * randomness;
+    }
+
+    private void CreateBridges()
+    {
+        Dictionary<BoundaryKey, List<BridgeConnection>> candidatesByBoundary = new();
+
+        for (int y = 0; y < Height; y++)
+        {
+            for (int x = 0; x < Width; x++)
+            {
+                CollectBoundaryCandidate(candidatesByBoundary, x, y, x + 1, y);
+                CollectBoundaryCandidate(candidatesByBoundary, x, y, x, y + 1);
+            }
+        }
+
+        foreach (List<BridgeConnection> candidates in candidatesByBoundary.Values)
+        {
+            BridgeConnection bridge = candidates[_rg.RandiRange(0, candidates.Count - 1)];
+            SetBridge(bridge.A);
+            SetBridge(bridge.B);
+            _bridges.Add(bridge);
+        }
+    }
+
+    private void CollectBoundaryCandidate(
+        Dictionary<BoundaryKey, List<BridgeConnection>> candidatesByBoundary,
+        int ax,
+        int ay,
+        int bx,
+        int by)
+    {
+        if (!IsValid(ax, ay) || !IsValid(bx, by))
+        {
+            return;
+        }
+
+        int regionA = GetRegion(ax, ay);
+        int regionB = GetRegion(bx, by);
+        if (regionA == 0 || regionB == 0 || regionA == regionB)
+        {
+            return;
+        }
+
+        BoundaryKey key = new(regionA, regionB);
+        if (!candidatesByBoundary.TryGetValue(key, out List<BridgeConnection> candidates))
+        {
+            candidates = new List<BridgeConnection>();
+            candidatesByBoundary[key] = candidates;
+        }
+
+        candidates.Add(new BridgeConnection(new Vector2I(ax, ay), new Vector2I(bx, by)));
+    }
+
+    private void SetBridge(Vector2I cell)
+    {
+        _isBridge[cell.X + cell.Y * Width] = true;
     }
 }

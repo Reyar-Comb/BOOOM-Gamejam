@@ -10,6 +10,7 @@ public partial class MapDataGenerationDemo : Control
     [Export] public float Randomness { get; set; } = 2.0f;
     [Export] public float CellSize { get; set; } = 14.0f;
     [Export] public Color GridLineColor { get; set; } = new(0.0f, 0.0f, 0.0f, 0.18f);
+    [Export] public Color BridgeColor { get; set; } = new(1.0f, 0.97f, 0.82f);
 
     private static readonly Color[] RegionPalette =
     [
@@ -63,6 +64,7 @@ public partial class MapDataGenerationDemo : Control
         Rect2 mapRect = GetMapRect();
         DrawRect(new Rect2(Vector2.Zero, Size), new Color(0.08f, 0.09f, 0.10f));
         DrawMapTiles(mapRect);
+        DrawBridges(mapRect);
         DrawMapGrid(mapRect);
     }
 
@@ -91,7 +93,7 @@ public partial class MapDataGenerationDemo : Control
         {
             for (int x = 0; x < MapWidth; x++)
             {
-                int regionId = _mapData.GetIndex(x, y);
+                int regionId = _mapData.GetRegion(x, y);
                 Rect2 tileRect = new(
                     mapRect.Position + new Vector2(x * tileSize.X, y * tileSize.Y),
                     tileSize + Vector2.One);
@@ -117,6 +119,22 @@ public partial class MapDataGenerationDemo : Control
         }
     }
 
+    private void DrawBridges(Rect2 mapRect)
+    {
+        Vector2 tileSize = GetTileSize(mapRect);
+        float markerSize = Mathf.Max(4.0f, Mathf.Min(tileSize.X, tileSize.Y) * 0.58f);
+        float lineWidth = Mathf.Max(2.0f, Mathf.Min(tileSize.X, tileSize.Y) * 0.18f);
+
+        foreach (MapData.BridgeConnection bridge in _mapData.GetBridges())
+        {
+            Vector2 centerA = GetTileCenter(mapRect, tileSize, bridge.A);
+            Vector2 centerB = GetTileCenter(mapRect, tileSize, bridge.B);
+            DrawLine(centerA, centerB, BridgeColor, lineWidth);
+            DrawRect(new Rect2(centerA - Vector2.One * markerSize * 0.5f, Vector2.One * markerSize), BridgeColor);
+            DrawRect(new Rect2(centerB - Vector2.One * markerSize * 0.5f, Vector2.One * markerSize), BridgeColor);
+        }
+    }
+
     private Rect2 GetMapRect()
     {
         Vector2 requestedSize = new(MapWidth * CellSize, MapHeight * CellSize);
@@ -131,6 +149,13 @@ public partial class MapDataGenerationDemo : Control
     private Vector2 GetTileSize(Rect2 mapRect)
     {
         return new Vector2(mapRect.Size.X / MapWidth, mapRect.Size.Y / MapHeight);
+    }
+
+    private static Vector2 GetTileCenter(Rect2 mapRect, Vector2 tileSize, Vector2I cell)
+    {
+        return mapRect.Position + new Vector2(
+            (cell.X + 0.5f) * tileSize.X,
+            (cell.Y + 0.5f) * tileSize.Y);
     }
 
     private static Color GetRegionColor(int regionId)

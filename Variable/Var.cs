@@ -46,6 +46,15 @@ public partial class Var : RefCounted, ICleanable
         Stats.Connect(VarStats.SignalName.OnDeath, _onDeathCallable);
         _hasOnDeathCallable = true;
     }
+    public void InitStats(SkillManager manager)
+    {
+        Stats.MaxHealth = (int)(Stats.MaxHealth * manager.GetStat<float>("MaxHealthMultiplier"));
+        Stats.CurrentHealth = Stats.MaxHealth;
+        Stats.AttackDamage = (int)(Stats.AttackDamage * manager.GetStat<float>("AttackDamageMultiplier"));
+        Stats.Defense = (int)(Stats.Defense * manager.GetStat<float>("DefenseMultiplier"));
+        Stats.MoveSpeed *= manager.GetStat<float>("MoveSpeedMultiplier");
+        Stats.AttackSpeedMult *= manager.GetStat<float>("AttackSpeedMultiplier");
+    }
     public void Cleanup()
     {
         if (_isCleanedUp) return;
@@ -116,7 +125,7 @@ public partial class Var : RefCounted, ICleanable
         Vector2 facingDirection = Stats.Direction;
         float directionFactor = atkInfo.GetFromDirection(Stats.Position).Dot(facingDirection) * -0.5f + 1.5f;
         finalDamage = (int)(finalDamage * directionFactor);
-
+        finalDamage = Math.Max(0, finalDamage - Stats.Defense);
         if (!_attackers.Contains(atkInfo.Source))
         {
             _attackers.Add(atkInfo.Source);

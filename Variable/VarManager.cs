@@ -7,6 +7,7 @@ using System.Collections.ObjectModel;
 using System.Collections.Concurrent;
 public partial class VarManager : Node
 {
+    [Export] private SkillManager _skillManager = null;
     public static class VarListPool
     {
         private static readonly ConcurrentBag<List<Var>> _pool = new ConcurrentBag<List<Var>>();
@@ -80,6 +81,7 @@ public partial class VarManager : Node
         _sharedBlackboard.Set("Pathfinder", pathfinder);
 
         var.Initialize(_sharedBlackboard);
+        var.InitStats(_skillManager);
     }
 
     private void ConnectOnDeath(Var var)

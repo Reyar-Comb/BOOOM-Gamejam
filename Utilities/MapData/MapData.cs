@@ -22,7 +22,7 @@ public class MapData
     public int Height { get; init; }
     // ID starts from 1, 0 means unassigned.
     private int[] _regionId;
-    private PriorityQueue<TileExpansion, float> _nextTileDecider;
+    private List<PriorityQueue<TileExpansion, float>> _nextTileDeciders;
     private readonly int _regionSeedTileDistance;
     private RandomNumberGenerator _rg;
     private NoiseTexture2D _noise;
@@ -31,7 +31,7 @@ public class MapData
         Width = width;
         Height = height;
         _regionId = new int[Width * Height];
-        _nextTileDecider = new();
+        _nextTileDeciders = new();
         _regionSeedTileDistance = regionSeedTileDistance;
         _rg = new();
         _rg.Randomize();
@@ -66,7 +66,7 @@ public class MapData
     {
         ResetRegion();
 
-        _nextTileDecider.Clear();
+        EnsureDeciderCount(regionCount);
 
         Vector2I[] regionSeedPositions = new Vector2I[regionCount];
         for (int i = 1; i <= regionCount; i++)
@@ -100,11 +100,44 @@ public class MapData
             }
         }
     }
+
+    private void EnsureDeciderCount(int regionCount)
+    {
+        int deciderCount = _nextTileDeciders.Count;
+        for (int i = 0; i < regionCount; i++)
+        {
+            if (i >= deciderCount)
+            {
+                _nextTileDeciders.Add(new PriorityQueue<TileExpansion, float>());
+            }
+            else
+            {
+                _nextTileDeciders[i].Clear();
+            }
+        }
+    }
+
     private void Expand(float randomness = 0.5f)
     {
-        while (_nextTileDecider.Count > 0)
+        bool hasTilesToExpand = true;
+        while (hasTilesToExpand)
         {
-            TileExpansion current = _nextTileDecider.Dequeue();
+            hasTilesToExpand = false;
+            for (int i = 0; i < _nextTileDeciders.Count; i++)
+            {
+                if (TryExpandNextTile(_nextTileDeciders[i], randomness))
+                {
+                    hasTilesToExpand = true;
+                }
+            }
+        }
+    }
+
+    private bool TryExpandNextTile(PriorityQueue<TileExpansion, float> decider, float randomness)
+    {
+        while (decider.Count > 0)
+        {
+            TileExpansion current = decider.Dequeue();
             int currentIndex = current.Index;
             int x = currentIndex % Width;
             int y = currentIndex / Width;
@@ -113,13 +146,18 @@ public class MapData
             {
                 continue;
             }
+
             SetIndex(x, y, current.RegionId);
             EnqueueNeighbors(x, y, current.RegionId, current.Cost, randomness);
+            return true;
         }
+
+        return false;
     }
 
     private void EnqueueNeighbors(int x, int y, int currentRegionId, float currentCost, float randomness)
     {
+        var decider = _nextTileDeciders[currentRegionId - 1];
         for (int i = -1; i <= 1; i++)
         {
             for (int j = -1; j <= 1; j++)
@@ -140,7 +178,7 @@ public class MapData
                 {
                     int nextIndex = newX + newY * Width;
                     float nextCost = currentCost + GetStepCost(newX, newY, randomness);
-                    _nextTileDecider.Enqueue(new TileExpansion(nextIndex, currentRegionId, nextCost), nextCost);
+                    decider.Enqueue(new TileExpansion(nextIndex, currentRegionId, nextCost), nextCost);
                 }
             }
         }

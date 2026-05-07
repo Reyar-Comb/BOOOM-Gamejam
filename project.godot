@@ -19,6 +19,11 @@ config/icon="res://icon.svg"
 
 ConsoleManager="*uid://bocfjfs3ip7pw"
 
+[display]
+
+window/size/viewport_width=1920
+window/size/viewport_height=1080
+
 [dotnet]
 
 project/assembly_name="booom"

@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://1sfv28q5fsl2"]
 
-[ext_resource type="Script" path="res://Console/ConsoleView/ConsoleView.cs" id="1_consoleview"]
+[ext_resource type="Script" uid="uid://dv7krc5f2tq8f" path="res://Console/ConsoleView/ConsoleView.cs" id="1_consoleview"]
 [ext_resource type="Script" uid="uid://bocfjfs3ip7pw" path="res://Console/ConsoleViewModel/ConsoleManager.cs" id="2_consolemanager"]
 [ext_resource type="Script" uid="uid://01fvca8ksf16" path="res://Variable/VarManager.cs" id="3_varmanager"]
 [ext_resource type="Script" uid="uid://ccuvk7ii52801" path="res://BattleManager/BattleManager.cs" id="4_battlemanager"]
@@ -27,3 +27,13 @@ script = ExtResource("3_varmanager")
 script = ExtResource("4_battlemanager")
 TickScale = 0.1
 VarManager = NodePath("../VarManager")
+
+[node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=937058356]
+
+[node name="ColorRect" type="ColorRect" parent="CanvasLayer" unique_id=1699338152]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0.40784314)

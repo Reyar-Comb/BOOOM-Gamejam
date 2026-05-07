@@ -18,7 +18,7 @@ public partial class Var : RefCounted, ICleanable
 
     private readonly HashSet<Var> _attackers = new();
 
-
+    private MapData MapData => _blackboard.Get<MapData>("MapData");
 
 
     [Signal] 
@@ -105,8 +105,8 @@ public partial class Var : RefCounted, ICleanable
         Vector2I selfCell = Grid.WorldToGrid(Stats.Position);
         Vector2I targetCell = Grid.WorldToGrid(worldTarget);
         if (selfCell == targetCell) return;
-
-        var path = pathfinder.Run(selfCell, targetCell);
+        
+        var path = pathfinder.Run(selfCell, targetCell, MapData.GetRegion(selfCell.X, selfCell.Y));
         SetPath(path);
     }
     public void PhysicsUpdate(double delta)

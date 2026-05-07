@@ -36,6 +36,8 @@ public partial class Var_DetectInDetectRangeState : STNode
     {
         get => _blackboard.Get<Var>("Self");
     }
+
+    private MapData MapData => _blackboard.Get<MapData>("MapData");
     protected override void OnPhysicsUpdate(double delta)
     {
         TryGetEnemyInRange();
@@ -100,7 +102,7 @@ public partial class Var_DetectInDetectRangeState : STNode
                 if (tuple.enemy != null)
                 {
                     CurrentAttackTarget = tuple.enemy;
-                    Self.SetPath(Pathfinder.Run(selfCell, tuple.cell));
+                    Self.SetPath(Pathfinder.Run(selfCell, tuple.cell, MapData.GetRegion(selfCell.X, selfCell.Y)));
                     return;
                 }
             }

@@ -21,16 +21,21 @@ public class AStarPathfinder : Pathfinder
 
         public override AStarPathfinder Build()
         {
-            return new AStarPathfinder(_usedRect, _heuristicType, _customHeuristic, _numOfNeighborsToCheck, _diagonalType);
+            return new AStarPathfinder(_usedRect, _heuristicType, _customHeuristic, _numOfNeighborsToCheck, _diagonalType, _mapData);
         }
     }
     private readonly int _numOfNeighborsToCheck = 4;
-    private AStarPathfinder(Rect2I usedRect, HeuristicType heuristicType, Func<int, int, int, int, int> customHeuristic, int numOfNeighborsToCheck, DiagonalType diagonalType)
-        : base(usedRect, heuristicType, customHeuristic, diagonalType)
+    private AStarPathfinder(Rect2I usedRect, HeuristicType heuristicType, Func<int, int, int, int, int> customHeuristic, int numOfNeighborsToCheck, DiagonalType diagonalType, MapData mapData)
+        : base(usedRect, heuristicType, customHeuristic, diagonalType, mapData)
     {
         _numOfNeighborsToCheck = numOfNeighborsToCheck;
     }
-    protected override List<Vector2I> MainLoop(PathfindingContext context, PathNode targetNode, float heuristicScale)
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private bool CanMoveTo(int x, int y, int regionId)
+    {
+        return IsWalkable(x, y) && (_mapData.GetRegion(x, y) == regionId || _mapData.IsBridge(x, y));
+    }
+    protected override List<Vector2I> MainLoop(PathfindingContext context, PathNode targetNode, float heuristicScale, int regionId)
     {
         var openList = context.OpenList;
         var isClosed = context.IsClosed;
@@ -50,8 +55,8 @@ public class AStarPathfinder : Pathfinder
             {
                 int nx = cur.X + DxArray[i];
                 int ny = cur.Y + DyArray[i];
-                if (!IsWalkable(nx, ny)) continue;
-                if (i >= 4 && !CheckDiagonal(IsWalkable(nx, cur.Y), IsWalkable(cur.X, ny))) continue;
+                if (!CanMoveTo(nx, ny, regionId)) continue;
+                if (i >= 4 && !CheckDiagonal(CanMoveTo(nx, cur.Y, regionId), CanMoveTo(cur.X, ny, regionId))) continue;
 
                 var neighborIdx = GetIndex(nx, ny);
                 ref var neighbor = ref grid[neighborIdx];

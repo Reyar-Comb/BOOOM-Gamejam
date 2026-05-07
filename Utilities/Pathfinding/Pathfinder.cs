@@ -33,7 +33,7 @@ public abstract class Pathfinder
         protected HeuristicType _heuristicType;
         protected DiagonalType _diagonalType;
         protected Rect2I _usedRect = default;
-
+        protected MapData _mapData = null!;
         protected PathfinderBuilder(
             HeuristicType heuristicType = HeuristicType.Octile,
             DiagonalType diagonalType = DiagonalType.WhenBothEmpty)
@@ -66,7 +66,13 @@ public abstract class Pathfinder
             _diagonalType = type;
             return (TBuilder)this;
         }
-
+        
+        public TBuilder SetMapData(MapData mapData)
+        {
+            SetRect(0, 0, mapData.Width - 1, mapData.Height - 1);
+            _mapData = mapData;
+            return (TBuilder)this;
+        }
         public abstract TPathfinder Build();
     }
 
@@ -78,7 +84,8 @@ public abstract class Pathfinder
     protected readonly Vector2I _offset = Vector2I.Zero;
     protected bool[] _wallGrid;
     protected ConcurrentBag<PathfindingContext> _contextPool = new();
-    protected Pathfinder(Rect2I usedRect, HeuristicType heuristicType, Func<int, int, int, int, int> customHeuristic, DiagonalType diagonalType)
+    protected MapData _mapData = null!;
+    protected Pathfinder(Rect2I usedRect, HeuristicType heuristicType, Func<int, int, int, int, int> customHeuristic, DiagonalType diagonalType, MapData mapData)
     {
         _offset = usedRect.Position;
         _width = usedRect.Size.X + 1;
@@ -87,6 +94,7 @@ public abstract class Pathfinder
         _heuristicType = heuristicType;
         _customHeuristic = customHeuristic;
         _diagonalType = diagonalType;
+        _mapData = mapData;
     }
     public void SetWall(Vector2I position, bool isWall = true)
     {
@@ -94,7 +102,7 @@ public abstract class Pathfinder
 
         _wallGrid[GetIndex(position)] = isWall;
     }
-    public List<Vector2I> Run(Vector2I startPos, Vector2I targetPos, float heuristicScale = 1f)
+    public List<Vector2I> Run(Vector2I startPos, Vector2I targetPos, int regionId, float heuristicScale = 1f)
     {
         if (!IsWalkable(startPos) || !IsWalkable(targetPos)) return null;
         if (startPos == targetPos) return new List<Vector2I> { startPos };
@@ -115,12 +123,12 @@ public abstract class Pathfinder
         isClosed[targetIndex] = false;
 
         openList.Enqueue(GetIndex(startPos), 0);
-        return MainLoop(context, targetNode, heuristicScale);
+        return MainLoop(context, targetNode, heuristicScale, regionId);
     }
-    protected abstract List<Vector2I> MainLoop(PathfindingContext context, PathNode targetNode, float heuristicScale);
-    public Task<List<Vector2I>> RunAsync(Vector2I startPos, Vector2I targetPos, float heuristicScale = 1f)
+    protected abstract List<Vector2I> MainLoop(PathfindingContext context, PathNode targetNode, float heuristicScale, int regionId);
+    public Task<List<Vector2I>> RunAsync(Vector2I startPos, Vector2I targetPos, int regionId, float heuristicScale = 1f)
     {
-        return Task.Run(() => Run(startPos, targetPos, heuristicScale));
+        return Task.Run(() => Run(startPos, targetPos, regionId, heuristicScale));
     }
     protected List<Vector2I> RetracePath(PathNode node, PathfindingContext context)
     {

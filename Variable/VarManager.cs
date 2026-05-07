@@ -8,6 +8,7 @@ using System.Collections.Concurrent;
 public partial class VarManager : Node
 {
     [Export] private SkillManager _skillManager = null;
+    private MapData _mapData = null!;
     public static class VarListPool
     {
         private static readonly ConcurrentBag<List<Var>> _pool = new ConcurrentBag<List<Var>>();
@@ -39,7 +40,19 @@ public partial class VarManager : Node
     //         var.PhysicsUpdate(delta);
     //     }
     // }
+    public void Initialize(MapData mapData)
+    {
+        _mapData = mapData;
+        _sharedBlackboard.Set("MapData", _mapData);
+        _sharedBlackboard.Set("Vars", ReadOnlyVars);
 
+        AStarPathfinder pathfinder = AStarPathfinder.CreateBuilder()
+            .SetMapData(_mapData)
+            .UseDiagonal(Pathfinder.DiagonalType.Never)
+            .UseHeuristic(Pathfinder.HeuristicType.Manhattan)
+            .Build();
+        _sharedBlackboard.Set("Pathfinder", pathfinder);
+    }
     public void Tick(double delta)
     {
         List<Var> varsToRemove = VarListPool.Get();
@@ -71,14 +84,6 @@ public partial class VarManager : Node
     {
         _vars.Add(var);
         ConnectOnDeath(var);
-        _sharedBlackboard.Set("Vars", ReadOnlyVars);
-
-        AStarPathfinder pathfinder = AStarPathfinder.CreateBuilder()
-            .SetRect(-200, -200, 400, 400)
-            .UseDiagonal(Pathfinder.DiagonalType.Never)
-            .UseHeuristic(Pathfinder.HeuristicType.Manhattan)
-            .Build();
-        _sharedBlackboard.Set("Pathfinder", pathfinder);
 
         var.Initialize(_sharedBlackboard);
         // var.InitStats(_skillManager);

@@ -26,9 +26,7 @@ public readonly struct BattleTickContext
 
 public partial class BattleManager : Node
 {
-
     public static BattleManager Instance { get; private set; } = null!;
-
     [Export] public int TickRate = 20;
 
     [Export] public float TickScale = 1f;
@@ -44,6 +42,8 @@ public partial class BattleManager : Node
     private double _accumulator = 0.0;
 
     private bool _isTicking = false;
+    
+    private MapData _mapData = null!;
 
     public long GameTime = 0;
 
@@ -51,6 +51,9 @@ public partial class BattleManager : Node
     {
         Instance = this;
         VarManager.SetPhysicsProcess(false);
+
+        _mapData = new MapData(60, 80);
+        VarManager.Initialize(_mapData);
     }
 
     public override void _Process(double delta)

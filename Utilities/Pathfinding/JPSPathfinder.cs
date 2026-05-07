@@ -194,7 +194,7 @@ public class JPSPathfinder : Pathfinder
         }
         public override JPSPathfinder Build()
         {
-            return new JPSPathfinder(_usedRect, _heuristicType, _customHeuristic, _diagonalType);
+            return new JPSPathfinder(_usedRect, _heuristicType, _customHeuristic, _diagonalType, _mapData);
         }
     }
     private readonly byte[] _directionMasks = new byte[8 * 256];
@@ -202,8 +202,8 @@ public class JPSPathfinder : Pathfinder
     private byte[] _validDirs;
     private readonly JPSRule _activeRule;
     private bool _usingJPSPlus = false;
-    private JPSPathfinder(Rect2I usedRect, HeuristicType heuristicType, Func<int, int, int, int, int> customHeuristic, DiagonalType diagonalType)
-        : base(usedRect, heuristicType, customHeuristic, diagonalType)
+    private JPSPathfinder(Rect2I usedRect, HeuristicType heuristicType, Func<int, int, int, int, int> customHeuristic, DiagonalType diagonalType, MapData mapData)
+        : base(usedRect, heuristicType, customHeuristic, diagonalType, mapData)
     {
         _activeRule = diagonalType == DiagonalType.WhenBothEmpty
                             ? new JPSRuleWhenBothEmpty()
@@ -272,7 +272,7 @@ public class JPSPathfinder : Pathfinder
         int signY = Math.Sign(toY - fromY);
         return signX != -dx && signY != -dy;
     }
-    protected override List<Vector2I> MainLoop(PathfindingContext context, PathNode targetNode, float heuristicScale)
+    protected override List<Vector2I> MainLoop(PathfindingContext context, PathNode targetNode, float heuristicScale, int regionId)
     {
         var openList = context.OpenList;
         var isClosed = context.IsClosed;

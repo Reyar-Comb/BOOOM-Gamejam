@@ -48,12 +48,12 @@ public partial class Var : RefCounted, ICleanable
     }
     public void InitStats(SkillManager manager)
     {
-        Stats.MaxHealth = (int)(Stats.MaxHealth * manager.GetStat<float>("MaxHealthMultiplier"));
+        Stats.MaxHealth = manager.ApplyStatOperation<int>("MaxHealthMultiplier", Stats.MaxHealth);
         Stats.CurrentHealth = Stats.MaxHealth;
-        Stats.AttackDamage = (int)(Stats.AttackDamage * manager.GetStat<float>("AttackDamageMultiplier"));
-        Stats.Defense = (int)(Stats.Defense * manager.GetStat<float>("DefenseMultiplier"));
-        Stats.MoveSpeed *= manager.GetStat<float>("MoveSpeedMultiplier");
-        Stats.AttackSpeedMult *= manager.GetStat<float>("AttackSpeedMultiplier");
+        Stats.AttackDamage = manager.ApplyStatOperation<int>("AttackDamageMultiplier", Stats.AttackDamage);
+        Stats.Defense = manager.ApplyStatOperation<int>("DefenseMultiplier", Stats.Defense);
+        Stats.MoveSpeed = manager.ApplyStatOperation<float>("MoveSpeedMultiplier", Stats.MoveSpeed);
+        Stats.AttackSpeedMult = manager.ApplyStatOperation<float>("AttackSpeedMultMultiplier", Stats.AttackSpeedMult);
     }
     public void Cleanup()
     {

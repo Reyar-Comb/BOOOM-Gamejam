@@ -4,6 +4,7 @@ using System.Collections.Generic;
 public partial class Main : Node2D
 {
     [Export] public VarManager VarManager { get; set; }
+    private VarRenderer _varRenderer = null!;
 
     public override void _Ready()
     {
@@ -31,7 +32,7 @@ public partial class Main : Node2D
 
     private void CreateRenderer(Var var)
     {
-        VarRenderer renderer = new()
+        _varRenderer ??= new VarRenderer
         {
             BodyRadius = 50.0f,
             BodyColor = Colors.Red,
@@ -41,7 +42,11 @@ public partial class Main : Node2D
             RenderDirection = true
         };
 
-        AddChild(renderer);
-        renderer.SetVar(var);
+        if (_varRenderer.GetParent() == null)
+        {
+            AddChild(_varRenderer);
+        }
+
+        _varRenderer.AddVar(var, Colors.Red, Colors.Red, Colors.Red, Colors.White);
     }
 }

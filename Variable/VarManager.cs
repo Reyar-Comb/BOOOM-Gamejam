@@ -81,7 +81,7 @@ public partial class VarManager : Node
         _sharedBlackboard.Set("Pathfinder", pathfinder);
 
         var.Initialize(_sharedBlackboard);
-        var.InitStats(_skillManager);
+        // var.InitStats(_skillManager);
     }
 
     private void ConnectOnDeath(Var var)

@@ -9,4 +9,7 @@ public interface IVarRenderer
 
     void SetVar(Var var);
     void ClearVar();
+    void AddVar(Var var);
+    void RemoveVar(Var var);
+    void ClearVars();
 }

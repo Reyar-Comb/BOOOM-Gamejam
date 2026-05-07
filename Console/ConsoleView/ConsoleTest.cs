@@ -35,6 +35,7 @@ public partial class ConsoleTest : Node2D
 	private LineEdit _inputY = null!;
 	private Label _infoLabel = null!;
 	private Slider _timeSlider = null!;
+	private VarRenderer _varRenderer = null!;
 
 	public override void _Ready()
 	{
@@ -368,12 +369,12 @@ public partial class ConsoleTest : Node2D
 
 	private void CreateRenderer(Var var, Color color)
 	{
-		VarRenderer renderer = new()
+		_varRenderer ??= new VarRenderer
 		{
 			BodyRadius = 18.0f,
-			BodyColor = color,
-			AttackRangeColor = color,
-			DetectRangeColor = WithAlpha(color, 0.65f),
+			BodyColor = Colors.OrangeRed,
+			AttackRangeColor = Colors.OrangeRed,
+			DetectRangeColor = WithAlpha(Colors.OrangeRed, 0.65f),
 			DirectionColor = Colors.White,
 			BattleManager = BattleManager,
 			RenderVarBody = true,
@@ -382,8 +383,12 @@ public partial class ConsoleTest : Node2D
 			RenderDirection = true
 		};
 
-		AddChild(renderer);
-		renderer.SetVar(var);
+		if (_varRenderer.GetParent() == null)
+		{
+			AddChild(_varRenderer);
+		}
+
+		_varRenderer.AddVar(var, color, color, WithAlpha(color, 0.65f), Colors.White);
 	}
 
 	private static VarRange CreateRange(params Vector2I[] relativeCells)

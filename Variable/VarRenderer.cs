@@ -1,16 +1,33 @@
 using Godot;
 using System;
+using System.Collections.Generic;
 
 [GlobalClass]
-public partial class VarRenderer : Node2D, IVarRenderer
+public partial class VarRenderer : Control, IVarRenderer
 {
+    private const float Epsilon = 1e-6f;
+
+    [Signal] public delegate void HoveredGridCellChangedEventHandler(Vector2I cell, bool hasCell);
+
+    [Export] public bool DrawBackground { get; set; } = false;
+    [Export] public Color BackgroundColor { get; set; } = new(0.08f, 0.09f, 0.11f);
+    [Export] public bool RenderGrid { get; set; } = false;
+    [Export] public Color GridColor { get; set; } = new(1.0f, 1.0f, 1.0f, 0.08f);
+    [Export] public Color AxisGridColor { get; set; } = new(1.0f, 1.0f, 1.0f, 0.22f);
     [Export] public bool RenderVarBody { get; set; } = true;
     [Export] public bool RenderAttackRange { get; set; } = false;
     [Export] public bool RenderDetectRange { get; set; } = false;
     [Export] public bool RenderDirection { get; set; } = false;
+    [Export] public bool EnableViewControls { get; set; } = true;
     [Export] public bool InterpolateRenderPosition { get; set; } = true;
     [Export] public bool UseBattleManagerInterpolationDuration { get; set; } = true;
     [Export] public BattleManager BattleManager { get; set; } = null!;
+
+    [Export] public Vector2 ViewCenterWorld { get; set; } = Vector2.Zero;
+    [Export] public float Zoom { get; set; } = 1.0f;
+    [Export] public float MinZoom { get; set; } = 0.25f;
+    [Export] public float MaxZoom { get; set; } = 4.0f;
+    [Export] public float ZoomStep { get; set; } = 1.1f;
 
     [Export] public float BodyRadius { get; set; } = 20.0f;
     [Export] public Color BodyColor { get; set; } = Colors.OrangeRed;
@@ -34,25 +51,69 @@ public partial class VarRenderer : Node2D, IVarRenderer
     [Export] public float SnapDistance { get; set; } = Grid.CellSize * 4.0f;
     [Export] public float IdleInterpolationResetDelay { get; set; } = 0.25f;
 
+    private sealed class RenderState
+    {
+        public Vector2 DisplayPosition;
+        public Vector2 LastObservedPosition;
+        public Vector2 InterpolationStartPosition;
+        public Vector2 InterpolationTargetPosition;
+        public double InterpolationElapsed;
+        public double InterpolationDuration;
+        public double TimeSinceLastPositionChange;
+        public double TimeSinceInterpolationFinished;
+        public bool HasInterpolationState;
+    }
+
+    private sealed class RenderStyle
+    {
+        public Color BodyColor;
+        public Color AttackRangeColor;
+        public Color DetectRangeColor;
+        public Color DirectionColor;
+    }
+
+    private readonly List<Var> _renderedVars = new();
+    private readonly Dictionary<Var, RenderState> _renderStatesByVar = new();
+    private readonly Dictionary<Var, RenderStyle> _renderStylesByVar = new();
     private Var _renderedVar = null!;
-    private Vector2 _displayPosition;
-    private Vector2 _lastObservedPosition;
-    private Vector2 _interpolationStartPosition;
-    private Vector2 _interpolationTargetPosition;
-    private double _interpolationElapsed;
-    private double _interpolationDuration;
-    private double _timeSinceLastPositionChange;
-    private double _timeSinceInterpolationFinished;
-    private bool _hasInterpolationState = false;
+    private Vector2I? _hoveredGridCell;
+    private bool _isPanning = false;
+
+    public event Action<Vector2I?> HoveredGridCellUpdated;
+
+    public Vector2I? HoveredGridCell => _hoveredGridCell;
+
     public Var RenderedVar
     {
         get => _renderedVar;
         set
         {
+            _renderedVars.Clear();
+            _renderStatesByVar.Clear();
+            _renderStylesByVar.Clear();
             _renderedVar = value;
-            ResetInterpolationState();
+            if (value != null)
+            {
+                _renderedVars.Add(value);
+                _renderStylesByVar[value] = CreateDefaultStyle();
+            }
             QueueRedraw();
         }
+    }
+
+    public override void _Ready()
+    {
+        MouseFilter = MouseFilterEnum.Stop;
+        FocusMode = FocusModeEnum.Click;
+        ClipContents = true;
+
+        if (Size == Vector2.Zero)
+        {
+            SetAnchorsPreset(LayoutPreset.FullRect);
+            Size = GetViewportRect().Size;
+        }
+
+        MouseExited += OnMouseExited;
     }
 
     public void SetVar(Var var)
@@ -63,49 +124,163 @@ public partial class VarRenderer : Node2D, IVarRenderer
     public void ClearVar()
     {
         RenderedVar = null;
+        QueueRedraw();
+    }
+
+    public void AddVar(Var var)
+    {
+        if (var == null || _renderedVars.Contains(var))
+        {
+            return;
+        }
+
+        _renderedVars.Add(var);
+        _renderStylesByVar[var] = CreateDefaultStyle();
+        _renderedVar ??= var;
+        QueueRedraw();
+    }
+
+    public void AddVar(Var var, Color bodyColor)
+    {
+        AddVar(var, bodyColor, bodyColor, WithAlpha(bodyColor, DetectRangeColor.A), DirectionColor);
+    }
+
+    public void AddVar(Var var, Color bodyColor, Color attackRangeColor, Color detectRangeColor, Color directionColor)
+    {
+        if (var == null)
+        {
+            return;
+        }
+
+        if (!_renderedVars.Contains(var))
+        {
+            _renderedVars.Add(var);
+        }
+
+        _renderStylesByVar[var] = new RenderStyle
+        {
+            BodyColor = bodyColor,
+            AttackRangeColor = attackRangeColor,
+            DetectRangeColor = detectRangeColor,
+            DirectionColor = directionColor
+        };
+        _renderedVar ??= var;
+        QueueRedraw();
+    }
+
+    public void RemoveVar(Var var)
+    {
+        if (var == null)
+        {
+            return;
+        }
+
+        _renderedVars.Remove(var);
+        _renderStatesByVar.Remove(var);
+        _renderStylesByVar.Remove(var);
+        if (_renderedVar == var)
+        {
+            _renderedVar = _renderedVars.Count > 0 ? _renderedVars[0] : null;
+        }
+        QueueRedraw();
+    }
+
+    public void ClearVars()
+    {
+        _renderedVars.Clear();
+        _renderStatesByVar.Clear();
+        _renderStylesByVar.Clear();
+        _renderedVar = null;
+        QueueRedraw();
+    }
+
+    public override void _GuiInput(InputEvent @event)
+    {
+        switch (@event)
+        {
+            case InputEventMouseButton mouseButton:
+                UpdateHoveredGridCell(mouseButton.Position);
+                break;
+            case InputEventMouseMotion mouseMotion:
+                UpdateHoveredGridCell(mouseMotion.Position);
+                break;
+        }
+
+        if (!EnableViewControls)
+        {
+            return;
+        }
+
+        switch (@event)
+        {
+            case InputEventMouseButton mouseButton:
+                HandleMouseButton(mouseButton);
+                break;
+            case InputEventMouseMotion mouseMotion:
+                HandleMouseMotion(mouseMotion);
+                break;
+        }
     }
 
     public override void _Process(double delta)
     {
-        if (_renderedVar?.IsDead ?? true)
+        PruneDeadVars();
+        foreach (Var renderedVar in _renderedVars)
         {
-            ClearVar();
-            QueueFree();
-            return;
+            UpdateRenderPosition(renderedVar, delta);
         }
-        UpdateRenderPosition(delta);
         QueueRedraw();
     }
 
     public override void _Draw()
     {
-        if (_renderedVar?.IsDead ?? true)
+        if (DrawBackground)
+        {
+            DrawRect(new Rect2(Vector2.Zero, Size), BackgroundColor);
+        }
+
+        if (RenderGrid)
+        {
+            DrawGrid();
+        }
+
+        PruneDeadVars();
+        foreach (Var renderedVar in _renderedVars)
+        {
+            DrawVar(renderedVar);
+        }
+    }
+
+    private void DrawVar(Var renderedVar)
+    {
+        if (renderedVar?.Stats == null || renderedVar.IsDead)
         {
             return;
         }
-        
-        VarStats stats = _renderedVar.Stats;
-        UpdateRenderPosition(0.0);
-        Vector2 renderPosition = _displayPosition;
+
+        VarStats stats = renderedVar.Stats;
+        UpdateRenderPosition(renderedVar, 0.0);
+        Vector2 renderPosition = GetRenderState(renderedVar).DisplayPosition;
+        RenderStyle renderStyle = GetRenderStyle(renderedVar);
 
         if (RenderDetectRange)
         {
-            DrawRange(stats.DetectRange, stats, renderPosition, DetectRangeColor, DetectRangeFillAlpha);
+            DrawRange(stats.DetectRange, stats, renderPosition, renderStyle.DetectRangeColor, DetectRangeFillAlpha);
         }
 
         if (RenderAttackRange)
         {
-            DrawRange(stats.AttackRange, stats, renderPosition, AttackRangeColor, AttackRangeFillAlpha);
+            DrawRange(stats.AttackRange, stats, renderPosition, renderStyle.AttackRangeColor, AttackRangeFillAlpha);
         }
 
         if (RenderVarBody)
         {
-            DrawCircle(ToLocal(renderPosition), BodyRadius, BodyColor);
+            DrawCircle(WorldToScreen(renderPosition), BodyRadius * Zoom, renderStyle.BodyColor);
         }
 
         if (RenderDirection)
         {
-            DrawDirection(stats, renderPosition);
+            DrawDirection(stats, renderPosition, renderStyle.DirectionColor);
         }
     }
 
@@ -125,23 +300,23 @@ public partial class VarRenderer : Node2D, IVarRenderer
 
     private void DrawRangeCell(Vector2I cell, Color color, float fillAlpha)
     {
-        Vector2 cellCenter = ToLocal(Grid.GridToWorld(cell));
-        Vector2 cellSize = Vector2.One * Grid.CellSize;
+        Vector2 cellCenter = WorldToScreen(Grid.GridToWorld(cell));
+        Vector2 cellSize = Vector2.One * Grid.CellSize * Zoom;
         Rect2 cellRect = new(cellCenter - cellSize / 2.0f, cellSize);
         Color fillColor = color;
         fillColor.A = fillAlpha;
 
         DrawRect(cellRect, fillColor);
-        DrawRect(cellRect, color, false, RangeOutlineWidth);
+        DrawRect(cellRect, color, false, RangeOutlineWidth * Zoom);
     }
 
-    private void DrawDirection(VarStats stats, Vector2 renderPosition)
+    private void DrawDirection(VarStats stats, Vector2 renderPosition, Color directionColor)
     {
         Vector2 direction = GetDrawableDirection(stats.Direction);
-        Vector2 start = ToLocal(renderPosition);
-        Vector2 end = ToLocal(renderPosition + direction * DirectionLength);
+        Vector2 start = WorldToScreen(renderPosition);
+        Vector2 end = WorldToScreen(renderPosition + direction * DirectionLength);
 
-        DrawLine(start, end, DirectionColor, DirectionLineWidth);
+        DrawLine(start, end, directionColor, DirectionLineWidth * Zoom);
 
         Vector2 localDirection = end - start;
         if (localDirection.LengthSquared() <= MathConstants.EpsilonSquared)
@@ -153,72 +328,73 @@ public partial class VarRenderer : Node2D, IVarRenderer
         Vector2 leftHead = localDirection.Rotated(Mathf.DegToRad(150.0f)) * DirectionHeadLength;
         Vector2 rightHead = localDirection.Rotated(Mathf.DegToRad(-150.0f)) * DirectionHeadLength;
 
-        DrawLine(end, end + leftHead, DirectionColor, DirectionLineWidth);
-        DrawLine(end, end + rightHead, DirectionColor, DirectionLineWidth);
+        DrawLine(end, end + leftHead * Zoom, directionColor, DirectionLineWidth * Zoom);
+        DrawLine(end, end + rightHead * Zoom, directionColor, DirectionLineWidth * Zoom);
     }
 
-    private void UpdateRenderPosition(double delta)
+    private void UpdateRenderPosition(Var renderedVar, double delta)
     {
-        if (_renderedVar?.Stats == null)
+        if (renderedVar?.Stats == null)
         {
-            ResetInterpolationState();
+            ResetInterpolationState(renderedVar);
             return;
         }
 
-        VarStats stats = _renderedVar.Stats;
+        RenderState renderState = GetRenderState(renderedVar);
+        VarStats stats = renderedVar.Stats;
         Vector2 logicalPosition = stats.Position;
 
-        if (!_hasInterpolationState)
+        if (!renderState.HasInterpolationState)
         {
-            InitializeInterpolationState(logicalPosition);
+            InitializeInterpolationState(renderState, logicalPosition);
             return;
         }
 
-        _timeSinceLastPositionChange += delta;
+        renderState.TimeSinceLastPositionChange += delta;
 
-        if (logicalPosition.DistanceSquaredTo(_lastObservedPosition) > MathConstants.EpsilonSquared)
+        if (logicalPosition.DistanceSquaredTo(renderState.LastObservedPosition) > MathConstants.EpsilonSquared)
         {
-            BeginPositionInterpolation(stats, logicalPosition);
+            BeginPositionInterpolation(renderState, stats, logicalPosition);
         }
 
-        AdvancePositionInterpolation(delta);
+        AdvancePositionInterpolation(renderState, delta);
     }
 
-    private void InitializeInterpolationState(Vector2 position)
+    private void InitializeInterpolationState(RenderState renderState, Vector2 position)
     {
-        _displayPosition = position;
-        _lastObservedPosition = position;
-        _interpolationStartPosition = position;
-        _interpolationTargetPosition = position;
-        _interpolationElapsed = 0.0;
-        _interpolationDuration = 0.0;
-        _timeSinceLastPositionChange = 0.0;
-        _timeSinceInterpolationFinished = 0.0;
-        _hasInterpolationState = true;
+        renderState.DisplayPosition = position;
+        renderState.LastObservedPosition = position;
+        renderState.InterpolationStartPosition = position;
+        renderState.InterpolationTargetPosition = position;
+        renderState.InterpolationElapsed = 0.0;
+        renderState.InterpolationDuration = 0.0;
+        renderState.TimeSinceLastPositionChange = 0.0;
+        renderState.TimeSinceInterpolationFinished = 0.0;
+        renderState.HasInterpolationState = true;
     }
 
-    private void BeginPositionInterpolation(VarStats stats, Vector2 logicalPosition)
+    private void BeginPositionInterpolation(RenderState renderState, VarStats stats, Vector2 logicalPosition)
     {
-        Vector2 previousLogicalPosition = _lastObservedPosition;
-        double observedInterval = HasBeenSettledForTooLong() ? 0.0 : _timeSinceLastPositionChange;
-        float displayDistance = _displayPosition.DistanceTo(logicalPosition);
+        Vector2 previousLogicalPosition = renderState.LastObservedPosition;
+        double observedInterval = HasBeenSettledForTooLong(renderState) ? 0.0 : renderState.TimeSinceLastPositionChange;
+        float displayDistance = renderState.DisplayPosition.DistanceTo(logicalPosition);
 
-        _lastObservedPosition = logicalPosition;
-        _timeSinceLastPositionChange = 0.0;
-        _timeSinceInterpolationFinished = 0.0;
+        renderState.LastObservedPosition = logicalPosition;
+        renderState.TimeSinceLastPositionChange = 0.0;
+        renderState.TimeSinceInterpolationFinished = 0.0;
 
         if (!InterpolateRenderPosition
             || displayDistance <= MathConstants.EpsilonSquared
             || ShouldSnap(displayDistance))
         {
-            SnapToPosition(logicalPosition);
+            SnapToPosition(renderState, logicalPosition);
             return;
         }
 
-        _interpolationStartPosition = _displayPosition;
-        _interpolationTargetPosition = logicalPosition;
-        _interpolationElapsed = 0.0;
-        _interpolationDuration = CalculateInterpolationDuration(stats, previousLogicalPosition, logicalPosition, observedInterval);
+        renderState.InterpolationStartPosition = renderState.DisplayPosition;
+        renderState.InterpolationTargetPosition = logicalPosition;
+        renderState.InterpolationElapsed = 0.0;
+        renderState.InterpolationDuration = CalculateInterpolationDuration(stats, previousLogicalPosition, logicalPosition, observedInterval);
     }
 
     private bool ShouldSnap(float distance)
@@ -226,10 +402,10 @@ public partial class VarRenderer : Node2D, IVarRenderer
         return SnapDistance > 0.0f && distance > SnapDistance;
     }
 
-    private bool HasBeenSettledForTooLong()
+    private bool HasBeenSettledForTooLong(RenderState renderState)
     {
         return IdleInterpolationResetDelay >= 0.0f
-            && _timeSinceInterpolationFinished > IdleInterpolationResetDelay;
+            && renderState.TimeSinceInterpolationFinished > IdleInterpolationResetDelay;
     }
 
     private double CalculateInterpolationDuration(VarStats stats, Vector2 previousLogicalPosition, Vector2 logicalPosition, double observedInterval)
@@ -267,49 +443,236 @@ public partial class VarRenderer : Node2D, IVarRenderer
         return duration > 0.0;
     }
 
-    private void AdvancePositionInterpolation(double delta)
+    private void AdvancePositionInterpolation(RenderState renderState, double delta)
     {
-        if (_interpolationDuration <= 0.0)
+        if (renderState.InterpolationDuration <= 0.0)
         {
-            _displayPosition = _interpolationTargetPosition;
-            _timeSinceInterpolationFinished += delta;
+            renderState.DisplayPosition = renderState.InterpolationTargetPosition;
+            renderState.TimeSinceInterpolationFinished += delta;
             return;
         }
 
-        if (_interpolationElapsed >= _interpolationDuration)
+        if (renderState.InterpolationElapsed >= renderState.InterpolationDuration)
         {
-            _displayPosition = _interpolationTargetPosition;
-            _timeSinceInterpolationFinished += delta;
+            renderState.DisplayPosition = renderState.InterpolationTargetPosition;
+            renderState.TimeSinceInterpolationFinished += delta;
             return;
         }
 
-        _interpolationElapsed = Math.Min(_interpolationElapsed + delta, _interpolationDuration);
-        float interpolationWeight = (float)(_interpolationElapsed / _interpolationDuration);
-        _displayPosition = _interpolationStartPosition.Lerp(_interpolationTargetPosition, interpolationWeight);
-        _timeSinceInterpolationFinished = 0.0;
+        renderState.InterpolationElapsed = Math.Min(renderState.InterpolationElapsed + delta, renderState.InterpolationDuration);
+        float interpolationWeight = (float)(renderState.InterpolationElapsed / renderState.InterpolationDuration);
+        renderState.DisplayPosition = renderState.InterpolationStartPosition.Lerp(renderState.InterpolationTargetPosition, interpolationWeight);
+        renderState.TimeSinceInterpolationFinished = 0.0;
     }
 
-    private void SnapToPosition(Vector2 position)
+    private void SnapToPosition(RenderState renderState, Vector2 position)
     {
-        _displayPosition = position;
-        _interpolationStartPosition = position;
-        _interpolationTargetPosition = position;
-        _interpolationElapsed = 0.0;
-        _interpolationDuration = 0.0;
-        _timeSinceInterpolationFinished = 0.0;
+        renderState.DisplayPosition = position;
+        renderState.InterpolationStartPosition = position;
+        renderState.InterpolationTargetPosition = position;
+        renderState.InterpolationElapsed = 0.0;
+        renderState.InterpolationDuration = 0.0;
+        renderState.TimeSinceInterpolationFinished = 0.0;
     }
 
-    private void ResetInterpolationState()
+    private void ResetInterpolationState(Var renderedVar)
     {
-        _displayPosition = Vector2.Zero;
-        _lastObservedPosition = Vector2.Zero;
-        _interpolationStartPosition = Vector2.Zero;
-        _interpolationTargetPosition = Vector2.Zero;
-        _interpolationElapsed = 0.0;
-        _interpolationDuration = 0.0;
-        _timeSinceLastPositionChange = 0.0;
-        _timeSinceInterpolationFinished = 0.0;
-        _hasInterpolationState = false;
+        if (renderedVar == null || !_renderStatesByVar.TryGetValue(renderedVar, out RenderState renderState))
+        {
+            return;
+        }
+
+        renderState.DisplayPosition = Vector2.Zero;
+        renderState.LastObservedPosition = Vector2.Zero;
+        renderState.InterpolationStartPosition = Vector2.Zero;
+        renderState.InterpolationTargetPosition = Vector2.Zero;
+        renderState.InterpolationElapsed = 0.0;
+        renderState.InterpolationDuration = 0.0;
+        renderState.TimeSinceLastPositionChange = 0.0;
+        renderState.TimeSinceInterpolationFinished = 0.0;
+        renderState.HasInterpolationState = false;
+    }
+
+    public void ResetView()
+    {
+        ViewCenterWorld = _renderedVar?.Stats?.Position ?? Vector2.Zero;
+        Zoom = 1.0f;
+        QueueRedraw();
+    }
+
+    private RenderState GetRenderState(Var renderedVar)
+    {
+        if (!_renderStatesByVar.TryGetValue(renderedVar, out RenderState renderState))
+        {
+            renderState = new RenderState();
+            _renderStatesByVar[renderedVar] = renderState;
+        }
+
+        return renderState;
+    }
+
+    private RenderStyle GetRenderStyle(Var renderedVar)
+    {
+        if (!_renderStylesByVar.TryGetValue(renderedVar, out RenderStyle renderStyle))
+        {
+            renderStyle = CreateDefaultStyle();
+            _renderStylesByVar[renderedVar] = renderStyle;
+        }
+
+        return renderStyle;
+    }
+
+    private RenderStyle CreateDefaultStyle()
+    {
+        return new RenderStyle
+        {
+            BodyColor = BodyColor,
+            AttackRangeColor = AttackRangeColor,
+            DetectRangeColor = DetectRangeColor,
+            DirectionColor = DirectionColor
+        };
+    }
+
+    private void PruneDeadVars()
+    {
+        for (int index = _renderedVars.Count - 1; index >= 0; index--)
+        {
+            Var renderedVar = _renderedVars[index];
+            if (renderedVar?.IsDead == true || renderedVar?.Stats == null)
+            {
+                _renderedVars.RemoveAt(index);
+                _renderStatesByVar.Remove(renderedVar);
+                _renderStylesByVar.Remove(renderedVar);
+            }
+        }
+
+        if (_renderedVar?.IsDead == true || _renderedVar?.Stats == null)
+        {
+            _renderedVar = _renderedVars.Count > 0 ? _renderedVars[0] : null;
+        }
+    }
+
+    public Vector2 WorldToScreen(Vector2 worldPosition)
+    {
+        return Size / 2.0f + (worldPosition - ViewCenterWorld) * Zoom;
+    }
+
+    public Vector2 ScreenToWorld(Vector2 screenPosition)
+    {
+        if (Zoom <= Epsilon)
+        {
+            return ViewCenterWorld;
+        }
+
+        return ViewCenterWorld + (screenPosition - Size / 2.0f) / Zoom;
+    }
+
+    private void HandleMouseButton(InputEventMouseButton mouseButton)
+    {
+        if (mouseButton.ButtonIndex == MouseButton.WheelUp && mouseButton.Pressed)
+        {
+            ZoomAt(mouseButton.Position, ZoomStep);
+            AcceptEvent();
+            return;
+        }
+
+        if (mouseButton.ButtonIndex == MouseButton.WheelDown && mouseButton.Pressed)
+        {
+            ZoomAt(mouseButton.Position, 1.0f / ZoomStep);
+            AcceptEvent();
+            return;
+        }
+
+        if (mouseButton.ButtonIndex == MouseButton.Middle || mouseButton.ButtonIndex == MouseButton.Right)
+        {
+            _isPanning = mouseButton.Pressed;
+            AcceptEvent();
+        }
+    }
+
+    private void HandleMouseMotion(InputEventMouseMotion mouseMotion)
+    {
+        if (!_isPanning)
+        {
+            return;
+        }
+
+        ViewCenterWorld -= mouseMotion.Relative / Zoom;
+        QueueRedraw();
+        AcceptEvent();
+    }
+
+    private void OnMouseExited()
+    {
+        SetHoveredGridCell(null);
+    }
+
+    private void UpdateHoveredGridCell(Vector2 localMousePosition)
+    {
+        if (!new Rect2(Vector2.Zero, Size).HasPoint(localMousePosition))
+        {
+            SetHoveredGridCell(null);
+            return;
+        }
+
+        SetHoveredGridCell(Grid.WorldToGrid(ScreenToWorld(localMousePosition)));
+    }
+
+    private void SetHoveredGridCell(Vector2I? gridCell)
+    {
+        if (_hoveredGridCell == gridCell)
+        {
+            return;
+        }
+
+        _hoveredGridCell = gridCell;
+        HoveredGridCellUpdated?.Invoke(_hoveredGridCell);
+
+        Vector2I signalCell = _hoveredGridCell ?? Vector2I.Zero;
+        EmitSignal(SignalName.HoveredGridCellChanged, signalCell, _hoveredGridCell.HasValue);
+    }
+
+    private void ZoomAt(Vector2 screenPosition, float zoomFactor)
+    {
+        Vector2 worldBeforeZoom = ScreenToWorld(screenPosition);
+        float newZoom = Mathf.Clamp(Zoom * zoomFactor, MinZoom, MaxZoom);
+        if (Mathf.IsEqualApprox(newZoom, Zoom))
+        {
+            return;
+        }
+
+        Zoom = newZoom;
+        ViewCenterWorld = worldBeforeZoom - (screenPosition - Size / 2.0f) / Zoom;
+        QueueRedraw();
+    }
+
+    private void DrawGrid()
+    {
+        if (Zoom <= Epsilon || Grid.CellSize <= 0)
+        {
+            return;
+        }
+
+        Vector2 topLeftWorld = ScreenToWorld(Vector2.Zero);
+        Vector2 bottomRightWorld = ScreenToWorld(Size);
+        Vector2I minCell = Grid.WorldToGrid(new Vector2(
+            Mathf.Min(topLeftWorld.X, bottomRightWorld.X),
+            Mathf.Min(topLeftWorld.Y, bottomRightWorld.Y)));
+        Vector2I maxCell = Grid.WorldToGrid(new Vector2(
+            Mathf.Max(topLeftWorld.X, bottomRightWorld.X),
+            Mathf.Max(topLeftWorld.Y, bottomRightWorld.Y)));
+
+        for (int x = minCell.X - 1; x <= maxCell.X + 1; x++)
+        {
+            for (int y = minCell.Y - 1; y <= maxCell.Y + 1; y++)
+            {
+                Vector2 cellCenter = WorldToScreen(Grid.GridToWorld(x, y));
+                Vector2 cellSize = Vector2.One * Grid.CellSize * Zoom;
+                Rect2 rect = new(cellCenter - cellSize / 2.0f, cellSize);
+                Color lineColor = x == 0 || y == 0 ? AxisGridColor : GridColor;
+                DrawRect(rect, lineColor, false, 1.0f);
+            }
+        }
     }
 
     private static Vector2 GetDrawableDirection(Vector2 direction)
@@ -321,5 +684,11 @@ public partial class VarRenderer : Node2D, IVarRenderer
 
         Vector2I facingDirection = direction.ToFacingDirection();
         return new Vector2(facingDirection.X, facingDirection.Y);
+    }
+
+    private static Color WithAlpha(Color color, float alpha)
+    {
+        color.A = alpha;
+        return color;
     }
 }

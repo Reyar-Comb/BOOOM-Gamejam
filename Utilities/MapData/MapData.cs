@@ -91,7 +91,7 @@ public class MapData
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public int GetRegion(int x, int y)
     {
-        return _regionId[x + y * Width];
+        return IsValid(x, y) ? _regionId[x + y * Width] : 0;
     }
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public bool IsBridge(int x, int y)
@@ -107,6 +107,7 @@ public class MapData
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private void SetRegion(int x, int y, int regionId)
     {
+        if (!IsValid(x, y)) return;
         _regionId[x + y * Width] = regionId;
     }
     private void ResetRegion()
@@ -299,6 +300,7 @@ public class MapData
 
     private void SetBridge(Vector2I cell)
     {
+        if (!IsValid(cell.X, cell.Y)) return;
         _isBridge[cell.X + cell.Y * Width] = true;
     }
 }

@@ -29,11 +29,13 @@ public partial class Var_DetectInAttackRange : STNode
     {
         get => _blackboard.Get<Var>("Self");
     }
+
+    private MapData MapData => _blackboard.Get<MapData>("MapData");
     protected override void OnPhysicsUpdate(double delta)
     {
         TryGetEnemyInRange();
     }
-    
+
     private void TryGetEnemyInRange()
     {
         if (Stats.AttackRange == null || Vars == null)
@@ -56,6 +58,10 @@ public partial class Var_DetectInAttackRange : STNode
         Vector2I selfCell = Grid.WorldToGrid(Stats.Position);
         foreach (Vector2I targetCell in Stats.AttackRange.EnumerateTargetCells(selfCell, Stats.Direction))
         {
+            if (MapData.GetRegion(targetCell.X, targetCell.Y) != MapData.GetRegion(selfCell.X, selfCell.Y))
+            {
+                continue;
+            }
             if (enemiesByCell.TryGetValue(targetCell, out Var enemy))
             {
                 CurrentAttackTarget = enemy;

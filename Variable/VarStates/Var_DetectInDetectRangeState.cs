@@ -51,37 +51,35 @@ public partial class Var_DetectInDetectRangeState : STNode
         }
 
         var enemiesByCell = _blackboard.Get<IReadOnlyDictionary<Vector2I, Var>>("EnemiesByCell");
+        if (enemiesByCell == null) return;
 
         Vector2I selfCell = Grid.WorldToGrid(Stats.Position);
 
         var found = new List<(Var enemy, Vector2I cell)>();
         var foundIds = new HashSet<int>();
 
-
         foreach (Vector2I targetCell in Stats.DetectRange.EnumerateTargetCells(selfCell, Stats.Direction))
         {
-            if (enemiesByCell != null && enemiesByCell.TryGetValue(targetCell, out Var enemy))
-            {
-                if (enemy == null || enemy.IsDead) continue;
+            if (MapData.GetRegion(targetCell.X, targetCell.Y) != MapData.GetRegion(selfCell.X, selfCell.Y)) continue;
+            if (!enemiesByCell.TryGetValue(targetCell, out Var enemy)) continue;
+            if (enemy == null || enemy.IsDead) continue;
 
-                int id = (int)enemy.GetInstanceId();
-                if (!foundIds.Contains(id))
-                {
-                    found.Add((enemy, targetCell));
-                    foundIds.Add(id);
-                }
+            int id = (int)enemy.GetInstanceId();
+            if (!foundIds.Contains(id))
+            {
+                found.Add((enemy, targetCell));
+                foundIds.Add(id);
             }
         }
 
         foreach (var (enemy, cell) in found)
         {
             int id = (int)enemy.GetInstanceId();
-            if (!_seenEnemyIds.Contains(id))
-            {
-                _seenEnemyIds.Add(id);
-                _detectionOrder.Add(id);
-                Self.EmitSignal(Var.SignalName.OnDetected, enemy);
-            }
+            if (_seenEnemyIds.Contains(id)) continue;
+
+            _seenEnemyIds.Add(id);
+            _detectionOrder.Add(id);
+            Self.EmitSignal(Var.SignalName.OnDetected, enemy);
         }
 
         _detectionOrder.RemoveAll(id => !foundIds.Contains(id));

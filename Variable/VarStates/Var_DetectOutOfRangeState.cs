@@ -29,6 +29,7 @@ public partial class Var_DetectOutOfRangeState : STNode
         get => _blackboard.Get<Pathfinder>("Pathfinder");
     }
 
+    private MapData MapData => _blackboard.Get<MapData>("MapData");
     private bool IsWalking
     {
         get => _blackboard.Get<bool>("IsWalking");
@@ -83,6 +84,10 @@ public partial class Var_DetectOutOfRangeState : STNode
 
         foreach (Vector2I attackCell in Stats.AttackRange.EnumerateTargetCells(selfCell, Stats.Direction))
         {
+            if (MapData.GetRegion(attackCell.X, attackCell.Y) != MapData.GetRegion(selfCell.X, selfCell.Y))
+            {
+                continue;
+            }
             if (attackCell != targetCell)
             {
                 continue;

@@ -31,9 +31,16 @@ public class AStarPathfinder : Pathfinder
         _numOfNeighborsToCheck = numOfNeighborsToCheck;
     }
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private bool CanMoveTo(int x, int y, int regionId)
+    private bool CanMoveBetween(int fromX, int fromY, int toX, int toY)
     {
-        return IsWalkable(x, y) && (_mapData.GetRegion(x, y) == regionId || _mapData.IsBridge(x, y));
+        if (!IsWalkable(toX, toY))
+        {
+            return false;
+        }
+
+        int fromRegion = _mapData.GetRegion(fromX, fromY);
+        int toRegion = _mapData.GetRegion(toX, toY);
+        return fromRegion == toRegion || (_mapData.IsBridge(fromX, fromY) && _mapData.IsBridge(toX, toY));
     }
     protected override List<Vector2I> MainLoop(PathfindingContext context, PathNode targetNode, float heuristicScale, int regionId)
     {
@@ -55,8 +62,10 @@ public class AStarPathfinder : Pathfinder
             {
                 int nx = cur.X + DxArray[i];
                 int ny = cur.Y + DyArray[i];
-                if (!CanMoveTo(nx, ny, regionId)) continue;
-                if (i >= 4 && !CheckDiagonal(CanMoveTo(nx, cur.Y, regionId), CanMoveTo(cur.X, ny, regionId))) continue;
+                if (!CanMoveBetween(cur.X, cur.Y, nx, ny)) continue;
+                if (i >= 4 && !CheckDiagonal(
+                    CanMoveBetween(cur.X, cur.Y, nx, cur.Y),
+                    CanMoveBetween(cur.X, cur.Y, cur.X, ny))) continue;
 
                 var neighborIdx = GetIndex(nx, ny);
                 ref var neighbor = ref grid[neighborIdx];

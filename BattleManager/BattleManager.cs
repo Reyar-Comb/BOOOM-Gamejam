@@ -53,6 +53,7 @@ public partial class BattleManager : Node
         VarManager.SetPhysicsProcess(false);
 
         _mapData = new MapData(60, 80);
+        _mapData.CreateRegions(6);
         VarManager.Initialize(_mapData);
     }
 

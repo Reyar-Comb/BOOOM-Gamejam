@@ -33,7 +33,7 @@ public partial class VarStats : Resource
     [Export] public VarRange AttackRange { get; set; } = null!;
     [Export] public VarRange DetectRange { get; set; } = null!;
     [Export] public int AttackDamage { get; set; }
-
+    [Export] public int TokenCost { get; set; }
     public int CurrentHealth
     {
         get => field;

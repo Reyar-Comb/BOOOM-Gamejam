@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="NumericDataResource" format=3 uid="uid://lhj6rb40lji4"]
+
+[ext_resource type="Script" uid="uid://cg6o6txvgp36k" path="res://GameData/NumericDataResource.cs" id="1_w8qnj"]
+
+[resource]
+script = ExtResource("1_w8qnj")
+Data = Dictionary[String, float]({
+"HealthMultiplier": 1.0
+})
+metadata/_custom_type_script = "uid://cg6o6txvgp36k"

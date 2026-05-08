@@ -7,8 +7,8 @@ using System.Collections.ObjectModel;
 using System.Collections.Concurrent;
 public partial class VarManager : Node
 {
-    [Export] private SkillManager _skillManager = null;
     private MapData _mapData = null!;
+    private GameData _gameData = null!;
     public static class VarListPool
     {
         private static readonly ConcurrentBag<List<Var>> _pool = new ConcurrentBag<List<Var>>();
@@ -40,9 +40,10 @@ public partial class VarManager : Node
     //         var.PhysicsUpdate(delta);
     //     }
     // }
-    public void Initialize(MapData mapData)
+    public void Initialize(MapData mapData, GameData gameData)
     {
         _mapData = mapData;
+        _gameData = gameData;
         _sharedBlackboard.Set("MapData", _mapData);
         _sharedBlackboard.Set("Vars", ReadOnlyVars);
 
@@ -86,7 +87,7 @@ public partial class VarManager : Node
         ConnectOnDeath(var);
 
         var.Initialize(_sharedBlackboard);
-        // var.InitStats(_skillManager);
+        var.InitStatsWithGameData(_gameData);
     }
 
     private void ConnectOnDeath(Var var)

@@ -46,14 +46,10 @@ public partial class Var : RefCounted, ICleanable
         Stats.Connect(VarStats.SignalName.OnDeath, _onDeathCallable);
         _hasOnDeathCallable = true;
     }
-    public void InitStats(SkillManager manager)
+    public void InitStatsWithGameData(GameData data)
     {
-        Stats.MaxHealth = manager.ApplyStatOperation<int>("MaxHealthMultiplier", Stats.MaxHealth);
+        Stats.MaxHealth = (int)(Stats.MaxHealth * data.NumericData.Get("HealthMultiplier"));
         Stats.CurrentHealth = Stats.MaxHealth;
-        Stats.AttackDamage = manager.ApplyStatOperation<int>("AttackDamageMultiplier", Stats.AttackDamage);
-        Stats.Defense = manager.ApplyStatOperation<int>("DefenseMultiplier", Stats.Defense);
-        Stats.MoveSpeed = manager.ApplyStatOperation<float>("MoveSpeedMultiplier", Stats.MoveSpeed);
-        Stats.AttackSpeedMult = manager.ApplyStatOperation<float>("AttackSpeedMultMultiplier", Stats.AttackSpeedMult);
     }
     public void Cleanup()
     {

@@ -130,9 +130,11 @@ public partial class MapDataGenerationDemo : Control
 			.UseHeuristic(Pathfinder.HeuristicType.Manhattan)
 			.Build();
 
-		_varManager.Initialize(_mapData);
+
+		_varManager.Initialize(_mapData, new GameData());
 		EnsureControlledVar();
 		ResetControlledVar();
+
 
 		_activePath.Clear();
 		_targetCell = null;

@@ -44,7 +44,8 @@ public partial class BattleManager : Node
     private bool _isTicking = false;
     
     private MapData _mapData = null!;
-
+    
+    private GameData _gameData = null!;
     public long GameTime = 0;
 
     public override void _Ready()
@@ -54,7 +55,8 @@ public partial class BattleManager : Node
 
         _mapData = new MapData(60, 80);
         _mapData.CreateRegions(6);
-        VarManager.Initialize(_mapData);
+        _gameData = new GameData();
+        VarManager.Initialize(_mapData, _gameData);
     }
 
     public override void _Process(double delta)

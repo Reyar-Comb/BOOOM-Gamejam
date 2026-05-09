@@ -22,6 +22,8 @@ public partial class VarStats : Resource
         Bool,
     }
 
+    public Type VarType { get; set; }
+
     public String Name { get; set; }
 
     [Signal] public delegate void OnDeathEventHandler();

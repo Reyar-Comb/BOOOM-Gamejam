@@ -34,7 +34,7 @@ public class CreateAck : Log
 {
     public CreateAck(Var targetVar) : base(LogType.Info, "System")
     {
-        Message = $"Successfully Created {targetVar}";
+        Message = $"Successfully Created {targetVar.Stats.Name}";
     }
 
     protected override string FormatMessage()
@@ -47,7 +47,7 @@ public class CreateAck : Log
 public class StatusAck : Log
 {
 
-    public StatusAck(Var targetVar) : base(LogType.Info, targetVar.ToString())
+    public StatusAck(Var targetVar) : base(LogType.Info, targetVar.Stats.Name)
     {
         Message = $"HP={targetVar.Stats.CurrentHealth}/{targetVar.Stats.MaxHealth}, Pos={targetVar.Stats.Position}, Direction={targetVar.Stats.Direction}";
     }
@@ -58,11 +58,36 @@ public class StatusAck : Log
     }
 }
 
+public class LocationAck : Log
+{
+    public LocationAck(Var targetVar) : base(LogType.Info, targetVar.Stats.Name)
+    {
+        Message = $"Current Location: {Grid.WorldToGrid(targetVar.Stats.Position)}";
+    }
+
+    protected override string FormatMessage()
+    {
+        return $"[Info] [{BattleManager.Instance.GetTimeString()}] {Actor}: {Message}";
+    }
+}
+
+public class HealthAck : Log
+{
+    public HealthAck(Var targetVar) : base(LogType.Info, targetVar.Stats.Name)
+    {
+        Message = $"Current Health: {targetVar.Stats.CurrentHealth}/{targetVar.Stats.MaxHealth}";
+    }
+
+    protected override string FormatMessage()
+    {
+        return $"[Info] [{BattleManager.Instance.GetTimeString()}] {Actor}: {Message}";
+    }
+}
 public class MoveAck : Log
 {
-    public MoveAck(Var targetVar, Vector2 newPosition) : base(LogType.Info, targetVar.ToString())
+    public MoveAck(Var targetVar, Vector2 newPosition) : base(LogType.Info, targetVar.Stats.Name)
     {
-        Message = $"Moving to {newPosition}";
+        Message = $"Moving to {Grid.WorldToGrid(newPosition)}";
     }
 
     protected override string FormatMessage()
@@ -73,7 +98,7 @@ public class MoveAck : Log
 
 public class AttackedWarning : Log
 {
-    public AttackedWarning(Var targetVar, AttackInfo atkInfo) : base(LogType.Warning, targetVar.ToString())
+    public AttackedWarning(Var targetVar, AttackInfo atkInfo) : base(LogType.Warning, targetVar.Stats.Name)
     {
         Message = $"Attacked from {atkInfo.GetFromDirection(targetVar.Stats.Position)}, Damage={atkInfo.Damage}";
     }
@@ -86,9 +111,9 @@ public class AttackedWarning : Log
 
 public class DetectedWarning : Log
 {
-    public DetectedWarning(Var targetVar, Var detectedVar) : base(LogType.Warning, targetVar.ToString())
+    public DetectedWarning(Var targetVar, Var detectedVar) : base(LogType.Warning, targetVar.Stats.Name)
     {
-        Message = $"Detected {detectedVar}";
+        Message = $"Detected {detectedVar.Stats.Name}";
     }
 
     protected override string FormatMessage()
@@ -99,9 +124,9 @@ public class DetectedWarning : Log
 
 public class OutOfDetectWarning : Log
 {
-    public OutOfDetectWarning(Var targetVar, Var lostTarget) : base(LogType.Warning, targetVar.ToString())
+    public OutOfDetectWarning(Var targetVar, Var lostTarget) : base(LogType.Warning, targetVar.Stats.Name)
     {
-        Message = $"Lost detection of {lostTarget}";
+        Message = $"Lost detection of {lostTarget.Stats.Name}";
     }
 
     protected override string FormatMessage()
@@ -112,7 +137,7 @@ public class OutOfDetectWarning : Log
 
 public class DeathError : Log
 {
-    public DeathError(Var targetVar) : base(LogType.Error, targetVar.ToString())
+    public DeathError(Var targetVar) : base(LogType.Error, targetVar.Stats.Name)
     {
         Message = $"Died.";
     }

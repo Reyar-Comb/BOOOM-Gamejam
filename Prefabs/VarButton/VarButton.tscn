@@ -1,0 +1,64 @@
+[gd_scene format=3 uid="uid://c3p8415n1lwy1"]
+
+[ext_resource type="FontFile" uid="uid://bnl5ekwhqxwkt" path="res://assets/Hack-Bold.ttf" id="1_l7ksu"]
+[ext_resource type="Script" uid="uid://biwimph8jg21r" path="res://Prefabs/VarButton/VarButton.cs" id="1_lb3j1"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_c8htk"]
+bg_color = Color(0, 0, 0, 0.10980392)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_lb3j1"]
+bg_color = Color(0, 0, 0, 0.34509805)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_pk4gy"]
+bg_color = Color(1, 1, 1, 0)
+
+[node name="VarButton" type="Control" unique_id=1993803341]
+custom_minimum_size = Vector2(0, 70)
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = -1720.0
+offset_bottom = -980.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+script = ExtResource("1_lb3j1")
+
+[node name="ColorRect" type="ColorRect" parent="." unique_id=1894200065]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="RichTextLabel" type="RichTextLabel" parent="." unique_id=1388884413]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/default_color = Color(0, 0, 0, 1)
+theme_override_fonts/bold_font = ExtResource("1_l7ksu")
+theme_override_font_sizes/bold_font_size = 35
+bbcode_enabled = true
+text = "[b]int1[/b]
+"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Button" type="Button" parent="." unique_id=1223400032]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/normal = SubResource("StyleBoxFlat_c8htk")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_lb3j1")
+theme_override_styles/hover = SubResource("StyleBoxFlat_pk4gy")

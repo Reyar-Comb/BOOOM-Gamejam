@@ -28,9 +28,9 @@ public partial class VarManager : Node
             _pool.Add(list);
         }
     }
-    private readonly List<Var> _vars = new();
+    public readonly List<Var> Vars = new();
     private readonly Dictionary<Var, Callable> _onDeathCallablesByVar = new();
-    private ReadOnlyCollection<Var> ReadOnlyVars => field ??= _vars.AsReadOnly();
+    private ReadOnlyCollection<Var> ReadOnlyVars => field ??= Vars.AsReadOnly();
     private Blackboard _sharedBlackboard = new();
 
     // public override void _PhysicsProcess(double delta)
@@ -57,7 +57,7 @@ public partial class VarManager : Node
     public void Tick(double delta)
     {
         List<Var> varsToRemove = VarListPool.Get();
-        foreach (var var in _vars)
+        foreach (var var in Vars)
         {
             if (var.IsDead)
             {
@@ -70,20 +70,20 @@ public partial class VarManager : Node
         {
             DisconnectOnDeath(var);
             var.Cleanup();
-            _vars.Remove(var);
+            Vars.Remove(var);
         }
         VarListPool.Return(varsToRemove);
     }
     public override void _Process(double delta)
     {
-        foreach (var var in _vars)
+        foreach (var var in Vars)
         {
             var.FrameUpdate(delta);
         }
     }
     public void AddVar(Var var)
     {
-        _vars.Add(var);
+        Vars.Add(var);
         ConnectOnDeath(var);
 
         var.Initialize(_sharedBlackboard);
@@ -115,5 +115,30 @@ public partial class VarManager : Node
     private void OnVarDeath(Var var)
     {
         var.IsDead = true;
+    }
+
+    public int CountVar(VarStats.Type type)
+    {
+        int count = 0;
+        foreach (var var in Vars)
+        {
+            if (var.Stats.VarType == type)
+            {
+                count++;
+            }
+        }
+        return count;
+    }
+
+    public Var GetVarByName(string name)
+    {
+        foreach (var var in Vars)
+        {
+            if (var.Stats.Name == name)
+            {
+                return var;
+            }
+        }
+        return null!;
     }
 }

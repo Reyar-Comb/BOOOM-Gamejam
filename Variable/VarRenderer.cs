@@ -133,7 +133,7 @@ public partial class VarRenderer : Control, IVarRenderer
         {
             return;
         }
-
+        GD.Print("Adding var to renderer: ");
         _renderedVars.Add(var);
         _renderStylesByVar[var] = CreateDefaultStyle();
         _renderedVar ??= var;

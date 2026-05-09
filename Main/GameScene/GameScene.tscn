@@ -1,6 +1,65 @@
 [gd_scene format=3 uid="uid://d0xq4j2ohsk2q"]
 
+[ext_resource type="Script" uid="uid://barrxhfrmxy8x" path="res://Main/GameScene/GameScene.cs" id="1_wlq8m"]
+[ext_resource type="Script" uid="uid://bocfjfs3ip7pw" path="res://Console/ConsoleViewModel/ConsoleManager.cs" id="2_jaa4w"]
+[ext_resource type="FontFile" uid="uid://bnl5ekwhqxwkt" path="res://assets/Hack-Bold.ttf" id="2_vecup"]
+[ext_resource type="FontFile" uid="uid://cbst7pqnmxosu" path="res://assets/Hack-Regular.ttf" id="3_3p7la"]
+[ext_resource type="Script" uid="uid://ccuvk7ii52801" path="res://BattleManager/BattleManager.cs" id="4_8oyud"]
+[ext_resource type="FontFile" uid="uid://jky4nd5a8wec" path="res://assets/Hack-BoldItalic.ttf" id="4_35cd8"]
+[ext_resource type="Script" uid="uid://01fvca8ksf16" path="res://Variable/VarManager.cs" id="5_b3sdv"]
+[ext_resource type="FontFile" uid="uid://cd6jbow8csp81" path="res://assets/Hack-Italic.ttf" id="5_ds47p"]
+[ext_resource type="Script" uid="uid://de1oryn5icnbq" path="res://Variable/VarRenderer.cs" id="6_2anr5"]
+[ext_resource type="Script" uid="uid://wjwo0jkmutf6" path="res://Main/GameScene/GamePanelNavigator.cs" id="10_8oyud"]
+[ext_resource type="Script" uid="uid://ccxvuxydhdkh5" path="res://Main/GameScene/Console.cs" id="10_utud6"]
+[ext_resource type="Script" uid="uid://s741c5fm1sb5" path="res://Utilities/PanelNavigator/ButtonBinding.cs" id="11_2anr5"]
+[ext_resource type="PackedScene" uid="uid://c3p8415n1lwy1" path="res://Prefabs/VarButton/VarButton.tscn" id="11_8oyud"]
+[ext_resource type="Script" uid="uid://sa26p4j2xfk4" path="res://Utilities/PanelNavigator/PanelUnit.cs" id="11_b3sdv"]
+
+[sub_resource type="Resource" id="Resource_b3sdv"]
+script = ExtResource("11_2anr5")
+ButtonPath = NodePath("VarUnit/VBoxContainer/PanelContainer/SelectVarButton")
+TargetPanelId = "VarAddUnit"
+metadata/_custom_type_script = "uid://s741c5fm1sb5"
+
+[sub_resource type="Resource" id="Resource_2anr5"]
+script = ExtResource("11_2anr5")
+ButtonPath = NodePath("VarOpUnit/VBoxContainer/ScrollContainer/VBoxContainer/OpStatusButton")
+TargetPanelId = "VarStatusUnit"
+metadata/_custom_type_script = "uid://s741c5fm1sb5"
+
+[sub_resource type="Resource" id="Resource_utud6"]
+script = ExtResource("11_2anr5")
+ButtonPath = NodePath("VarOpUnit/VBoxContainer/ScrollContainer/VBoxContainer/OpCommandButton")
+TargetPanelId = "VarCommandUnit"
+metadata/_custom_type_script = "uid://s741c5fm1sb5"
+
+[sub_resource type="Resource" id="Resource_xxvh7"]
+script = ExtResource("11_2anr5")
+ButtonPath = NodePath("VarCommandUnit/VBoxContainer/ScrollContainer/VBoxContainer/OpMoveButton")
+TargetPanelId = "VarMoveUnit"
+metadata/_custom_type_script = "uid://s741c5fm1sb5"
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_8oyud"]
+bg_color = Color(0.31616732, 0.31616738, 0.31616727, 1)
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_b3sdv"]
+
 [node name="GameScene" type="Node2D" unique_id=1582491454]
+script = ExtResource("1_wlq8m")
+
+[node name="ConsoleManager" type="Node" parent="." unique_id=51194342]
+script = ExtResource("2_jaa4w")
+
+[node name="BattleManager" type="Node" parent="." unique_id=1363842359 node_paths=PackedStringArray("VarManager", "ConsoleManager", "PanelNavigator", "VarRenderer")]
+script = ExtResource("4_8oyud")
+TickScale = 5.0
+VarManager = NodePath("../VarManager")
+ConsoleManager = NodePath("../ConsoleManager")
+PanelNavigator = NodePath("../MarginContainer/HBoxContainer/MarginContainer3/ChooseVar/VBoxContainer/MarginContainer2/PanelContainer/MarginContainer/PanelNavigator")
+VarRenderer = NodePath("../MarginContainer/HBoxContainer/MarginContainer2/VBoxContainer/VarRenderer")
+
+[node name="VarManager" type="Node" parent="." unique_id=1602613892]
+script = ExtResource("5_b3sdv")
 
 [node name="MarginContainer" type="MarginContainer" parent="." unique_id=347560611]
 anchors_preset = 15
@@ -16,37 +75,698 @@ size_flags_vertical = 3
 [node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer" unique_id=945856404]
 layout_mode = 2
 
-[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/HBoxContainer" unique_id=983033097]
+[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/HBoxContainer" unique_id=1845521549]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/margin_left = 50
+theme_override_constants/margin_top = 40
+theme_override_constants/margin_right = 40
+theme_override_constants/margin_bottom = 150
+
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/HBoxContainer/MarginContainer" unique_id=983033097]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_stretch_ratio = 0.39
+theme_override_constants/separation = 20
 
-[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/HBoxContainer/HBoxContainer" unique_id=1084586986]
+[node name="VBoxContainer2" type="VBoxContainer" parent="MarginContainer/HBoxContainer/MarginContainer/HBoxContainer" unique_id=568218871]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="ProgressBar" type="ProgressBar" parent="MarginContainer/HBoxContainer/HBoxContainer/VBoxContainer" unique_id=831379452]
+[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/HBoxContainer/MarginContainer/HBoxContainer/VBoxContainer2" unique_id=930903882]
 layout_mode = 2
-size_flags_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 50
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 50
+
+[node name="ProgressBar" type="ProgressBar" parent="MarginContainer/HBoxContainer/MarginContainer/HBoxContainer/VBoxContainer2/MarginContainer" unique_id=920620135]
+layout_mode = 2
+size_flags_vertical = 3
+value = 22.03
 fill_mode = 3
 
-[node name="Label" type="Label" parent="MarginContainer/HBoxContainer/HBoxContainer/VBoxContainer" unique_id=2138176983]
+[node name="Label" type="Label" parent="MarginContainer/HBoxContainer/MarginContainer/HBoxContainer/VBoxContainer2" unique_id=1450505501]
 layout_mode = 2
+theme_override_fonts/font = ExtResource("2_vecup")
+theme_override_font_sizes/font_size = 20
 text = "Patience"
 horizontal_alignment = 1
 
-[node name="VBoxContainer2" type="VBoxContainer" parent="MarginContainer/HBoxContainer/HBoxContainer" unique_id=500233681]
+[node name="HSeparator" type="HSeparator" parent="MarginContainer/HBoxContainer/MarginContainer/HBoxContainer/VBoxContainer2" unique_id=1338354259]
+modulate = Color(1, 1, 1, 0)
+layout_mode = 2
+size_flags_vertical = 3
+size_flags_stretch_ratio = 0.04
+
+[node name="VBoxContainer3" type="VBoxContainer" parent="MarginContainer/HBoxContainer/MarginContainer/HBoxContainer" unique_id=2078566339]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/HBoxContainer" unique_id=1718995261]
+[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/HBoxContainer/MarginContainer/HBoxContainer/VBoxContainer3" unique_id=593013154]
 layout_mode = 2
 size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 50
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 50
 
-[node name="PanelContainer" type="PanelContainer" parent="MarginContainer/HBoxContainer" unique_id=1552360732]
+[node name="ProgressBar" type="ProgressBar" parent="MarginContainer/HBoxContainer/MarginContainer/HBoxContainer/VBoxContainer3/MarginContainer" unique_id=2124816428]
+layout_mode = 2
+size_flags_vertical = 3
+value = 22.03
+fill_mode = 3
+
+[node name="Label" type="Label" parent="MarginContainer/HBoxContainer/MarginContainer/HBoxContainer/VBoxContainer3" unique_id=1288177147]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("2_vecup")
+theme_override_font_sizes/font_size = 20
+text = "Patience"
+horizontal_alignment = 1
+
+[node name="HSeparator" type="HSeparator" parent="MarginContainer/HBoxContainer/MarginContainer/HBoxContainer/VBoxContainer3" unique_id=2053109729]
+modulate = Color(1, 1, 1, 0)
+layout_mode = 2
+size_flags_vertical = 3
+size_flags_stretch_ratio = 0.04
+
+[node name="MarginContainer2" type="MarginContainer" parent="MarginContainer/HBoxContainer" unique_id=337682986]
 layout_mode = 2
 size_flags_horizontal = 3
-size_flags_stretch_ratio = 0.54
+size_flags_stretch_ratio = 10.0
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 50
+theme_override_constants/margin_right = 50
+theme_override_constants/margin_bottom = 50
 
-[node name="Control" type="Control" parent="MarginContainer/HBoxContainer/PanelContainer" unique_id=8746168]
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/HBoxContainer/MarginContainer2" unique_id=1718995261]
 layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 30
+
+[node name="VarRenderer" type="Control" parent="MarginContainer/HBoxContainer/MarginContainer2/VBoxContainer" unique_id=1166360567 node_paths=PackedStringArray("BattleManager")]
+layout_mode = 2
+size_flags_vertical = 3
+script = ExtResource("6_2anr5")
+DrawBackground = true
+RenderGrid = true
+BattleManager = NodePath("../../../../../BattleManager")
+metadata/_custom_type_script = "uid://de1oryn5icnbq"
+
+[node name="PanelContainer" type="PanelContainer" parent="MarginContainer/HBoxContainer/MarginContainer2/VBoxContainer" unique_id=416854844]
+layout_mode = 2
+size_flags_vertical = 3
+size_flags_stretch_ratio = 0.5
+
+[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/HBoxContainer/MarginContainer2/VBoxContainer/PanelContainer" unique_id=1478602741]
+layout_mode = 2
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 20
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 20
+
+[node name="Console" type="RichTextLabel" parent="MarginContainer/HBoxContainer/MarginContainer2/VBoxContainer/PanelContainer/MarginContainer" unique_id=1812832563 node_paths=PackedStringArray("ConsoleManager")]
+layout_mode = 2
+theme_override_fonts/normal_font = ExtResource("3_3p7la")
+theme_override_fonts/bold_font = ExtResource("2_vecup")
+theme_override_fonts/bold_italics_font = ExtResource("4_35cd8")
+theme_override_fonts/italics_font = ExtResource("5_ds47p")
+theme_override_font_sizes/normal_font_size = 20
+theme_override_font_sizes/bold_font_size = 20
+theme_override_font_sizes/bold_italics_font_size = 20
+theme_override_font_sizes/italics_font_size = 20
+theme_override_font_sizes/mono_font_size = 20
+script = ExtResource("10_utud6")
+ConsoleManager = NodePath("../../../../../../../ConsoleManager")
+
+[node name="MarginContainer3" type="MarginContainer" parent="MarginContainer/HBoxContainer" unique_id=279241852]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 3.0
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 40
+theme_override_constants/margin_right = 30
+theme_override_constants/margin_bottom = 50
+
+[node name="ChooseVar" type="Control" parent="MarginContainer/HBoxContainer/MarginContainer3" unique_id=1261672753]
+layout_mode = 2
+script = ExtResource("11_b3sdv")
+PanelId = "ChooseVar"
+metadata/_custom_type_script = "uid://sa26p4j2xfk4"
+
+[node name="PanelContainer" type="PanelContainer" parent="MarginContainer/HBoxContainer/MarginContainer3/ChooseVar" unique_id=607573787]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_vertical = 3
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/HBoxContainer/MarginContainer3/ChooseVar" unique_id=1172201399]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/HBoxContainer/MarginContainer3/ChooseVar/VBoxContainer" unique_id=912428863]
+layout_mode = 2
+size_flags_vertical = 3
+size_flags_stretch_ratio = 0.07
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 250
+theme_override_constants/margin_bottom = 10
+
+[node name="ReturnButton" type="Button" parent="MarginContainer/HBoxContainer/MarginContainer3/ChooseVar/VBoxContainer/MarginContainer" unique_id=394799611]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_fonts/font = ExtResource("4_35cd8")
+text = "<-"
+
+[node name="MarginContainer2" type="MarginContainer" parent="MarginContainer/HBoxContainer/MarginContainer3/ChooseVar/VBoxContainer" unique_id=1139721577]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 20
+
+[node name="PanelContainer" type="PanelContainer" parent="MarginContainer/HBoxContainer/MarginContainer3/ChooseVar/VBoxContainer/MarginContainer2" unique_id=446451997]
+layout_mode = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/HBoxContainer/MarginContainer3/ChooseVar/VBoxContainer/MarginContainer2/PanelContainer" unique_id=1906222613]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 20
+
+[node name="PanelNavigator" type="Control" parent="MarginContainer/HBoxContainer/MarginContainer3/ChooseVar/VBoxContainer/MarginContainer2/PanelContainer/MarginContainer" unique_id=133855871 node_paths=PackedStringArray("BackButton", "SelectedVarLabels", "LocationLabels", "VarManager", "_varListContainer", "VarRenderer")]
+layout_mode = 2
+size_flags_vertical = 3
+script = ExtResource("10_8oyud")
+BackButton = NodePath("../../../../MarginContainer/ReturnButton")
+SelectedVarLabels = [NodePath("VarOpUnit/VBoxContainer/PanelContainer/SelectedVarButton/RichTextLabel"), NodePath("VarStatusUnit/VBoxContainer/PanelContainer/SelectedVarButton/RichTextLabel"), NodePath("VarCommandUnit/VBoxContainer/PanelContainer/SelectedVarButton/RichTextLabel"), NodePath("VarMoveUnit/VBoxContainer/PanelContainer/SelectedVarButton/RichTextLabel")]
+LocationLabels = [NodePath("VarAddUnit/VBoxContainer/ScrollContainer/VBoxContainer/PanelContainer/LocationLabel"), NodePath("VarMoveUnit/VBoxContainer/ScrollContainer/VBoxContainer/PanelContainer/LocationLabel")]
+VarManager = NodePath("../../../../../../../../../VarManager")
+_varListContainer = NodePath("VarUnit/VBoxContainer/ScrollContainer/VBoxContainer")
+VarRenderer = NodePath("../../../../../../../MarginContainer2/VBoxContainer/VarRenderer")
+ButtonBindings = Array[ExtResource("11_2anr5")]([SubResource("Resource_b3sdv"), SubResource("Resource_2anr5"), SubResource("Resource_utud6"), SubResource("Resource_xxvh7")])
+metadata/_custom_type_script = "uid://kdydruu63l2c"
+
+[node name="VarUnit" type="Control" parent="MarginContainer/HBoxContainer/MarginContainer3/ChooseVar/VBoxContainer/MarginContainer2/PanelContainer/MarginContainer/PanelNavigator" unique_id=2060844466]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("11_b3sdv")
+PanelId = "VarUnit"
+metadata/_custom_type_script = "uid://sa26p4j2xfk4"
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/HBoxContainer/MarginContainer3/ChooseVar/VBoxContainer/MarginContainer2/PanelContainer/MarginContainer/PanelNavigator/VarUnit" unique_id=235060198]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 50
+
+[node name="ScrollContainer" type="ScrollContainer" parent="MarginContainer/HBoxContainer/MarginContainer3/ChooseVar/VBoxContainer/MarginContainer2/PanelContainer/MarginContainer/PanelNavigator/VarUnit/VBoxContainer" unique_id=608178004]
+layout_mode = 2
+size_flags_vertical = 3
+horizontal_scroll_mode = 3
+vertical_scroll_mode = 3
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/HBoxContainer/MarginContainer3/ChooseVar/VBoxContainer/MarginContainer2/PanelContainer/MarginContainer/PanelNavigator/VarUnit/VBoxContainer/ScrollContainer" unique_id=1179856748]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/separation = 12
+
+[node name="PanelContainer" type="PanelContainer" parent="MarginContainer/HBoxContainer/MarginContainer3/ChooseVar/VBoxContainer/MarginContainer2/PanelContainer/MarginContainer/PanelNavigator/VarUnit/VBoxContainer" unique_id=2082086881]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_8oyud")
+
+[node name="SelectVarButton" parent="MarginContainer/HBoxContainer/MarginContainer3/ChooseVar/VBoxContainer/MarginContainer2/PanelContainer/MarginContainer/PanelNavigator/VarUnit/VBoxContainer/PanelContainer" unique_id=1869583073 instance=ExtResource("11_8oyud")]
+layout_mode = 2
+
+[node name="ColorRect" parent="MarginContainer/HBoxContainer/MarginContainer3/ChooseVar/VBoxContainer/MarginContainer2/PanelContainer/MarginContainer/PanelNavigator/VarUnit/VBoxContainer/PanelContainer/SelectVarButton" index="0" unique_id=1894200065]
+color = Color(0.4506483, 0.4506483, 0.45064825, 1)
+
+[node name="RichTextLabel" parent="MarginContainer/HBoxContainer/MarginContainer3/ChooseVar/VBoxContainer/MarginContainer2/PanelContainer/MarginContainer/PanelNavigator/VarUnit/VBoxContainer/PanelContainer/SelectVarButton" index="1" unique_id=1388884413]
+theme_override_colors/default_color = Color(1, 1, 1, 1)
+text = "[b]+[/b]
+"
+
+[node name="VarOpUnit" type="Control" parent="MarginContainer/HBoxContainer/MarginContainer3/ChooseVar/VBoxContainer/MarginContainer2/PanelContainer/MarginContainer/PanelNavigator" unique_id=496238830]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("11_b3sdv")
+PanelId = "VarOpUnit"
+metadata/_custom_type_script = "uid://sa26p4j2xfk4"
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/HBoxContainer/MarginContainer3/ChooseVar/VBoxContainer/MarginContainer2/PanelContainer/MarginContainer/PanelNavigator/VarOpUnit" unique_id=127303262]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 50
+
+[node name="ScrollContainer" type="ScrollContainer" parent="MarginContainer/HBoxContainer/MarginContainer3/ChooseVar/VBoxContainer/MarginContainer2/PanelContainer/MarginContainer/PanelNavigator/VarOpUnit/VBoxContainer" unique_id=922663101]
+layout_mode = 2
+size_flags_vertical = 3
+horizontal_scroll_mode = 3
+vertical_scroll_mode = 3
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/HBoxContainer/MarginContainer3/ChooseVar/VBoxContainer/MarginContainer2/PanelContainer/MarginContainer/PanelNavigator/VarOpUnit/VBoxContainer/ScrollContainer" unique_id=294320997]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/separation = 12
+
+[node name="OpStatusButton" parent="MarginContainer/HBoxContainer/MarginContainer3/ChooseVar/VBoxContainer/MarginContainer2/PanelContainer/MarginContainer/PanelNavigator/VarOpUnit/VBoxContainer/ScrollContainer/VBoxContainer" unique_id=158889923 instance=ExtResource("11_8oyud")]
+layout_mode = 2
+size_flags_vertical = 1
+
+[node name="ColorRect" parent="MarginContainer/HBoxContainer/MarginContainer3/ChooseVar/VBoxContainer/MarginContainer2/PanelContainer/MarginContainer/PanelNavigator/VarOpUnit/VBoxContainer/ScrollContainer/VBoxContainer/OpStatusButton" index="0" unique_id=1894200065]
+color = Color(1, 0.5921569, 0.50980395, 1)
+
+[node name="RichTextLabel" parent="MarginContainer/HBoxContainer/MarginContainer3/ChooseVar/VBoxContainer/MarginContainer2/PanelContainer/MarginContainer/PanelNavigator/VarOpUnit/VBoxContainer/ScrollContainer/VBoxContainer/OpStatusButton" index="1" unique_id=1388884413]
+text = "[b]Status[/b]
+"
+
+[node name="OpCommandButton" parent="MarginContainer/HBoxContainer/MarginContainer3/ChooseVar/VBoxContainer/MarginContainer2/PanelContainer/MarginContainer/PanelNavigator/VarOpUnit/VBoxContainer/ScrollContainer/VBoxContainer" unique_id=872858293 instance=ExtResource("11_8oyud")]
+layout_mode = 2
+size_flags_vertical = 1
+
+[node name="ColorRect" parent="MarginContainer/HBoxContainer/MarginContainer3/ChooseVar/VBoxContainer/MarginContainer2/PanelContainer/MarginContainer/PanelNavigator/VarOpUnit/VBoxContainer/ScrollContainer/VBoxContainer/OpCommandButton" index="0" unique_id=1894200065]
+color = Color(1, 1, 0.53333336, 1)
+
+[node name="RichTextLabel" parent="MarginContainer/HBoxContainer/MarginContainer3/ChooseVar/VBoxContainer/MarginContainer2/PanelContainer/MarginContainer/PanelNavigator/VarOpUnit/VBoxContainer/ScrollContainer/VBoxContainer/OpCommandButton" index="1" unique_id=1388884413]
+text = "[b]Command[/b]
+"
+
+[node name="PanelContainer" type="PanelContainer" parent="MarginContainer/HBoxContainer/MarginContainer3/ChooseVar/VBoxContainer/MarginContainer2/PanelContainer/MarginContainer/PanelNavigator/VarOpUnit/VBoxContainer" unique_id=1283121429]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_8oyud")
+
+[node name="SelectedVarButton" parent="MarginContainer/HBoxContainer/MarginContainer3/ChooseVar/VBoxContainer/MarginContainer2/PanelContainer/MarginContainer/PanelNavigator/VarOpUnit/VBoxContainer/PanelContainer" unique_id=1422389573 instance=ExtResource("11_8oyud")]
+layout_mode = 2
+
+[node name="ColorRect" parent="MarginContainer/HBoxContainer/MarginContainer3/ChooseVar/VBoxContainer/MarginContainer2/PanelContainer/MarginContainer/PanelNavigator/VarOpUnit/VBoxContainer/PanelContainer/SelectedVarButton" index="0" unique_id=1894200065]
+color = Color(0.4506483, 0.4506483, 0.45064825, 1)
+
+[node name="RichTextLabel" parent="MarginContainer/HBoxContainer/MarginContainer3/ChooseVar/VBoxContainer/MarginContainer2/PanelContainer/MarginContainer/PanelNavigator/VarOpUnit/VBoxContainer/PanelContainer/SelectedVarButton" index="1" unique_id=1388884413]
+theme_override_colors/default_color = Color(1, 1, 1, 1)
+
+[node name="Button" parent="MarginContainer/HBoxContainer/MarginContainer3/ChooseVar/VBoxContainer/MarginContainer2/PanelContainer/MarginContainer/PanelNavigator/VarOpUnit/VBoxContainer/PanelContainer/SelectedVarButton" index="2" unique_id=1223400032]
+disabled = true
+
+[node name="VarStatusUnit" type="Control" parent="MarginContainer/HBoxContainer/MarginContainer3/ChooseVar/VBoxContainer/MarginContainer2/PanelContainer/MarginContainer/PanelNavigator" unique_id=1871174077]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("11_b3sdv")
+PanelId = "VarStatusUnit"
+metadata/_custom_type_script = "uid://sa26p4j2xfk4"
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/HBoxContainer/MarginContainer3/ChooseVar/VBoxContainer/MarginContainer2/PanelContainer/MarginContainer/PanelNavigator/VarStatusUnit" unique_id=653312184]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 50
+
+[node name="ScrollContainer" type="ScrollContainer" parent="MarginContainer/HBoxContainer/MarginContainer3/ChooseVar/VBoxContainer/MarginContainer2/PanelContainer/MarginContainer/PanelNavigator/VarStatusUnit/VBoxContainer" unique_id=1274741606]
+layout_mode = 2
+size_flags_vertical = 3
+horizontal_scroll_mode = 3
+vertical_scroll_mode = 3
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/HBoxContainer/MarginContainer3/ChooseVar/VBoxContainer/MarginContainer2/PanelContainer/MarginContainer/PanelNavigator/VarStatusUnit/VBoxContainer/ScrollContainer" unique_id=220692964]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/separation = 12
+
+[node name="OpLocationButton" parent="MarginContainer/HBoxContainer/MarginContainer3/ChooseVar/VBoxContainer/MarginContainer2/PanelContainer/MarginContainer/PanelNavigator/VarStatusUnit/VBoxContainer/ScrollContainer/VBoxContainer" unique_id=627533663 instance=ExtResource("11_8oyud")]
+layout_mode = 2
+size_flags_vertical = 1
+
+[node name="ColorRect" parent="MarginContainer/HBoxContainer/MarginContainer3/ChooseVar/VBoxContainer/MarginContainer2/PanelContainer/MarginContainer/PanelNavigator/VarStatusUnit/VBoxContainer/ScrollContainer/VBoxContainer/OpLocationButton" index="0" unique_id=1894200065]
+color = Color(1, 0.5921569, 0.50980395, 1)
+
+[node name="RichTextLabel" parent="MarginContainer/HBoxContainer/MarginContainer3/ChooseVar/VBoxContainer/MarginContainer2/PanelContainer/MarginContainer/PanelNavigator/VarStatusUnit/VBoxContainer/ScrollContainer/VBoxContainer/OpLocationButton" index="1" unique_id=1388884413]
+text = "[b]Location[/b]
+"
+
+[node name="OpHealthButton" parent="MarginContainer/HBoxContainer/MarginContainer3/ChooseVar/VBoxContainer/MarginContainer2/PanelContainer/MarginContainer/PanelNavigator/VarStatusUnit/VBoxContainer/ScrollContainer/VBoxContainer" unique_id=1909446224 instance=ExtResource("11_8oyud")]
+layout_mode = 2
+size_flags_vertical = 1
+
+[node name="ColorRect" parent="MarginContainer/HBoxContainer/MarginContainer3/ChooseVar/VBoxContainer/MarginContainer2/PanelContainer/MarginContainer/PanelNavigator/VarStatusUnit/VBoxContainer/ScrollContainer/VBoxContainer/OpHealthButton" index="0" unique_id=1894200065]
+color = Color(1, 1, 0.53333336, 1)
+
+[node name="RichTextLabel" parent="MarginContainer/HBoxContainer/MarginContainer3/ChooseVar/VBoxContainer/MarginContainer2/PanelContainer/MarginContainer/PanelNavigator/VarStatusUnit/VBoxContainer/ScrollContainer/VBoxContainer/OpHealthButton" index="1" unique_id=1388884413]
+text = "[b]Health[/b]
+"
+
+[node name="PanelContainer" type="PanelContainer" parent="MarginContainer/HBoxContainer/MarginContainer3/ChooseVar/VBoxContainer/MarginContainer2/PanelContainer/MarginContainer/PanelNavigator/VarStatusUnit/VBoxContainer" unique_id=182278569]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_8oyud")
+
+[node name="SelectedVarButton" parent="MarginContainer/HBoxContainer/MarginContainer3/ChooseVar/VBoxContainer/MarginContainer2/PanelContainer/MarginContainer/PanelNavigator/VarStatusUnit/VBoxContainer/PanelContainer" unique_id=1302913856 instance=ExtResource("11_8oyud")]
+layout_mode = 2
+
+[node name="ColorRect" parent="MarginContainer/HBoxContainer/MarginContainer3/ChooseVar/VBoxContainer/MarginContainer2/PanelContainer/MarginContainer/PanelNavigator/VarStatusUnit/VBoxContainer/PanelContainer/SelectedVarButton" index="0" unique_id=1894200065]
+color = Color(0.4506483, 0.4506483, 0.45064825, 1)
+
+[node name="RichTextLabel" parent="MarginContainer/HBoxContainer/MarginContainer3/ChooseVar/VBoxContainer/MarginContainer2/PanelContainer/MarginContainer/PanelNavigator/VarStatusUnit/VBoxContainer/PanelContainer/SelectedVarButton" index="1" unique_id=1388884413]
+theme_override_colors/default_color = Color(1, 1, 1, 1)
+
+[node name="Button" parent="MarginContainer/HBoxContainer/MarginContainer3/ChooseVar/VBoxContainer/MarginContainer2/PanelContainer/MarginContainer/PanelNavigator/VarStatusUnit/VBoxContainer/PanelContainer/SelectedVarButton" index="2" unique_id=1223400032]
+disabled = true
+
+[node name="VarCommandUnit" type="Control" parent="MarginContainer/HBoxContainer/MarginContainer3/ChooseVar/VBoxContainer/MarginContainer2/PanelContainer/MarginContainer/PanelNavigator" unique_id=1910640537]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("11_b3sdv")
+PanelId = "VarCommandUnit"
+metadata/_custom_type_script = "uid://sa26p4j2xfk4"
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/HBoxContainer/MarginContainer3/ChooseVar/VBoxContainer/MarginContainer2/PanelContainer/MarginContainer/PanelNavigator/VarCommandUnit" unique_id=1173178127]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 50
+
+[node name="ScrollContainer" type="ScrollContainer" parent="MarginContainer/HBoxContainer/MarginContainer3/ChooseVar/VBoxContainer/MarginContainer2/PanelContainer/MarginContainer/PanelNavigator/VarCommandUnit/VBoxContainer" unique_id=320622385]
+layout_mode = 2
+size_flags_vertical = 3
+horizontal_scroll_mode = 3
+vertical_scroll_mode = 3
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/HBoxContainer/MarginContainer3/ChooseVar/VBoxContainer/MarginContainer2/PanelContainer/MarginContainer/PanelNavigator/VarCommandUnit/VBoxContainer/ScrollContainer" unique_id=1059504697]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/separation = 12
+
+[node name="OpMoveButton" parent="MarginContainer/HBoxContainer/MarginContainer3/ChooseVar/VBoxContainer/MarginContainer2/PanelContainer/MarginContainer/PanelNavigator/VarCommandUnit/VBoxContainer/ScrollContainer/VBoxContainer" unique_id=495013879 instance=ExtResource("11_8oyud")]
+layout_mode = 2
+size_flags_vertical = 1
+
+[node name="ColorRect" parent="MarginContainer/HBoxContainer/MarginContainer3/ChooseVar/VBoxContainer/MarginContainer2/PanelContainer/MarginContainer/PanelNavigator/VarCommandUnit/VBoxContainer/ScrollContainer/VBoxContainer/OpMoveButton" index="0" unique_id=1894200065]
+color = Color(1, 0.5921569, 0.50980395, 1)
+
+[node name="RichTextLabel" parent="MarginContainer/HBoxContainer/MarginContainer3/ChooseVar/VBoxContainer/MarginContainer2/PanelContainer/MarginContainer/PanelNavigator/VarCommandUnit/VBoxContainer/ScrollContainer/VBoxContainer/OpMoveButton" index="1" unique_id=1388884413]
+text = "[b]Move[/b]
+"
+
+[node name="PanelContainer" type="PanelContainer" parent="MarginContainer/HBoxContainer/MarginContainer3/ChooseVar/VBoxContainer/MarginContainer2/PanelContainer/MarginContainer/PanelNavigator/VarCommandUnit/VBoxContainer" unique_id=649694835]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_8oyud")
+
+[node name="SelectedVarButton" parent="MarginContainer/HBoxContainer/MarginContainer3/ChooseVar/VBoxContainer/MarginContainer2/PanelContainer/MarginContainer/PanelNavigator/VarCommandUnit/VBoxContainer/PanelContainer" unique_id=25301034 instance=ExtResource("11_8oyud")]
+layout_mode = 2
+
+[node name="ColorRect" parent="MarginContainer/HBoxContainer/MarginContainer3/ChooseVar/VBoxContainer/MarginContainer2/PanelContainer/MarginContainer/PanelNavigator/VarCommandUnit/VBoxContainer/PanelContainer/SelectedVarButton" index="0" unique_id=1894200065]
+color = Color(0.4506483, 0.4506483, 0.45064825, 1)
+
+[node name="RichTextLabel" parent="MarginContainer/HBoxContainer/MarginContainer3/ChooseVar/VBoxContainer/MarginContainer2/PanelContainer/MarginContainer/PanelNavigator/VarCommandUnit/VBoxContainer/PanelContainer/SelectedVarButton" index="1" unique_id=1388884413]
+theme_override_colors/default_color = Color(1, 1, 1, 1)
+
+[node name="Button" parent="MarginContainer/HBoxContainer/MarginContainer3/ChooseVar/VBoxContainer/MarginContainer2/PanelContainer/MarginContainer/PanelNavigator/VarCommandUnit/VBoxContainer/PanelContainer/SelectedVarButton" index="2" unique_id=1223400032]
+disabled = true
+
+[node name="VarAddUnit" type="Control" parent="MarginContainer/HBoxContainer/MarginContainer3/ChooseVar/VBoxContainer/MarginContainer2/PanelContainer/MarginContainer/PanelNavigator" unique_id=2048405454]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("11_b3sdv")
+PanelId = "VarAddUnit"
+metadata/_custom_type_script = "uid://sa26p4j2xfk4"
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/HBoxContainer/MarginContainer3/ChooseVar/VBoxContainer/MarginContainer2/PanelContainer/MarginContainer/PanelNavigator/VarAddUnit" unique_id=1586005104]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 50
+
+[node name="ScrollContainer" type="ScrollContainer" parent="MarginContainer/HBoxContainer/MarginContainer3/ChooseVar/VBoxContainer/MarginContainer2/PanelContainer/MarginContainer/PanelNavigator/VarAddUnit/VBoxContainer" unique_id=1199970129]
+layout_mode = 2
+size_flags_vertical = 3
+horizontal_scroll_mode = 3
+vertical_scroll_mode = 3
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/HBoxContainer/MarginContainer3/ChooseVar/VBoxContainer/MarginContainer2/PanelContainer/MarginContainer/PanelNavigator/VarAddUnit/VBoxContainer/ScrollContainer" unique_id=271593718]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/separation = 12
+
+[node name="AddIntButton" parent="MarginContainer/HBoxContainer/MarginContainer3/ChooseVar/VBoxContainer/MarginContainer2/PanelContainer/MarginContainer/PanelNavigator/VarAddUnit/VBoxContainer/ScrollContainer/VBoxContainer" unique_id=1029203935 instance=ExtResource("11_8oyud")]
+layout_mode = 2
+size_flags_vertical = 1
+
+[node name="ColorRect" parent="MarginContainer/HBoxContainer/MarginContainer3/ChooseVar/VBoxContainer/MarginContainer2/PanelContainer/MarginContainer/PanelNavigator/VarAddUnit/VBoxContainer/ScrollContainer/VBoxContainer/AddIntButton" index="0" unique_id=1894200065]
+color = Color(1, 0.5921569, 0.50980395, 1)
+
+[node name="RichTextLabel" parent="MarginContainer/HBoxContainer/MarginContainer3/ChooseVar/VBoxContainer/MarginContainer2/PanelContainer/MarginContainer/PanelNavigator/VarAddUnit/VBoxContainer/ScrollContainer/VBoxContainer/AddIntButton" index="1" unique_id=1388884413]
+text = "[b]Int[/b]
+"
+
+[node name="AddCharButton" parent="MarginContainer/HBoxContainer/MarginContainer3/ChooseVar/VBoxContainer/MarginContainer2/PanelContainer/MarginContainer/PanelNavigator/VarAddUnit/VBoxContainer/ScrollContainer/VBoxContainer" unique_id=218567015 instance=ExtResource("11_8oyud")]
+layout_mode = 2
+size_flags_vertical = 1
+
+[node name="ColorRect" parent="MarginContainer/HBoxContainer/MarginContainer3/ChooseVar/VBoxContainer/MarginContainer2/PanelContainer/MarginContainer/PanelNavigator/VarAddUnit/VBoxContainer/ScrollContainer/VBoxContainer/AddCharButton" index="0" unique_id=1894200065]
+color = Color(1, 1, 0.53333336, 1)
+
+[node name="RichTextLabel" parent="MarginContainer/HBoxContainer/MarginContainer3/ChooseVar/VBoxContainer/MarginContainer2/PanelContainer/MarginContainer/PanelNavigator/VarAddUnit/VBoxContainer/ScrollContainer/VBoxContainer/AddCharButton" index="1" unique_id=1388884413]
+text = "[b]Char[/b]
+"
+
+[node name="AddFloatButton" parent="MarginContainer/HBoxContainer/MarginContainer3/ChooseVar/VBoxContainer/MarginContainer2/PanelContainer/MarginContainer/PanelNavigator/VarAddUnit/VBoxContainer/ScrollContainer/VBoxContainer" unique_id=1232173103 instance=ExtResource("11_8oyud")]
+layout_mode = 2
+size_flags_vertical = 1
+
+[node name="ColorRect" parent="MarginContainer/HBoxContainer/MarginContainer3/ChooseVar/VBoxContainer/MarginContainer2/PanelContainer/MarginContainer/PanelNavigator/VarAddUnit/VBoxContainer/ScrollContainer/VBoxContainer/AddFloatButton" index="0" unique_id=1894200065]
+color = Color(1, 1, 0.53333336, 1)
+
+[node name="RichTextLabel" parent="MarginContainer/HBoxContainer/MarginContainer3/ChooseVar/VBoxContainer/MarginContainer2/PanelContainer/MarginContainer/PanelNavigator/VarAddUnit/VBoxContainer/ScrollContainer/VBoxContainer/AddFloatButton" index="1" unique_id=1388884413]
+text = "[b]Float[/b]
+"
+
+[node name="AddDoubleButton" parent="MarginContainer/HBoxContainer/MarginContainer3/ChooseVar/VBoxContainer/MarginContainer2/PanelContainer/MarginContainer/PanelNavigator/VarAddUnit/VBoxContainer/ScrollContainer/VBoxContainer" unique_id=104788066 instance=ExtResource("11_8oyud")]
+layout_mode = 2
+size_flags_vertical = 1
+
+[node name="ColorRect" parent="MarginContainer/HBoxContainer/MarginContainer3/ChooseVar/VBoxContainer/MarginContainer2/PanelContainer/MarginContainer/PanelNavigator/VarAddUnit/VBoxContainer/ScrollContainer/VBoxContainer/AddDoubleButton" index="0" unique_id=1894200065]
+color = Color(1, 1, 0.53333336, 1)
+
+[node name="RichTextLabel" parent="MarginContainer/HBoxContainer/MarginContainer3/ChooseVar/VBoxContainer/MarginContainer2/PanelContainer/MarginContainer/PanelNavigator/VarAddUnit/VBoxContainer/ScrollContainer/VBoxContainer/AddDoubleButton" index="1" unique_id=1388884413]
+text = "[b]Double[/b]
+"
+
+[node name="AddLongDoubleButton" parent="MarginContainer/HBoxContainer/MarginContainer3/ChooseVar/VBoxContainer/MarginContainer2/PanelContainer/MarginContainer/PanelNavigator/VarAddUnit/VBoxContainer/ScrollContainer/VBoxContainer" unique_id=1977854194 instance=ExtResource("11_8oyud")]
+layout_mode = 2
+size_flags_vertical = 1
+
+[node name="ColorRect" parent="MarginContainer/HBoxContainer/MarginContainer3/ChooseVar/VBoxContainer/MarginContainer2/PanelContainer/MarginContainer/PanelNavigator/VarAddUnit/VBoxContainer/ScrollContainer/VBoxContainer/AddLongDoubleButton" index="0" unique_id=1894200065]
+color = Color(1, 1, 0.53333336, 1)
+
+[node name="RichTextLabel" parent="MarginContainer/HBoxContainer/MarginContainer3/ChooseVar/VBoxContainer/MarginContainer2/PanelContainer/MarginContainer/PanelNavigator/VarAddUnit/VBoxContainer/ScrollContainer/VBoxContainer/AddLongDoubleButton" index="1" unique_id=1388884413]
+text = "[b]Long Double[/b]
+"
+
+[node name="AddLongButton" parent="MarginContainer/HBoxContainer/MarginContainer3/ChooseVar/VBoxContainer/MarginContainer2/PanelContainer/MarginContainer/PanelNavigator/VarAddUnit/VBoxContainer/ScrollContainer/VBoxContainer" unique_id=338267082 instance=ExtResource("11_8oyud")]
+layout_mode = 2
+size_flags_vertical = 1
+
+[node name="ColorRect" parent="MarginContainer/HBoxContainer/MarginContainer3/ChooseVar/VBoxContainer/MarginContainer2/PanelContainer/MarginContainer/PanelNavigator/VarAddUnit/VBoxContainer/ScrollContainer/VBoxContainer/AddLongButton" index="0" unique_id=1894200065]
+color = Color(1, 1, 0.53333336, 1)
+
+[node name="RichTextLabel" parent="MarginContainer/HBoxContainer/MarginContainer3/ChooseVar/VBoxContainer/MarginContainer2/PanelContainer/MarginContainer/PanelNavigator/VarAddUnit/VBoxContainer/ScrollContainer/VBoxContainer/AddLongButton" index="1" unique_id=1388884413]
+text = "[b]Long[/b]
+"
+
+[node name="AddBoolButton" parent="MarginContainer/HBoxContainer/MarginContainer3/ChooseVar/VBoxContainer/MarginContainer2/PanelContainer/MarginContainer/PanelNavigator/VarAddUnit/VBoxContainer/ScrollContainer/VBoxContainer" unique_id=2062394104 instance=ExtResource("11_8oyud")]
+layout_mode = 2
+size_flags_vertical = 1
+
+[node name="ColorRect" parent="MarginContainer/HBoxContainer/MarginContainer3/ChooseVar/VBoxContainer/MarginContainer2/PanelContainer/MarginContainer/PanelNavigator/VarAddUnit/VBoxContainer/ScrollContainer/VBoxContainer/AddBoolButton" index="0" unique_id=1894200065]
+color = Color(1, 1, 0.53333336, 1)
+
+[node name="RichTextLabel" parent="MarginContainer/HBoxContainer/MarginContainer3/ChooseVar/VBoxContainer/MarginContainer2/PanelContainer/MarginContainer/PanelNavigator/VarAddUnit/VBoxContainer/ScrollContainer/VBoxContainer/AddBoolButton" index="1" unique_id=1388884413]
+text = "[b]Bool[/b]
+"
+
+[node name="PanelContainer" type="PanelContainer" parent="MarginContainer/HBoxContainer/MarginContainer3/ChooseVar/VBoxContainer/MarginContainer2/PanelContainer/MarginContainer/PanelNavigator/VarAddUnit/VBoxContainer/ScrollContainer/VBoxContainer" unique_id=1711041455]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_styles/panel = SubResource("StyleBoxEmpty_b3sdv")
+
+[node name="LocationLabel" type="RichTextLabel" parent="MarginContainer/HBoxContainer/MarginContainer3/ChooseVar/VBoxContainer/MarginContainer2/PanelContainer/MarginContainer/PanelNavigator/VarAddUnit/VBoxContainer/ScrollContainer/VBoxContainer/PanelContainer" unique_id=816714535]
+layout_mode = 2
+theme_override_fonts/bold_italics_font = ExtResource("4_35cd8")
+theme_override_font_sizes/bold_italics_font_size = 40
+bbcode_enabled = true
+text = "[b][i]
+X: 114
+Y: 514
+[/i][/b]"
+horizontal_alignment = 1
+vertical_alignment = 2
+
+[node name="PanelContainer" type="PanelContainer" parent="MarginContainer/HBoxContainer/MarginContainer3/ChooseVar/VBoxContainer/MarginContainer2/PanelContainer/MarginContainer/PanelNavigator/VarAddUnit/VBoxContainer" unique_id=1322004754]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_8oyud")
+
+[node name="PlaceButton" parent="MarginContainer/HBoxContainer/MarginContainer3/ChooseVar/VBoxContainer/MarginContainer2/PanelContainer/MarginContainer/PanelNavigator/VarAddUnit/VBoxContainer/PanelContainer" unique_id=213954771 instance=ExtResource("11_8oyud")]
+layout_mode = 2
+
+[node name="ColorRect" parent="MarginContainer/HBoxContainer/MarginContainer3/ChooseVar/VBoxContainer/MarginContainer2/PanelContainer/MarginContainer/PanelNavigator/VarAddUnit/VBoxContainer/PanelContainer/PlaceButton" index="0" unique_id=1894200065]
+color = Color(0.4509804, 0.4509804, 0.972549, 1)
+
+[node name="RichTextLabel" parent="MarginContainer/HBoxContainer/MarginContainer3/ChooseVar/VBoxContainer/MarginContainer2/PanelContainer/MarginContainer/PanelNavigator/VarAddUnit/VBoxContainer/PanelContainer/PlaceButton" index="1" unique_id=1388884413]
+theme_override_colors/default_color = Color(1, 1, 1, 1)
+text = "[b]Place[/b]
+"
+
+[node name="VarMoveUnit" type="Control" parent="MarginContainer/HBoxContainer/MarginContainer3/ChooseVar/VBoxContainer/MarginContainer2/PanelContainer/MarginContainer/PanelNavigator" unique_id=1004839150]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("11_b3sdv")
+PanelId = "VarMoveUnit"
+metadata/_custom_type_script = "uid://sa26p4j2xfk4"
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/HBoxContainer/MarginContainer3/ChooseVar/VBoxContainer/MarginContainer2/PanelContainer/MarginContainer/PanelNavigator/VarMoveUnit" unique_id=1888904782]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 50
+
+[node name="ScrollContainer" type="ScrollContainer" parent="MarginContainer/HBoxContainer/MarginContainer3/ChooseVar/VBoxContainer/MarginContainer2/PanelContainer/MarginContainer/PanelNavigator/VarMoveUnit/VBoxContainer" unique_id=939039116]
+layout_mode = 2
+size_flags_vertical = 3
+horizontal_scroll_mode = 3
+vertical_scroll_mode = 3
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/HBoxContainer/MarginContainer3/ChooseVar/VBoxContainer/MarginContainer2/PanelContainer/MarginContainer/PanelNavigator/VarMoveUnit/VBoxContainer/ScrollContainer" unique_id=1443624673]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/separation = 12
+
+[node name="PanelContainer" type="PanelContainer" parent="MarginContainer/HBoxContainer/MarginContainer3/ChooseVar/VBoxContainer/MarginContainer2/PanelContainer/MarginContainer/PanelNavigator/VarMoveUnit/VBoxContainer/ScrollContainer/VBoxContainer" unique_id=171134837]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_styles/panel = SubResource("StyleBoxEmpty_b3sdv")
+
+[node name="LocationLabel" type="RichTextLabel" parent="MarginContainer/HBoxContainer/MarginContainer3/ChooseVar/VBoxContainer/MarginContainer2/PanelContainer/MarginContainer/PanelNavigator/VarMoveUnit/VBoxContainer/ScrollContainer/VBoxContainer/PanelContainer" unique_id=500844181]
+layout_mode = 2
+theme_override_fonts/bold_italics_font = ExtResource("4_35cd8")
+theme_override_font_sizes/bold_italics_font_size = 40
+bbcode_enabled = true
+text = "[b][i]
+X: 114
+Y: 514
+[/i][/b]"
+horizontal_alignment = 1
+vertical_alignment = 2
+
+[node name="PanelContainer2" type="PanelContainer" parent="MarginContainer/HBoxContainer/MarginContainer3/ChooseVar/VBoxContainer/MarginContainer2/PanelContainer/MarginContainer/PanelNavigator/VarMoveUnit/VBoxContainer" unique_id=1194730551]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_8oyud")
+
+[node name="MoveButton" parent="MarginContainer/HBoxContainer/MarginContainer3/ChooseVar/VBoxContainer/MarginContainer2/PanelContainer/MarginContainer/PanelNavigator/VarMoveUnit/VBoxContainer/PanelContainer2" unique_id=1089359852 instance=ExtResource("11_8oyud")]
+layout_mode = 2
+
+[node name="ColorRect" parent="MarginContainer/HBoxContainer/MarginContainer3/ChooseVar/VBoxContainer/MarginContainer2/PanelContainer/MarginContainer/PanelNavigator/VarMoveUnit/VBoxContainer/PanelContainer2/MoveButton" index="0" unique_id=1894200065]
+color = Color(0.77775145, 0.23788673, 0, 1)
+
+[node name="RichTextLabel" parent="MarginContainer/HBoxContainer/MarginContainer3/ChooseVar/VBoxContainer/MarginContainer2/PanelContainer/MarginContainer/PanelNavigator/VarMoveUnit/VBoxContainer/PanelContainer2/MoveButton" index="1" unique_id=1388884413]
+text = "[b]Deploy[/b]
+"
+
+[node name="PanelContainer" type="PanelContainer" parent="MarginContainer/HBoxContainer/MarginContainer3/ChooseVar/VBoxContainer/MarginContainer2/PanelContainer/MarginContainer/PanelNavigator/VarMoveUnit/VBoxContainer" unique_id=1572978050]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_8oyud")
+
+[node name="SelectedVarButton" parent="MarginContainer/HBoxContainer/MarginContainer3/ChooseVar/VBoxContainer/MarginContainer2/PanelContainer/MarginContainer/PanelNavigator/VarMoveUnit/VBoxContainer/PanelContainer" unique_id=1921663979 instance=ExtResource("11_8oyud")]
+layout_mode = 2
+
+[node name="ColorRect" parent="MarginContainer/HBoxContainer/MarginContainer3/ChooseVar/VBoxContainer/MarginContainer2/PanelContainer/MarginContainer/PanelNavigator/VarMoveUnit/VBoxContainer/PanelContainer/SelectedVarButton" index="0" unique_id=1894200065]
+color = Color(0.4506483, 0.4506483, 0.45064825, 1)
+
+[node name="RichTextLabel" parent="MarginContainer/HBoxContainer/MarginContainer3/ChooseVar/VBoxContainer/MarginContainer2/PanelContainer/MarginContainer/PanelNavigator/VarMoveUnit/VBoxContainer/PanelContainer/SelectedVarButton" index="1" unique_id=1388884413]
+theme_override_colors/default_color = Color(1, 1, 1, 1)
+
+[node name="Button" parent="MarginContainer/HBoxContainer/MarginContainer3/ChooseVar/VBoxContainer/MarginContainer2/PanelContainer/MarginContainer/PanelNavigator/VarMoveUnit/VBoxContainer/PanelContainer/SelectedVarButton" index="2" unique_id=1223400032]
+disabled = true
+
+[editable path="MarginContainer/HBoxContainer/MarginContainer3/ChooseVar/VBoxContainer/MarginContainer2/PanelContainer/MarginContainer/PanelNavigator/VarUnit/VBoxContainer/PanelContainer/SelectVarButton"]
+[editable path="MarginContainer/HBoxContainer/MarginContainer3/ChooseVar/VBoxContainer/MarginContainer2/PanelContainer/MarginContainer/PanelNavigator/VarOpUnit/VBoxContainer/ScrollContainer/VBoxContainer/OpStatusButton"]
+[editable path="MarginContainer/HBoxContainer/MarginContainer3/ChooseVar/VBoxContainer/MarginContainer2/PanelContainer/MarginContainer/PanelNavigator/VarOpUnit/VBoxContainer/ScrollContainer/VBoxContainer/OpCommandButton"]
+[editable path="MarginContainer/HBoxContainer/MarginContainer3/ChooseVar/VBoxContainer/MarginContainer2/PanelContainer/MarginContainer/PanelNavigator/VarOpUnit/VBoxContainer/PanelContainer/SelectedVarButton"]
+[editable path="MarginContainer/HBoxContainer/MarginContainer3/ChooseVar/VBoxContainer/MarginContainer2/PanelContainer/MarginContainer/PanelNavigator/VarStatusUnit/VBoxContainer/ScrollContainer/VBoxContainer/OpLocationButton"]
+[editable path="MarginContainer/HBoxContainer/MarginContainer3/ChooseVar/VBoxContainer/MarginContainer2/PanelContainer/MarginContainer/PanelNavigator/VarStatusUnit/VBoxContainer/ScrollContainer/VBoxContainer/OpHealthButton"]
+[editable path="MarginContainer/HBoxContainer/MarginContainer3/ChooseVar/VBoxContainer/MarginContainer2/PanelContainer/MarginContainer/PanelNavigator/VarStatusUnit/VBoxContainer/PanelContainer/SelectedVarButton"]
+[editable path="MarginContainer/HBoxContainer/MarginContainer3/ChooseVar/VBoxContainer/MarginContainer2/PanelContainer/MarginContainer/PanelNavigator/VarCommandUnit/VBoxContainer/ScrollContainer/VBoxContainer/OpMoveButton"]
+[editable path="MarginContainer/HBoxContainer/MarginContainer3/ChooseVar/VBoxContainer/MarginContainer2/PanelContainer/MarginContainer/PanelNavigator/VarCommandUnit/VBoxContainer/PanelContainer/SelectedVarButton"]
+[editable path="MarginContainer/HBoxContainer/MarginContainer3/ChooseVar/VBoxContainer/MarginContainer2/PanelContainer/MarginContainer/PanelNavigator/VarAddUnit/VBoxContainer/ScrollContainer/VBoxContainer/AddIntButton"]
+[editable path="MarginContainer/HBoxContainer/MarginContainer3/ChooseVar/VBoxContainer/MarginContainer2/PanelContainer/MarginContainer/PanelNavigator/VarAddUnit/VBoxContainer/ScrollContainer/VBoxContainer/AddCharButton"]
+[editable path="MarginContainer/HBoxContainer/MarginContainer3/ChooseVar/VBoxContainer/MarginContainer2/PanelContainer/MarginContainer/PanelNavigator/VarAddUnit/VBoxContainer/ScrollContainer/VBoxContainer/AddFloatButton"]
+[editable path="MarginContainer/HBoxContainer/MarginContainer3/ChooseVar/VBoxContainer/MarginContainer2/PanelContainer/MarginContainer/PanelNavigator/VarAddUnit/VBoxContainer/ScrollContainer/VBoxContainer/AddDoubleButton"]
+[editable path="MarginContainer/HBoxContainer/MarginContainer3/ChooseVar/VBoxContainer/MarginContainer2/PanelContainer/MarginContainer/PanelNavigator/VarAddUnit/VBoxContainer/ScrollContainer/VBoxContainer/AddLongDoubleButton"]
+[editable path="MarginContainer/HBoxContainer/MarginContainer3/ChooseVar/VBoxContainer/MarginContainer2/PanelContainer/MarginContainer/PanelNavigator/VarAddUnit/VBoxContainer/ScrollContainer/VBoxContainer/AddLongButton"]
+[editable path="MarginContainer/HBoxContainer/MarginContainer3/ChooseVar/VBoxContainer/MarginContainer2/PanelContainer/MarginContainer/PanelNavigator/VarAddUnit/VBoxContainer/ScrollContainer/VBoxContainer/AddBoolButton"]
+[editable path="MarginContainer/HBoxContainer/MarginContainer3/ChooseVar/VBoxContainer/MarginContainer2/PanelContainer/MarginContainer/PanelNavigator/VarAddUnit/VBoxContainer/PanelContainer/PlaceButton"]
+[editable path="MarginContainer/HBoxContainer/MarginContainer3/ChooseVar/VBoxContainer/MarginContainer2/PanelContainer/MarginContainer/PanelNavigator/VarMoveUnit/VBoxContainer/PanelContainer2/MoveButton"]
+[editable path="MarginContainer/HBoxContainer/MarginContainer3/ChooseVar/VBoxContainer/MarginContainer2/PanelContainer/MarginContainer/PanelNavigator/VarMoveUnit/VBoxContainer/PanelContainer/SelectedVarButton"]

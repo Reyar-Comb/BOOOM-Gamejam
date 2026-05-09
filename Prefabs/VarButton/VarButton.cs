@@ -1,0 +1,133 @@
+using Godot;
+using System;
+
+[GlobalClass]
+public partial class VarButton : Control
+{
+	// ========== 静态选中管理（全局同一时间只有一个 VarButton 被选中） ==========
+
+	private static VarButton _selected;
+
+	/// <summary>
+	/// 闪烁效果：modulate.a 在 MinAlpha 和 MaxAlpha 之间往复。
+	/// 设为 0 则选中时不闪烁，仅保持静止高亮。
+	/// </summary>
+	[Export] public float BlinkDuration { get; set; } = 0.35f;
+
+	[Export] public float BlinkMinAlpha { get; set; } = 0.4f;
+	[Export] public float BlinkMaxAlpha { get; set; } = 1.0f;
+
+	private Tween _blinkTween;
+
+	public bool IsSelected => _selected == this;
+
+	// ========== 导出字段 ==========
+
+	[Export]
+	public string Text {
+		get => richTextLabel.Text;
+		set => richTextLabel.Text = value;
+	}
+
+	public RichTextLabel richTextLabel;
+	public ColorRect colorRect;
+	public Button button;
+
+	// ========== 生命周期 ==========
+
+	public override void _Ready()
+	{
+		richTextLabel = GetNode<RichTextLabel>("RichTextLabel");
+		colorRect = GetNode<ColorRect>("ColorRect");
+		button = GetNode<Button>("Button");
+
+		button.Pressed += onPressed;
+
+		this.SizeFlagsVertical = (int)SizeFlags.ShrinkBegin;
+	}
+
+	public override void _ExitTree()
+	{
+		KillBlink();
+		if (_selected == this)
+			_selected = null;
+	}
+
+	// ========== 选中 / 闪烁 ==========
+
+	public void Select()
+	{
+		if (_selected == this) return;
+
+		_selected?.Deselect();
+		_selected = this;
+
+		StartBlink();
+	}
+
+	public void Deselect()
+	{
+		if (_selected != this) return;
+		_selected = null;
+		KillBlink();
+	}
+
+	private void StartBlink()
+	{
+		KillBlink();
+
+		if (BlinkDuration <= 0)
+		{
+			Modulate = new Color(Modulate.R, Modulate.G, Modulate.B, BlinkMinAlpha);
+			return;
+		}
+
+		// 以当前 modulate.a 为起点，摆动到 MinAlpha 再摆回来，循环往复
+		_blinkTween = CreateTween().SetLoops();
+		_blinkTween.TweenProperty(this, "modulate:a", BlinkMinAlpha, BlinkDuration)
+			.SetEase(Tween.EaseType.InOut)
+			.SetTrans(Tween.TransitionType.Sine);
+		_blinkTween.TweenProperty(this, "modulate:a", BlinkMaxAlpha, BlinkDuration)
+			.SetEase(Tween.EaseType.InOut)
+			.SetTrans(Tween.TransitionType.Sine);
+	}
+
+	private void KillBlink()
+	{
+		_blinkTween?.Kill();
+		_blinkTween = null;
+		Modulate = new Color(Modulate.R, Modulate.G, Modulate.B, BlinkMaxAlpha);
+	}
+
+	// ========== 事件 ==========
+
+	public void onPressed()
+	{
+		Select();
+	}
+
+	// ========== 工具方法 ==========
+
+	public void SetText(string text)
+	{
+		richTextLabel.Text = "[b]" + text + "[/b]";
+	}
+
+	public void SetStyle(VarStats.Type varType)
+	{
+		Color color = varType switch
+		{
+			VarStats.Type.Int => Colors.LightPink,
+			VarStats.Type.Float => Colors.LightBlue,
+			VarStats.Type.Double => Colors.LightGreen,
+			VarStats.Type.LongDouble => Colors.LightYellow,
+			VarStats.Type.Char => Colors.LightCoral,
+			VarStats.Type.Bool => Colors.LightCyan,
+			VarStats.Type.Long => Colors.LightGoldenrod,
+			_ => Colors.White
+		};
+		colorRect.Color = color;
+	}
+
+
+}

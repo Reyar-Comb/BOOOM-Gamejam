@@ -99,8 +99,19 @@ public partial class ConsoleManager : Node
     public void MoveVar(Var v, Vector2 newPosition)
     {
         if (v == null) return;
-        v.MoveTo(newPosition);
         AddLog(new MoveAck(v, newPosition));
+    }
+
+    public void QueryLocation(Var v)
+    {
+        if (v == null) return;
+        AddLog(new LocationAck(v));
+    }
+
+    public void QueryHealth(Var v)
+    {
+        if (v == null) return;
+        AddLog(new HealthAck(v));
     }
 
 

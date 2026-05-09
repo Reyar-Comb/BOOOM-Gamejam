@@ -10,6 +10,20 @@ public partial class VarStats : Resource
         Hostile,
         Neutral
     }
+
+    public enum Type
+    {
+        Int,
+        Float,
+        Long,
+        Double,
+        LongDouble,
+        Char,
+        Bool,
+    }
+
+    public String Name { get; set; }
+
     [Signal] public delegate void OnDeathEventHandler();
     [Export]
     public int MaxHealth

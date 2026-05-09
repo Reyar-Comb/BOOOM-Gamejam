@@ -1,6 +1,8 @@
 [gd_resource type="Resource" script_class="VarStats" format=3 uid="uid://0w2mnjyod4qn"]
 
 [ext_resource type="Script" uid="uid://d05ld37qbcgjs" path="res://Variable/VarStats.cs" id="1_da6vr"]
+[ext_resource type="Resource" uid="uid://b3e3spwj0kssi" path="res://Variable/VarResources/Bool/BoolAtkRange.tres" id="1_w0mqd"]
+[ext_resource type="Resource" uid="uid://cysl80t3fwaf" path="res://Variable/VarResources/Bool/BoolDetRange.tres" id="2_q8klo"]
 
 [resource]
 script = ExtResource("1_da6vr")
@@ -8,5 +10,7 @@ MaxHealth = 50
 AttackSpeedMult = 1.0
 MoveSpeed = 40.0
 Defense = 5
+AttackRange = ExtResource("1_w0mqd")
+DetectRange = ExtResource("2_q8klo")
 AttackDamage = 5
 metadata/_custom_type_script = "uid://d05ld37qbcgjs"

@@ -62,4 +62,8 @@ public partial class VarStats : Resource
     {
         _tags.Add(tag);
     }
+    public void SetGridPosition(Vector2I gridPos)
+    {
+        Position = Grid.GridToWorld(gridPos);
+    }
 }

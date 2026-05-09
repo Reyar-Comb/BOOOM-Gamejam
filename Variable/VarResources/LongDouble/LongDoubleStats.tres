@@ -1,0 +1,17 @@
+[gd_resource type="Resource" script_class="VarStats" format=3 uid="uid://btb4qi7ul273r"]
+
+[ext_resource type="Resource" uid="uid://cm5n6twe4y0m3" path="res://Variable/VarResources/LongDouble/LongDoubleAtkRange.tres" id="1_d7gf5"]
+[ext_resource type="Script" uid="uid://d05ld37qbcgjs" path="res://Variable/VarStats.cs" id="1_ffb4u"]
+[ext_resource type="Resource" uid="uid://b1rty1rge5meh" path="res://Variable/VarResources/LongDouble/LongDoubleDetRange.tres" id="2_5btd1"]
+
+[resource]
+script = ExtResource("1_ffb4u")
+MaxHealth = 200
+AttackSpeedMult = 1.0
+AttackFrameInterval = 10
+MoveSpeed = 5.0
+Defense = 18
+AttackRange = ExtResource("1_d7gf5")
+DetectRange = ExtResource("2_5btd1")
+AttackDamage = 30
+metadata/_custom_type_script = "uid://d05ld37qbcgjs"

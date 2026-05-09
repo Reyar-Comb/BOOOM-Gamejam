@@ -1,0 +1,7 @@
+[gd_resource type="Resource" script_class="VarRange" format=3 uid="uid://b3e3spwj0kssi"]
+
+[ext_resource type="Script" uid="uid://b0lmntoimfei1" path="res://Variable/VarRange.cs" id="1_vlkus"]
+
+[resource]
+script = ExtResource("1_vlkus")
+RelativeCells = Array[Vector2i]([Vector2i(0, 1)])

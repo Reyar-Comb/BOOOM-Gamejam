@@ -1,0 +1,12 @@
+[gd_resource type="Resource" script_class="VarStats" format=3 uid="uid://0w2mnjyod4qn"]
+
+[ext_resource type="Script" uid="uid://d05ld37qbcgjs" path="res://Variable/VarStats.cs" id="1_da6vr"]
+
+[resource]
+script = ExtResource("1_da6vr")
+MaxHealth = 50
+AttackSpeedMult = 1.0
+MoveSpeed = 40.0
+Defense = 5
+AttackDamage = 5
+metadata/_custom_type_script = "uid://d05ld37qbcgjs"

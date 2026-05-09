@@ -1,0 +1,17 @@
+[gd_resource type="Resource" script_class="VarStats" format=3 uid="uid://d2q5fb7d87n7q"]
+
+[ext_resource type="Script" uid="uid://d05ld37qbcgjs" path="res://Variable/VarStats.cs" id="1_72014"]
+[ext_resource type="Resource" uid="uid://dkl8bksokgthu" path="res://Variable/VarResources/Float/FloatAtkRange.tres" id="1_qacp2"]
+[ext_resource type="Resource" uid="uid://b1mfbbhaiuik4" path="res://Variable/VarResources/Float/FloatDetRange.tres" id="2_ywn3n"]
+
+[resource]
+script = ExtResource("1_72014")
+MaxHealth = 80
+AttackSpeedMult = 1.0
+AttackFrameInterval = 3
+MoveSpeed = 15.0
+Defense = 10
+AttackRange = ExtResource("1_qacp2")
+DetectRange = ExtResource("2_ywn3n")
+AttackDamage = 15
+metadata/_custom_type_script = "uid://d05ld37qbcgjs"

@@ -19,6 +19,8 @@ public partial class Var_DetectInAttackRange : STNode
         get => _blackboard.Get<IReadOnlyList<Var>>("Vars");
     }
 
+    private GameData GameData => _blackboard.Get<GameData>("GameData");
+
     private Var CurrentAttackTarget
     {
         get => _blackboard.Get<Var>("CurrentAttackTarget");
@@ -38,7 +40,7 @@ public partial class Var_DetectInAttackRange : STNode
 
     private void TryGetEnemyInRange()
     {
-        if (Stats.AttackRange == null || Vars == null)
+        if (Stats.AttackRange == null || Vars == null || GameData == null)
         {
             return;
         }
@@ -56,7 +58,20 @@ public partial class Var_DetectInAttackRange : STNode
         _blackboard.Set("EnemiesByCell", enemiesByCell.AsReadOnly());
 
         Vector2I selfCell = Grid.WorldToGrid(Stats.Position);
-        foreach (Vector2I targetCell in Stats.AttackRange.EnumerateTargetCells(selfCell, Stats.Direction))
+        AttackRangeQueryInfo queryInfo = new()
+        {
+            Source = Self,
+            OriginCell = selfCell,
+            FacingDirection = Stats.Direction,
+            AttackRange = Stats.AttackRange,
+            DetectRange = Stats.DetectRange
+        };
+
+        IEnumerable<Vector2I> attackCells = GameData.SkillManager.OnAttackRangeQuery(
+            queryInfo,
+            Stats.AttackRange.EnumerateTargetCells(selfCell, Stats.Direction));
+
+        foreach (Vector2I targetCell in attackCells)
         {
             if (MapData.GetRegion(targetCell.X, targetCell.Y) != MapData.GetRegion(selfCell.X, selfCell.Y))
             {

@@ -1,5 +1,6 @@
 using Godot;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
 public class CrowdOfCharRuntime : ISkillRuntime
@@ -12,5 +13,9 @@ public class CrowdOfCharRuntime : ISkillRuntime
         info.Damage += charAttackerCount;
     }
     public void OnDetected(DetectInfo info) {}
+    public IEnumerable<Vector2I> OnAttackRangeQuery(AttackRangeQueryInfo info, IEnumerable<Vector2I> rangeCells)
+    {
+        return rangeCells;
+    }
     public void OnTokenOperation() {}
 }

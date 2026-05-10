@@ -1,5 +1,6 @@
 using Godot;
 using System;
+using System.Collections.Generic;
 
 public class GrowingIntRuntime : ISkillRuntime
 {
@@ -23,6 +24,10 @@ public class GrowingIntRuntime : ISkillRuntime
 
     public void OnBeforeAttack(AttackInfo info) {}
     public void OnDetected(DetectInfo info) {}
+    public IEnumerable<Vector2I> OnAttackRangeQuery(AttackRangeQueryInfo info, IEnumerable<Vector2I> rangeCells)
+    {
+        return rangeCells;
+    }
     public void OnTokenOperation() {}
 
     private void ApplyCurrentBonuses(VarStats stats)

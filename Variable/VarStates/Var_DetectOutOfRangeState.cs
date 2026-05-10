@@ -1,5 +1,6 @@
 using Godot;
 using System;
+using System.Collections.Generic;
 using StarlightBT.Data;
 using Cosmosity.Pathfinders;
 using StarlightStateTree;
@@ -30,6 +31,7 @@ public partial class Var_DetectOutOfRangeState : STNode
     }
 
     private MapData MapData => _blackboard.Get<MapData>("MapData");
+    private GameData GameData => _blackboard.Get<GameData>("GameData");
     private bool IsWalking
     {
         get => _blackboard.Get<bool>("IsWalking");
@@ -73,7 +75,7 @@ public partial class Var_DetectOutOfRangeState : STNode
 
     private bool IsCurrentTargetInRange()
     {
-        if (Stats.AttackRange == null || CurrentAttackTarget == null || CurrentAttackTarget.IsDead)
+        if (Stats.AttackRange == null || CurrentAttackTarget == null || CurrentAttackTarget.IsDead || GameData == null)
         {
             CurrentAttackTarget = null;
             return false;
@@ -82,7 +84,20 @@ public partial class Var_DetectOutOfRangeState : STNode
         Vector2I selfCell = Grid.WorldToGrid(Stats.Position);
         Vector2I targetCell = Grid.WorldToGrid(CurrentAttackTarget.Stats.Position);
 
-        foreach (Vector2I attackCell in Stats.AttackRange.EnumerateTargetCells(selfCell, Stats.Direction))
+        AttackRangeQueryInfo queryInfo = new()
+        {
+            Source = Self,
+            OriginCell = selfCell,
+            FacingDirection = Stats.Direction,
+            AttackRange = Stats.AttackRange,
+            DetectRange = Stats.DetectRange
+        };
+
+        IEnumerable<Vector2I> attackCells = GameData.SkillManager.OnAttackRangeQuery(
+            queryInfo,
+            Stats.AttackRange.EnumerateTargetCells(selfCell, Stats.Direction));
+
+        foreach (Vector2I attackCell in attackCells)
         {
             if (MapData.GetRegion(attackCell.X, attackCell.Y) != MapData.GetRegion(selfCell.X, selfCell.Y))
             {

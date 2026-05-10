@@ -37,4 +37,15 @@ public class SkillManager
             runtime.OnDetected(info);
         }
     }
+
+    public IEnumerable<Vector2I> OnAttackRangeQuery(AttackRangeQueryInfo info, IEnumerable<Vector2I> rangeCells)
+    {
+        IEnumerable<Vector2I> result = rangeCells;
+        foreach (var runtime in _activeSkillRuntimes)
+        {
+            result = runtime.OnAttackRangeQuery(info, result);
+        }
+
+        return result;
+    }
 }

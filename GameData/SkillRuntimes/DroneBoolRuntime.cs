@@ -1,5 +1,6 @@
 using Godot;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
 public class DroneBoolRuntime : ISkillRuntime
@@ -13,6 +14,10 @@ public class DroneBoolRuntime : ISkillRuntime
         {
             info.ShouldRender = true;
         }
+    }
+    public IEnumerable<Vector2I> OnAttackRangeQuery(AttackRangeQueryInfo info, IEnumerable<Vector2I> rangeCells)
+    {
+        return rangeCells;
     }
     public void OnTokenOperation() {}
 }

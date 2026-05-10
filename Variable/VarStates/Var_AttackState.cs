@@ -67,7 +67,8 @@ public partial class Var_AttackState : STNode
         AttackInfo atkInfo = new()
         {
             Damage = Stats.AttackDamage,
-            Source = Self
+            Source = Self,
+            Target = CurrentAttackTarget
         };
         CurrentAttackTarget.ReceiveDamage(atkInfo);
     }

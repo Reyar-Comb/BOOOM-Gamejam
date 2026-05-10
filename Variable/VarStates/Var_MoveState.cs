@@ -7,6 +7,9 @@ using System.Collections.Generic;
 public partial class Var_MoveState : STNode
 {
     public override string Name => "Move";
+    private int _currentRegionId = -1;
+    private Vector2I _currentCell;
+
     private bool IsWalking
     {
         get => _blackboard.Get<bool>("IsWalking");
@@ -26,6 +29,16 @@ public partial class Var_MoveState : STNode
         get => _blackboard.Get<VarStats>("Stats");
         set => _blackboard.Set("Stats", value);
     }
+
+    private Var Self => _blackboard.Get<Var>("Self");
+    private MapData MapData => _blackboard.Get<MapData>("MapData");
+    private GameData GameData => _blackboard.Get<GameData>("GameData");
+
+    protected override void OnEnter()
+    {
+        UpdateCurrentRegion();
+    }
+
     protected override void OnPhysicsUpdate(double delta)
     {
         if (!IsWalking || CurrentPath == null)
@@ -46,6 +59,7 @@ public partial class Var_MoveState : STNode
         if (Stats.Position.DistanceSquaredTo(nextPos) > stepLength * stepLength) return;
 
         Stats.Position = nextPos;
+        NotifyRegionEntryIfNeeded(CurrentPath[CurrentPathIndex]);
         CurrentPathIndex++;
         if (CurrentPathIndex >= CurrentPath.Count)
         {
@@ -58,6 +72,49 @@ public partial class Var_MoveState : STNode
     {
         IsWalking = false;
         RequestTransition("Idle");
+    }
+
+    private void UpdateCurrentRegion()
+    {
+        if (Stats == null || MapData == null)
+        {
+            _currentRegionId = -1;
+            _currentCell = default;
+            return;
+        }
+
+        _currentCell = Grid.WorldToGrid(Stats.Position);
+        _currentRegionId = MapData.GetRegion(_currentCell.X, _currentCell.Y);
+    }
+
+    private void NotifyRegionEntryIfNeeded(Vector2I reachedCell)
+    {
+        if (MapData == null || GameData == null || Self == null)
+        {
+            _currentCell = reachedCell;
+            return;
+        }
+
+        int reachedRegion = MapData.GetRegion(reachedCell.X, reachedCell.Y);
+        if (reachedRegion == _currentRegionId)
+        {
+            _currentCell = reachedCell;
+            return;
+        }
+
+        RegionEnteredInfo info = new()
+        {
+            Var = Self,
+            MapData = MapData,
+            FromCell = _currentCell,
+            ToCell = reachedCell,
+            FromRegion = _currentRegionId,
+            ToRegion = reachedRegion
+        };
+
+        _currentCell = reachedCell;
+        _currentRegionId = reachedRegion;
+        GameData.SkillManager.OnRegionEntered(info);
     }
 
     private bool TryGetNextTargetPosition(out Vector2 nextPos)

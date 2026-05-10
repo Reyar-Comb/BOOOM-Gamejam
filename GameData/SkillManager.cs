@@ -59,6 +59,14 @@ public class SkillManager
         }
     }
 
+    public void OnRegionEntered(RegionEnteredInfo info)
+    {
+        foreach (var runtime in _activeSkillRuntimes)
+        {
+            runtime.OnRegionEntered(info);
+        }
+    }
+
     public IEnumerable<Vector2I> OnAttackRangeQuery(AttackRangeQueryInfo info, IEnumerable<Vector2I> rangeCells)
     {
         IEnumerable<Vector2I> result = rangeCells;

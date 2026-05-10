@@ -9,6 +9,7 @@ public interface ISkillRuntime
     void OnVarCreated(VarCreationInfo info) {}
     void OnBeforeAttack(AttackInfo info) {}
     void OnDetected(DetectInfo info) {}
+    void OnRegionEntered(RegionEnteredInfo info) {}
     IEnumerable<Vector2I> OnAttackRangeQuery(AttackRangeQueryInfo info, IEnumerable<Vector2I> rangeCells) => rangeCells;
     void OnTokenOperation(TokenOperationInfo info) {}
 }

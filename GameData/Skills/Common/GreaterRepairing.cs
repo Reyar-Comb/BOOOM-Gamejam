@@ -7,7 +7,7 @@ public class GreaterRepairing : Skill
     public override string Description => "Increases the attack of created vars.";
     public override Texture2D Icon => null;
     public override RarityLevel Rarity => RarityLevel.Common;
-    public override void Apply(GameData data)
+    public override void Apply(GameData data, int stack = 1)
     {
         data.NumericData.Set("AttackMultiplier", 1.1f);
     }

@@ -7,7 +7,7 @@ public class PersonalizedRecommendation : Skill
     public override string Description => "Reduces patience consumed when requesting tokens from users.";
     public override Texture2D Icon => null;
     public override RarityLevel Rarity => RarityLevel.Uncommon;
-    public override void Apply(GameData data)
+    public override void Apply(GameData data, int stack = 1)
     {
         data.NumericData.Set("TokenRequestPatienceCostMultiplier", 0.8f);
     }

@@ -7,7 +7,7 @@ public class FriendOfClasses : Skill
     public override string Description => "Vars gain +10% positive stats when entering a new region for the first time.";
     public override Texture2D Icon => null;
     public override RarityLevel Rarity => RarityLevel.Rare;
-    public override void Apply(GameData data)
+    public override void Apply(GameData data, int stack = 1)
     {
         data.SkillManager.AddRuntime(GetSkillRuntime());
     }

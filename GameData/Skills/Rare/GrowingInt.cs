@@ -7,7 +7,7 @@ public class GrowingInt : Skill
     public override string Description => "Each created Int randomly increases health, attack, or defense for future Int vars.";
     public override Texture2D Icon => null;
     public override RarityLevel Rarity => RarityLevel.Rare;
-    public override void Apply(GameData data)
+    public override void Apply(GameData data, int stack = 1)
     {
         data.SkillManager.AddRuntime(GetSkillRuntime());
     }

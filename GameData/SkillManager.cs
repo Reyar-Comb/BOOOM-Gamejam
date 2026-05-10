@@ -1,6 +1,7 @@
 using Godot;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 public class SkillManager
 {
@@ -14,6 +15,15 @@ public class SkillManager
     {
         _activeSkillRuntimes.Clear();
     }
+
+    public void ApplyOwnedSkills(GameData data)
+    {
+        foreach (var skillGroup in OwnedSkills.GroupBy(skill => skill.GetType()))
+        {
+            skillGroup.First().Apply(data, skillGroup.Count());
+        }
+    }
+
     public void OnWaveStarted()
     {
         foreach (var runtime in _activeSkillRuntimes)

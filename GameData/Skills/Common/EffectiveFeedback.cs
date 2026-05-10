@@ -7,7 +7,7 @@ public class EffectiveFeedback : Skill
     public override string Description => "Reduces token cost when querying or commanding vars.";
     public override Texture2D Icon => null;
     public override RarityLevel Rarity => RarityLevel.Common;
-    public override void Apply(GameData data)
+    public override void Apply(GameData data, int stack = 1)
     {
         data.NumericData.Set("CommandTokenCostMultiplier", 0.9f);
     }

@@ -7,7 +7,7 @@ public class AccurateFloat : Skill
     public override string Description => "Float vars deal +3 damage when attacking a target on the same x or y axis.";
     public override Texture2D Icon => null;
     public override RarityLevel Rarity => RarityLevel.Rare;
-    public override void Apply(GameData data)
+    public override void Apply(GameData data, int stack = 1)
     {
         data.SkillManager.AddRuntime(GetSkillRuntime());
     }

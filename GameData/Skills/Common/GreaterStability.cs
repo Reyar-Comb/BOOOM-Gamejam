@@ -7,7 +7,7 @@ public class GreaterStability : Skill
     public override string Description => "Increases the health of created vars.";
     public override Texture2D Icon => null;
     public override RarityLevel Rarity => RarityLevel.Common;
-    public override void Apply(GameData data)
+    public override void Apply(GameData data, int stack = 1)
     {
         data.NumericData.Set("HealthMultiplier", 1.1f);
     }

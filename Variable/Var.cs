@@ -19,7 +19,7 @@ public partial class Var : RefCounted, ICleanable
     private readonly HashSet<Var> _attackers = new();
 
     private MapData MapData => _blackboard.Get<MapData>("MapData");
-
+    private GameData GameData => _blackboard.Get<GameData>("GameData");
 
     [Signal] 
     public delegate void OnDetectedEventHandler(Var detectedVar);
@@ -115,6 +115,8 @@ public partial class Var : RefCounted, ICleanable
     }
     public void ReceiveDamage(AttackInfo atkInfo)
     {
+        //atkInfo.Attackers = _attackers.AsR
+        GameData.SkillManager.OnBeforeAttack(atkInfo);
         int finalDamage = atkInfo.Damage;
 
         //directionFactor is in [1, 2], 1 if attacked from front, 2 if from back.

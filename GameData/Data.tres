@@ -10,9 +10,9 @@ Data = Dictionary[String, float]({
 "CreateTokenCostMultiplier": 1.0,
 "DeathTokenRefundMultiplier": 0.0,
 "DefenseMultiplier": 1.0,
-"FloatCreateTokenCostMultiplier": 1.0,
+"FloatingPointAttackMultiplier": 1.0,
 "HealthMultiplier": 1.0,
-"IntegerCreateTokenCostMultiplier": 1.0,
+"IntegerDefenseMultiplier": 1.0,
 "MoveSpeedMultiplier": 1.0,
 "TokenRequestGainMultiplier": 1.0,
 "TokenRequestPatienceCostMultiplier": 1.0

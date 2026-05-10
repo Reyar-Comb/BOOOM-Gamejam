@@ -6,8 +6,9 @@ public class FastIteration : Skill
     public override string Name => "fast-iteration";
     public override string Description => "Increases the move speed of created vars.";
     public override Texture2D Icon => null;
+    public override RarityLevel Rarity => RarityLevel.Common;
     public override void Apply(GameData data)
     {
-        data.NumericData.Set("MoveSpeedMultiplier", 1.2f);
+        data.NumericData.Set("MoveSpeedMultiplier", 1.1f);
     }
 }

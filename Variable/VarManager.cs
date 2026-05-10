@@ -46,7 +46,8 @@ public partial class VarManager : Node
         _gameData = gameData;
         _sharedBlackboard.Set("MapData", _mapData);
         _sharedBlackboard.Set("Vars", ReadOnlyVars);
-
+        _sharedBlackboard.Set("GameData", _gameData);
+        
         AStarPathfinder pathfinder = AStarPathfinder.CreateBuilder()
             .SetMapData(_mapData)
             .UseDiagonal(Pathfinder.DiagonalType.Never)

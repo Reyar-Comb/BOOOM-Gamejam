@@ -5,13 +5,15 @@ using System.Collections.Generic;
 public class GameData
 {
     public NumericData NumericData;
-    public List<Skill> OwnedSkills { get; private set; } = new List<Skill>();
+    public SkillManager SkillManager;
     public GameData()
     {
         NumericData = new NumericData();
+        SkillManager = new SkillManager();
     }
     public void Reset()
     {
         NumericData.Reset();
+        SkillManager.Reset();
     }
 }

@@ -6,6 +6,7 @@ public class EfficientMarketing : Skill
     public override string Name => "efficient-marketing";
     public override string Description => "Increases the tokens gained when requesting them from users.";
     public override Texture2D Icon => null;
+    public override RarityLevel Rarity => RarityLevel.Uncommon;
     public override void Apply(GameData data)
     {
         data.NumericData.Set("TokenRequestGainMultiplier", 1.2f);

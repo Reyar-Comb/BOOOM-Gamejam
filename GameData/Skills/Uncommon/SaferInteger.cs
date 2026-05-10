@@ -1,13 +1,14 @@
 using Godot;
 using System;
 
-public class SafetyImprovement : Skill
+public class SaferInteger : Skill
 {
-    public override string Name => "safety-improvement";
+    public override string Name => "safer-integer";
     public override string Description => "Increases the defense of created vars.";
     public override Texture2D Icon => null;
+    public override RarityLevel Rarity => RarityLevel.Uncommon;
     public override void Apply(GameData data)
     {
-        data.NumericData.Set("DefenseMultiplier", 1.2f);
+        data.NumericData.Set("IntegerDefenseMultiplier", 1.2f);
     }
 }

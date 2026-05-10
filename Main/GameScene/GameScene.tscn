@@ -271,7 +271,7 @@ bg_color = Color(0.31764707, 0.31764707, 0.31764707, 0)
 script = ExtResource("1_wlq8m")
 
 [node name="Bg" parent="." unique_id=61670994 instance=ExtResource("2_4bds6")]
-position = Vector2(-49, -18)
+position = Vector2(-52.78, 0)
 scale = Vector2(1.05, 1.05)
 
 [node name="ConsoleManager" type="Node" parent="." unique_id=51194342]

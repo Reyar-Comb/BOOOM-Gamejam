@@ -68,25 +68,25 @@ public partial class GamePanelNavigator : PanelNavigator
 				switch (CurrentVarType)
 				{
 					case "Int":
-						BattleManager.Instance.RegisterVar(VarStats.Type.Int, LastClickedGrid);
+						BattleManager.Instance.RegisterVar(VarStats.VarType.Int, LastClickedGrid);
 						break;
 					case "Float":
-						BattleManager.Instance.RegisterVar(VarStats.Type.Float, LastClickedGrid);
+						BattleManager.Instance.RegisterVar(VarStats.VarType.Float, LastClickedGrid);
 						break;
 					case "Double":
-						BattleManager.Instance.RegisterVar(VarStats.Type.Double, LastClickedGrid);
+						BattleManager.Instance.RegisterVar(VarStats.VarType.Double, LastClickedGrid);
 						break;
 					case "LongDouble":
-						BattleManager.Instance.RegisterVar(VarStats.Type.LongDouble, LastClickedGrid);
+						BattleManager.Instance.RegisterVar(VarStats.VarType.LongDouble, LastClickedGrid);
 						break;
 					case "Char":
-						BattleManager.Instance.RegisterVar(VarStats.Type.Char, LastClickedGrid);
+						BattleManager.Instance.RegisterVar(VarStats.VarType.Char, LastClickedGrid);
 						break;
 					case "Bool":
-						BattleManager.Instance.RegisterVar(VarStats.Type.Bool, LastClickedGrid);
+						BattleManager.Instance.RegisterVar(VarStats.VarType.Bool, LastClickedGrid);
 						break;
 					case "Long":
-						BattleManager.Instance.RegisterVar(VarStats.Type.Long, LastClickedGrid);
+						BattleManager.Instance.RegisterVar(VarStats.VarType.Long, LastClickedGrid);
 						break;
 					default:
 						GD.PrintErr($"Unsupported var type: {CurrentVarType}");
@@ -203,12 +203,12 @@ public partial class GamePanelNavigator : PanelNavigator
 	{
 		_varListContainer.AddChild(varButton);
 		varButton.SetText(var.Stats.Name);
-		varButton.SetStyle(var.Stats.VarType);
+		varButton.SetStyle(var.Stats.Type);
 		RegisterButton(varButton, "VarOpUnit",
 			onPressed: () =>
 			{
 				CurrentVarName = var.Stats.Name;
-				CurrentVarType = var.Stats.VarType.ToString();
+				CurrentVarType = var.Stats.Type.ToString();
 				GD.Print($"Selected var: {CurrentVarName} of type {CurrentVarType}");
 			}
 		);

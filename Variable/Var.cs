@@ -16,7 +16,10 @@ public partial class Var : RefCounted, ICleanable
     private bool _hasOnDeathCallable = false;
     private bool _isCleanedUp = false;
 
-    private readonly HashSet<Var> _attackers = new();
+    private readonly HashSet<Var> _currentAttackers = new();
+    private readonly HashSet<Var> _historyAttackers = new();
+    // Record whose _attackers hashset this Var is currently in.
+    private Var _registeredAttackTarget;
 
     private MapData MapData => _blackboard.Get<MapData>("MapData");
     private GameData GameData => _blackboard.Get<GameData>("GameData");
@@ -56,6 +59,8 @@ public partial class Var : RefCounted, ICleanable
         if (_isCleanedUp) return;
         _isCleanedUp = true;
 
+        StopAttacking();
+        ClearAttackers();
         DisconnectOnDeath();
         Stats = null;
         _stateTree?.Cleanup();
@@ -65,6 +70,9 @@ public partial class Var : RefCounted, ICleanable
     }
     private void OnDeath()
     {
+        IsDead = true;
+        StopAttacking();
+        ClearAttackers();
         _stateTree?.ForceTransition("Death");
     }
     private void DisconnectOnDeath()
@@ -115,7 +123,9 @@ public partial class Var : RefCounted, ICleanable
     }
     public void ReceiveDamage(AttackInfo atkInfo)
     {
-        //atkInfo.Attackers = _attackers.AsR
+        PruneAttackers();
+
+        atkInfo.Attackers = _currentAttackers;
         GameData.SkillManager.OnBeforeAttack(atkInfo);
         int finalDamage = atkInfo.Damage;
 
@@ -124,13 +134,74 @@ public partial class Var : RefCounted, ICleanable
         float directionFactor = atkInfo.GetFromDirection(Stats.Position).Dot(facingDirection) * -0.5f + 1.5f;
         finalDamage = (int)(finalDamage * directionFactor);
         finalDamage = Math.Max(0, finalDamage - Stats.Defense);
-        if (!_attackers.Contains(atkInfo.Source))
+        
+        if (!_historyAttackers.Contains(atkInfo.Source))
         {
-            _attackers.Add(atkInfo.Source);
+            _historyAttackers.Add(atkInfo.Source);
             EmitSignal(SignalName.OnAttacked, finalDamage, atkInfo.Source);
         }
-
+        
         Stats.CurrentHealth -= finalDamage;
+    }
+
+    public void BeginAttacking(Var target)
+    {
+        if (target == null || target.IsDead)
+        {
+            StopAttacking();
+            return;
+        }
+
+        if (_registeredAttackTarget == target)
+        {
+            return;
+        }
+
+        StopAttacking();
+        _registeredAttackTarget = target;
+        target.AddAttacker(this);
+    }
+
+    public void StopAttacking()
+    {
+        if (_registeredAttackTarget == null)
+        {
+            return;
+        }
+
+        Var previousTarget = _registeredAttackTarget;
+        _registeredAttackTarget = null;
+        previousTarget.RemoveAttacker(this);
+    }
+
+    private void AddAttacker(Var attacker)
+    {
+        if (attacker == null || attacker == this || attacker.IsDead)
+        {
+            return;
+        }
+
+        _currentAttackers.Add(attacker);
+    }
+
+    private void RemoveAttacker(Var attacker)
+    {
+        if (attacker == null)
+        {
+            return;
+        }
+        
+        _currentAttackers.Remove(attacker);
+    }
+
+    private void ClearAttackers()
+    {
+        _currentAttackers.Clear();
+    }
+
+    private void PruneAttackers()
+    {
+        _currentAttackers.RemoveWhere(attacker => attacker == null || attacker.IsDead);
     }
     protected virtual void SetupStateTree()
     {

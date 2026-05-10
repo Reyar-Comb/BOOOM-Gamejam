@@ -99,18 +99,18 @@ public partial class BattleManager : Node
 
 
 
-	public void RegisterVar(VarStats.Type type, Vector2I position)
+	public void RegisterVar(VarStats.VarType type, Vector2I position)
 	{
 		Var var = new();
 		VarStats template = type switch
 		{
-			VarStats.Type.Int => ResourceLoader.Load<VarStats>("res://Variable/VarResources/Int/IntStats.tres"),
-			VarStats.Type.Float => ResourceLoader.Load<VarStats>("res://Variable/VarResources/Float/FloatStats.tres"),
-			VarStats.Type.Char => ResourceLoader.Load<VarStats>("res://Variable/VarResources/Char/CharStats.tres"),
-			VarStats.Type.Bool => ResourceLoader.Load<VarStats>("res://Variable/VarResources/Bool/BoolStats.tres"),
-			VarStats.Type.Long => ResourceLoader.Load<VarStats>("res://Variable/VarResources/Long/LongStats.tres"),
-			VarStats.Type.Double => ResourceLoader.Load<VarStats>("res://Variable/VarResources/Double/DoubleStats.tres"),
-			VarStats.Type.LongDouble => ResourceLoader.Load<VarStats>("res://Variable/VarResources/LongDouble/LongDoubleStats.tres"),
+			VarStats.VarType.Int => ResourceLoader.Load<VarStats>("res://Variable/VarResources/Int/IntStats.tres"),
+			VarStats.VarType.Float => ResourceLoader.Load<VarStats>("res://Variable/VarResources/Float/FloatStats.tres"),
+			VarStats.VarType.Char => ResourceLoader.Load<VarStats>("res://Variable/VarResources/Char/CharStats.tres"),
+			VarStats.VarType.Bool => ResourceLoader.Load<VarStats>("res://Variable/VarResources/Bool/BoolStats.tres"),
+			VarStats.VarType.Long => ResourceLoader.Load<VarStats>("res://Variable/VarResources/Long/LongStats.tres"),
+			VarStats.VarType.Double => ResourceLoader.Load<VarStats>("res://Variable/VarResources/Double/DoubleStats.tres"),
+			VarStats.VarType.LongDouble => ResourceLoader.Load<VarStats>("res://Variable/VarResources/LongDouble/LongDoubleStats.tres"),
 			_ => throw new ArgumentException($"Unsupported VarStats.Type: {type}")
 		};
 
@@ -120,7 +120,7 @@ public partial class BattleManager : Node
 		VarManager.AddVar(var);
 		VarRenderer.AddVar(var);
 		ConsoleManager.RegisterVar(var);
-		var.Stats.VarType = type;
+		var.Stats.Type = type;
 		var.Stats.Name = $"{type}_{VarManager.CountVar(type)}";
 		PanelNavigator.RefreshVarList();
 		GD.Print($"Registered var of type {type} at position {position}");

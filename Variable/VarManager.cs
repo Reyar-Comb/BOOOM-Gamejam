@@ -47,7 +47,7 @@ public partial class VarManager : Node
         _sharedBlackboard.Set("MapData", _mapData);
         _sharedBlackboard.Set("Vars", ReadOnlyVars);
         _sharedBlackboard.Set("GameData", _gameData);
-        
+
         AStarPathfinder pathfinder = AStarPathfinder.CreateBuilder()
             .SetMapData(_mapData)
             .UseDiagonal(Pathfinder.DiagonalType.Never)
@@ -118,12 +118,12 @@ public partial class VarManager : Node
         var.IsDead = true;
     }
 
-    public int CountVar(VarStats.Type type)
+    public int CountVar(VarStats.VarType type)
     {
         int count = 0;
         foreach (var var in Vars)
         {
-            if (var.Stats.VarType == type)
+            if (var.Stats.Type == type)
             {
                 count++;
             }

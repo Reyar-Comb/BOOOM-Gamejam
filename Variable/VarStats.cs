@@ -11,7 +11,7 @@ public partial class VarStats : Resource
         Neutral
     }
 
-    public enum Type
+    public enum VarType
     {
         Int,
         Float,
@@ -22,9 +22,9 @@ public partial class VarStats : Resource
         Bool,
     }
 
-    public Type VarType { get; set; }
+    public VarType Type { get; set; }
 
-    public String Name { get; set; }
+    public string Name { get; set; }
 
     [Signal] public delegate void OnDeathEventHandler();
     [Export]

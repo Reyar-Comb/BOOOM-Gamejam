@@ -113,17 +113,17 @@ public partial class VarButton : Control
 		richTextLabel.Text = "[b]" + text + "[/b]";
 	}
 
-	public void SetStyle(VarStats.Type varType)
+	public void SetStyle(VarStats.VarType varType)
 	{
 		Color color = varType switch
 		{
-			VarStats.Type.Int => Colors.LightPink,
-			VarStats.Type.Float => Colors.LightBlue,
-			VarStats.Type.Double => Colors.LightGreen,
-			VarStats.Type.LongDouble => Colors.LightYellow,
-			VarStats.Type.Char => Colors.LightCoral,
-			VarStats.Type.Bool => Colors.LightCyan,
-			VarStats.Type.Long => Colors.LightGoldenrod,
+			VarStats.VarType.Int => Colors.LightPink,
+			VarStats.VarType.Float => Colors.LightBlue,
+			VarStats.VarType.Double => Colors.LightGreen,
+			VarStats.VarType.LongDouble => Colors.LightYellow,
+			VarStats.VarType.Char => Colors.LightCoral,
+			VarStats.VarType.Bool => Colors.LightCyan,
+			VarStats.VarType.Long => Colors.LightGoldenrod,
 			_ => Colors.White
 		};
 		colorRect.Color = color;

@@ -33,10 +33,19 @@ public partial class Var_AttackState : STNode
     protected override void OnEnter()
     {
         _timer = 0;
+        Self.BeginAttacking(CurrentAttackTarget);
     }
 
     protected override void OnPhysicsUpdate(double delta)
     {
+        if (CurrentAttackTarget == null || CurrentAttackTarget.IsDead)
+        {
+            StopCurrentAttack();
+            return;
+        }
+
+        Self.BeginAttacking(CurrentAttackTarget);
+
         if (_timer == 0)
         {
             Attack();
@@ -51,7 +60,7 @@ public partial class Var_AttackState : STNode
     {
         if (CurrentAttackTarget == null || CurrentAttackTarget.IsDead)
         {
-            CurrentAttackTarget = null;
+            StopCurrentAttack();
             return;
         }
 
@@ -62,8 +71,15 @@ public partial class Var_AttackState : STNode
         };
         CurrentAttackTarget.ReceiveDamage(atkInfo);
     }
+    private void StopCurrentAttack()
+    {
+        Self.StopAttacking();
+        CurrentAttackTarget = null;
+        RequestTransition("Idle");
+    }
     protected override void OnExit()
     {
+        Self.StopAttacking();
         Stats.Direction = Stats.Direction.ToFacingDirection();
     }
 }

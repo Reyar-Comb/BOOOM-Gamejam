@@ -126,6 +126,9 @@ public partial class Var : RefCounted, ICleanable
         PruneAttackers();
 
         atkInfo.Attackers = _currentAttackers;
+        atkInfo.Defense = Stats.Defense;
+        atkInfo.Vars = _blackboard.Get<IReadOnlyList<Var>>("Vars");
+        atkInfo.MapData = MapData;
         GameData.SkillManager.OnBeforeAttack(atkInfo);
         int finalDamage = atkInfo.Damage;
 
@@ -133,7 +136,7 @@ public partial class Var : RefCounted, ICleanable
         Vector2 facingDirection = Stats.Direction;
         float directionFactor = atkInfo.GetFromDirection(Stats.Position).Dot(facingDirection) * -0.5f + 1.5f;
         finalDamage = (int)(finalDamage * directionFactor);
-        finalDamage = Math.Max(0, finalDamage - Stats.Defense);
+        finalDamage = Math.Max(0, finalDamage - atkInfo.Defense);
         
         if (!_historyAttackers.Contains(atkInfo.Source))
         {

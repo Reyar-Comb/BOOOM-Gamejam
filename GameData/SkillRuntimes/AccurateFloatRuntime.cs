@@ -6,9 +6,6 @@ public class AccurateFloatRuntime : ISkillRuntime
 {
     private const int SameAxisDamageBonus = 3;
 
-    public void OnWaveStarted() {}
-    public void OnVarCreated(VarCreationInfo info) {}
-
     public void OnBeforeAttack(AttackInfo info)
     {
         Var source = info?.Source;
@@ -30,11 +27,4 @@ public class AccurateFloatRuntime : ISkillRuntime
             info.Damage += SameAxisDamageBonus;
         }
     }
-
-    public void OnDetected(DetectInfo info) {}
-    public IEnumerable<Vector2I> OnAttackRangeQuery(AttackRangeQueryInfo info, IEnumerable<Vector2I> rangeCells)
-    {
-        return rangeCells;
-    }
-    public void OnTokenOperation() {}
 }

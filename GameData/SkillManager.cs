@@ -14,6 +14,27 @@ public class SkillManager
     {
         _activeSkillRuntimes.Clear();
     }
+    public void OnWaveStarted()
+    {
+        foreach (var runtime in _activeSkillRuntimes)
+        {
+            runtime.OnWaveStarted();
+        }
+    }
+
+    public bool CanCreateVar(VarStats.VarType type)
+    {
+        foreach (var runtime in _activeSkillRuntimes)
+        {
+            if (!runtime.CanCreateVar(type))
+            {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
     public void OnBeforeAttack(AttackInfo info)
     {
         foreach (var runtime in _activeSkillRuntimes)

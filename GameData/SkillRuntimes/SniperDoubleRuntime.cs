@@ -5,10 +5,6 @@ using System.Linq;
 
 public class SniperDoubleRuntime : ISkillRuntime
 {
-    public void OnWaveStarted() {}
-    public void OnVarCreated(VarCreationInfo info) {}
-    public void OnBeforeAttack(AttackInfo info) {}
-    public void OnDetected(DetectInfo info) {}
     public IEnumerable<Vector2I> OnAttackRangeQuery(AttackRangeQueryInfo info, IEnumerable<Vector2I> rangeCells)
     {
         if (info?.Source?.Stats == null || info.Source.Stats.Type != VarStats.VarType.Double)
@@ -27,5 +23,4 @@ public class SniperDoubleRuntime : ISkillRuntime
 
         return rangeCells.Concat(sameAxisDetectCells);
     }
-    public void OnTokenOperation() {}
 }

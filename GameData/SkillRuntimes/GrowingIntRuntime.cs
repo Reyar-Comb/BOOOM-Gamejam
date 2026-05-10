@@ -8,8 +8,6 @@ public class GrowingIntRuntime : ISkillRuntime
     private int _attackBonus;
     private int _defenseBonus;
 
-    public void OnWaveStarted() {}
-
     public void OnVarCreated(VarCreationInfo info)
     {
         VarStats stats = info?.Var?.Stats;
@@ -21,14 +19,6 @@ public class GrowingIntRuntime : ISkillRuntime
         ApplyCurrentBonuses(stats);
         AddRandomFutureBonus();
     }
-
-    public void OnBeforeAttack(AttackInfo info) {}
-    public void OnDetected(DetectInfo info) {}
-    public IEnumerable<Vector2I> OnAttackRangeQuery(AttackRangeQueryInfo info, IEnumerable<Vector2I> rangeCells)
-    {
-        return rangeCells;
-    }
-    public void OnTokenOperation() {}
 
     private void ApplyCurrentBonuses(VarStats stats)
     {

@@ -10,5 +10,5 @@ public interface ISkillRuntime
     void OnBeforeAttack(AttackInfo info) {}
     void OnDetected(DetectInfo info) {}
     IEnumerable<Vector2I> OnAttackRangeQuery(AttackRangeQueryInfo info, IEnumerable<Vector2I> rangeCells) => rangeCells;
-    void OnTokenOperation() {}
+    void OnTokenOperation(TokenOperationInfo info) {}
 }

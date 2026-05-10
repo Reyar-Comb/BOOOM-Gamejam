@@ -69,4 +69,12 @@ public class SkillManager
 
         return result;
     }
+
+    public void OnTokenOperation(TokenOperationInfo info)
+    {
+        foreach (var runtime in _activeSkillRuntimes)
+        {
+            runtime.OnTokenOperation(info);
+        }
+    }
 }

@@ -94,7 +94,7 @@ public partial class BattleManager : Node
 	public String GetTimeString()
 	{
 		TimeSpan timeSpan = TimeSpan.FromMilliseconds(GameTime);
-		return timeSpan.ToString(@"mm\:ss\.fff");
+		return timeSpan.ToString(@"mm\:ss");
 	}
 
 

@@ -39,7 +39,7 @@ public class CreateAck : Log
 
     protected override string FormatMessage()
     {
-        return $"[Info] [{BattleManager.Instance.GetTimeString()}] {Actor}: {Message}";
+        return $"[color=a0a9fe][b]INFO[/b][/color] [{BattleManager.Instance.GetTimeString()}] {Actor}: {Message}";
     }
 
 }
@@ -54,7 +54,7 @@ public class StatusAck : Log
 
     protected override string FormatMessage()
     {
-        return $"[Info] [{BattleManager.Instance.GetTimeString()}] {Actor}: {Message}";
+        return $"[color=a0a9fe][b]INFO[/b][/color] [{BattleManager.Instance.GetTimeString()}] {Actor}: {Message}";
     }
 }
 
@@ -67,7 +67,7 @@ public class LocationAck : Log
 
     protected override string FormatMessage()
     {
-        return $"[Info] [{BattleManager.Instance.GetTimeString()}] {Actor}: {Message}";
+        return $"[color=a0a9fe][b]INFO[/b][/color] [{BattleManager.Instance.GetTimeString()}] {Actor}: {Message}";
     }
 }
 
@@ -80,7 +80,7 @@ public class HealthAck : Log
 
     protected override string FormatMessage()
     {
-        return $"[Info] [{BattleManager.Instance.GetTimeString()}] {Actor}: {Message}";
+        return $"[color=a0a9fe][b]INFO[/b][/color] [{BattleManager.Instance.GetTimeString()}] {Actor}: {Message}";
     }
 }
 public class MoveAck : Log
@@ -92,7 +92,7 @@ public class MoveAck : Log
 
     protected override string FormatMessage()
     {
-        return $"[Info] [{BattleManager.Instance.GetTimeString()}] {Actor}: {Message}";
+        return $"[color=a0a9fe][b]INFO[/b][/color] [{BattleManager.Instance.GetTimeString()}] {Actor}: {Message}";
     }
 }
 
@@ -105,7 +105,7 @@ public class AttackedWarning : Log
 
     protected override string FormatMessage()
     {
-        return $"[Warning] [{BattleManager.Instance.GetTimeString()}] {Actor}: {Message}";
+        return $"[color=orange][b]WARNING[/b][/color] [{BattleManager.Instance.GetTimeString()}] {Actor}: {Message}";
     }
 }
 
@@ -118,7 +118,7 @@ public class DetectedWarning : Log
 
     protected override string FormatMessage()
     {
-        return $"[Warning] [{BattleManager.Instance.GetTimeString()}] {Actor}: {Message}";
+        return $"[color=orange][b]WARNING[/b][/color] [{BattleManager.Instance.GetTimeString()}] {Actor}: {Message}";
     }
 }
 
@@ -131,7 +131,7 @@ public class OutOfDetectWarning : Log
 
     protected override string FormatMessage()
     {
-        return $"[Warning] [{BattleManager.Instance.GetTimeString()}] {Actor}: {Message}";
+        return $"[color=orange][b]WARNING[/b][/color] [{BattleManager.Instance.GetTimeString()}] {Actor}: {Message}";
     }
 }
 
@@ -144,6 +144,6 @@ public class DeathError : Log
 
     protected override string FormatMessage()
     {
-        return $"[Error] [{BattleManager.Instance.GetTimeString()}] {Actor}: {Message}";
+        return $"[color=red][b]ERROR[/b][/color] [{BattleManager.Instance.GetTimeString()}] {Actor}: {Message}";
     }
 }

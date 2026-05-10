@@ -1,0 +1,32 @@
+[gd_scene format=3 uid="uid://dj4n7p74m5wpu"]
+
+[ext_resource type="Shader" uid="uid://cmtfcbu6k5nsn" path="res://Shaders/CardScene.gdshader" id="1_byatl"]
+[ext_resource type="PackedScene" uid="uid://d0xq4j2ohsk2q" path="res://Main/GameScene/GameScene.tscn" id="1_k72b0"]
+[ext_resource type="Script" uid="uid://dxmg6qq286ydp" path="res://Main/MainGame/SubView/sub_viewport_container.gd" id="2_i30qx"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_byatl"]
+shader = ExtResource("1_byatl")
+shader_parameter/mouse_pos = Vector2(0, 0)
+shader_parameter/fov = 0.01
+
+[node name="MainGame" type="Node2D" unique_id=67133812]
+
+[node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=1860306869]
+
+[node name="SubViewportContainer" type="SubViewportContainer" parent="CanvasLayer" unique_id=2120081323]
+material = SubResource("ShaderMaterial_byatl")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+script = ExtResource("2_i30qx")
+
+[node name="SubViewport" type="SubViewport" parent="CanvasLayer/SubViewportContainer" unique_id=231521668]
+handle_input_locally = false
+size = Vector2i(1920, 1080)
+render_target_update_mode = 4
+
+[node name="GameScene" parent="CanvasLayer/SubViewportContainer/SubViewport" unique_id=1582491454 instance=ExtResource("1_k72b0")]

@@ -1,6 +1,7 @@
 [gd_scene format=3 uid="uid://d0xq4j2ohsk2q"]
 
 [ext_resource type="Script" uid="uid://barrxhfrmxy8x" path="res://Main/GameScene/GameScene.cs" id="1_wlq8m"]
+[ext_resource type="PackedScene" uid="uid://cmfcqmhv4puv3" path="res://Main/GameScene/BG/BG.tscn" id="2_4bds6"]
 [ext_resource type="Script" uid="uid://bocfjfs3ip7pw" path="res://Console/ConsoleViewModel/ConsoleManager.cs" id="2_jaa4w"]
 [ext_resource type="FontFile" uid="uid://bnl5ekwhqxwkt" path="res://assets/Hack-Bold.ttf" id="2_vecup"]
 [ext_resource type="FontFile" uid="uid://cbst7pqnmxosu" path="res://assets/Hack-Regular.ttf" id="3_3p7la"]
@@ -9,11 +10,233 @@
 [ext_resource type="Script" uid="uid://01fvca8ksf16" path="res://Variable/VarManager.cs" id="5_b3sdv"]
 [ext_resource type="FontFile" uid="uid://cd6jbow8csp81" path="res://assets/Hack-Italic.ttf" id="5_ds47p"]
 [ext_resource type="Script" uid="uid://de1oryn5icnbq" path="res://Variable/VarRenderer.cs" id="6_2anr5"]
+[ext_resource type="FontFile" uid="uid://bo3cgu1o17h5i" path="res://assets/AGENCYR.TTF" id="7_4bds6"]
+[ext_resource type="PackedScene" uid="uid://dhd46rm8iamsn" path="res://Prefabs/WindowPanel/WindowPanel.tscn" id="8_816xn"]
+[ext_resource type="Script" uid="uid://1pprsysgn4ne" path="res://Main/GameScene/Nodes/GameTimeText.cs" id="8_hdewu"]
 [ext_resource type="Script" uid="uid://wjwo0jkmutf6" path="res://Main/GameScene/GamePanelNavigator.cs" id="10_8oyud"]
 [ext_resource type="Script" uid="uid://ccxvuxydhdkh5" path="res://Main/GameScene/Console.cs" id="10_utud6"]
 [ext_resource type="Script" uid="uid://s741c5fm1sb5" path="res://Utilities/PanelNavigator/ButtonBinding.cs" id="11_2anr5"]
 [ext_resource type="PackedScene" uid="uid://c3p8415n1lwy1" path="res://Prefabs/VarButton/VarButton.tscn" id="11_8oyud"]
 [ext_resource type="Script" uid="uid://sa26p4j2xfk4" path="res://Utilities/PanelNavigator/PanelUnit.cs" id="11_b3sdv"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_816xn"]
+bg_color = Color(0.6, 0.6, 0.6, 0.21568628)
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_hdewu"]
+bg_color = Color(0.50980395, 0.6784314, 1, 0.5568628)
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_4bds6"]
+bg_color = Color(0.6, 0.6, 0.6, 0.21568628)
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_3yp31"]
+bg_color = Color(0.92156863, 0.24705882, 0.20784314, 0.5568628)
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_y1mx5"]
+bg_color = Color(0.6, 0.6, 0.6, 0)
+border_width_left = 5
+border_width_top = 5
+border_width_right = 5
+border_width_bottom = 5
+border_color = Color(0.6745098, 0.6901961, 1, 1)
+corner_radius_top_left = 15
+corner_radius_top_right = 15
+corner_radius_bottom_right = 15
+corner_radius_bottom_left = 15
+corner_detail = 10
+
+[sub_resource type="Shader" id="Shader_hdewu"]
+code = "shader_type canvas_item;
+uniform sampler2D SCREEN_TEXTURE : hint_screen_texture, filter_linear_mipmap;
+// Xor's gausian blur function 
+// Link: https://xorshaders.weebly.com/tutorials/blur-shaders-5-part-2
+// Defaults from: https://www.shadertoy.com/view/Xltfzj
+//
+// BLUR BLURRINESS (Default 8.0)
+// BLUR ITERATIONS (Default 16.0 - More is better but slower)
+// BLUR QUALITY (Default 4.0 - More is better but slower)
+//
+// Desc.: Don't have the best performance but will run on almost
+// anything, although, if developing for mobile, is better to use 
+// 'texture_nodevgaussian(...) instead'.
+vec4 texture_xorgaussian(sampler2D tex, vec2 uv, vec2 pixel_size, float blurriness, int iterations, int quality){
+	float pi = 6.28;
+	
+	vec2 radius = blurriness / (1.0 / pixel_size).xy;
+	vec4 blurred_tex = texture(tex, uv);
+	
+	for(float d = 0.0; d < pi; d += pi / float(iterations)){
+		for( float i = 1.0 / float(quality); i <= 1.0; i += 1.0 / float(quality) ){
+			vec2 directions = uv + vec2(cos(d), sin(d)) * radius * i;
+			blurred_tex += texture(tex, directions);
+		}
+	}
+	blurred_tex /= float(quality) * float(iterations) + 1.0;
+	
+	return blurred_tex;
+}
+
+// Experience-Monks' fast gaussian blur function
+// Link: https://github.com/Experience-Monks/glsl-fast-gaussian-blur/
+//
+// BLUR ITERATIONS (Default 16.0 - More is better but slower)
+// BLUR DIRECTION (Direction in which the blur is apllied, use vec2(1, 0) for first pass and vec2(0, 1) for second pass)
+//
+// Desc.: ACTUALLY PRETTY SLOW but still pretty good for custom cinematic
+// bloom effects, since this needs render 2 passes 
+vec4 texture_monksgaussian_multipass(sampler2D tex, vec2 uv, vec2 pixel_size, int iterations, vec2 direction){
+	vec4 blurred_tex = vec4(0.0);
+	vec2 resolution = 1.0 / pixel_size;
+	
+	for (int i=0; i < iterations; i++){
+		float size = float(iterations - i);
+		
+		vec2 off1 = vec2(1.3846153846) * (direction * size);
+		vec2 off2 = vec2(3.2307692308) * (direction * size);
+
+		blurred_tex += texture(tex, uv) * 0.2270270270;
+		blurred_tex += texture(tex, uv + (off1 / resolution)) * 0.3162162162;
+		blurred_tex += texture(tex, uv - (off1 / resolution)) * 0.3162162162;
+		blurred_tex += texture(tex, uv + (off2 / resolution)) * 0.0702702703;
+		blurred_tex += texture(tex, uv - (off2 / resolution)) * 0.0702702703;
+	}
+	
+	blurred_tex /= float(iterations) + 1.0;
+	
+	return blurred_tex;
+}
+
+// u/_NoDev_'s gaussian blur function
+// Discussion Link: https://www.reddit.com/r/godot/comments/klgfo9/help_with_shaders_in_gles2/
+// Code Link: https://postimg.cc/7JDJw80d
+//
+// BLUR BLURRINESS (Default 8.0 - More is better but slower)
+// BLUR RADIUS (Default 1.5)
+// BLUR DIRECTION (Direction in which the blur is apllied, use vec2(1, 0) for first pass and vec2(0, 1) for second pass)
+//
+// Desc.: Really fast and GOOD FOR MOST CASES, but might NOT RUN IN THE WEB!
+// use 'texture_xorgaussian' instead if you found any issues.
+vec4 texture_nodevgaussian_singlepass(sampler2D tex, vec2 uv, vec2 pixel_size, float blurriness, float radius){
+	float pi = 3.14;
+	float n = 0.0015;
+	
+	vec4 blurred_tex = vec4(0);
+	
+	float weight;
+	for (float i = -blurriness; i <= blurriness; i++){
+		float d = i / pi;
+		vec2 anchor = vec2(cos(d), sin(d)) * radius * i;
+		vec2 directions = uv + pixel_size * anchor;
+		blurred_tex += texture(tex, directions) * n;
+		if (i <= 0.0) {n += 0.0015; }
+		if (i > 0.0) {n -= 0.0015; }
+		weight += n;
+	}
+	
+	float norm = 1.0 / weight;
+	blurred_tex *= norm;
+	return blurred_tex;
+}
+vec4 texture_nodevgaussian_multipass(sampler2D tex, vec2 uv, vec2 pixel_size, float blurriness, vec2 direction){
+	float n = 0.0015;
+	
+	vec4 blurred_tex = vec4(0);
+	
+	float weight;
+	for (float i = -blurriness; i <= blurriness; i++){
+		vec2 directions = uv + pixel_size * (direction * i);
+		blurred_tex += texture(tex, directions) * n;
+		if (i <= 0.0) {n += 0.0015; }
+		if (i > 0.0) {n -= 0.0015; }
+		weight += n;
+	}
+	
+	float norm = 1.0 / weight;
+	blurred_tex *= norm;
+	return blurred_tex;
+}
+
+//  -- EXAMPLE CODE -- //
+uniform int blur_type = 0;
+uniform int blur_amount = 16;
+uniform float blur_radius = 1;
+uniform vec2 blur_direction = vec2(1, 1);
+void fragment(){
+	vec2 uv = FRAGCOORD.xy / (1.0 / SCREEN_PIXEL_SIZE).xy;
+	
+	if (blur_type == 0) 
+	{
+		vec4 xorgaussian = texture_xorgaussian(SCREEN_TEXTURE, uv, SCREEN_PIXEL_SIZE, float(blur_amount), 16, 4);
+		COLOR =  xorgaussian;
+	} 
+	else if (blur_type == 1) 
+	{
+		vec4 monksgaussian_multipass = texture_monksgaussian_multipass(SCREEN_TEXTURE, uv, SCREEN_PIXEL_SIZE, blur_amount, blur_direction);
+		COLOR =  monksgaussian_multipass;
+	} 
+	else if (blur_type == 2) 
+	{
+		vec4 nodevgaussian_singlepass = texture_nodevgaussian_singlepass(SCREEN_TEXTURE, uv, SCREEN_PIXEL_SIZE, float(blur_amount), blur_radius);
+		COLOR =  nodevgaussian_singlepass;
+	} 
+	else if (blur_type == 3) 
+	{
+		vec4 nodevgaussian_multipass = texture_nodevgaussian_multipass(SCREEN_TEXTURE, uv, SCREEN_PIXEL_SIZE, float(blur_amount), blur_direction);
+		COLOR =  nodevgaussian_multipass;
+	} 
+	else 
+	{
+		COLOR =  texture(SCREEN_TEXTURE, uv);
+	}
+}"
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_4bds6"]
+shader = SubResource("Shader_hdewu")
+shader_parameter/blur_type = 0
+shader_parameter/blur_amount = 20
+shader_parameter/blur_radius = 1.0
+shader_parameter/blur_direction = Vector2(1, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_0mgrt"]
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
+shadow_offset = Vector2(10, 0)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_xdr2y"]
+bg_color = Color(0.44097927, 0.44097927, 0.44097915, 0)
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 4
+border_color = Color(1, 1, 0.6862745, 1)
+corner_radius_top_left = 21
+corner_radius_top_right = 21
+corner_radius_bottom_right = 21
+corner_radius_bottom_left = 21
+corner_detail = 10
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_dkdgh"]
+bg_color = Color(0.6, 0.6, 0.6, 0.627451)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_2nynh"]
+bg_color = Color(0.6872149, 0.68721503, 0.68721485, 0.58431375)
 
 [sub_resource type="Resource" id="Resource_b3sdv"]
 script = ExtResource("11_2anr5")
@@ -40,12 +263,16 @@ TargetPanelId = "VarMoveUnit"
 metadata/_custom_type_script = "uid://s741c5fm1sb5"
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_8oyud"]
-bg_color = Color(0.31616732, 0.31616738, 0.31616727, 1)
+bg_color = Color(0.31764707, 0.31764707, 0.31764707, 0)
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_b3sdv"]
 
 [node name="GameScene" type="Node2D" unique_id=1582491454]
 script = ExtResource("1_wlq8m")
+
+[node name="Bg" parent="." unique_id=61670994 instance=ExtResource("2_4bds6")]
+position = Vector2(-49, -18)
+scale = Vector2(1.05, 1.05)
 
 [node name="ConsoleManager" type="Node" parent="." unique_id=51194342]
 script = ExtResource("2_jaa4w")
@@ -56,7 +283,7 @@ TickScale = 5.0
 VarManager = NodePath("../VarManager")
 ConsoleManager = NodePath("../ConsoleManager")
 PanelNavigator = NodePath("../MarginContainer/HBoxContainer/MarginContainer3/ChooseVar/VBoxContainer/MarginContainer2/PanelContainer/MarginContainer/PanelNavigator")
-VarRenderer = NodePath("../MarginContainer/HBoxContainer/MarginContainer2/VBoxContainer/VarRenderer")
+VarRenderer = NodePath("../MarginContainer/HBoxContainer/MarginContainer2/VBoxContainer/WindowPanel2/MarginContainer/VarRenderer")
 
 [node name="VarManager" type="Node" parent="." unique_id=1602613892]
 script = ExtResource("5_b3sdv")
@@ -74,80 +301,110 @@ size_flags_vertical = 3
 
 [node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer" unique_id=945856404]
 layout_mode = 2
+theme_override_constants/separation = 0
 
 [node name="MarginContainer" type="MarginContainer" parent="MarginContainer/HBoxContainer" unique_id=1845521549]
 layout_mode = 2
 size_flags_horizontal = 3
+size_flags_stretch_ratio = 4.0
 theme_override_constants/margin_left = 50
 theme_override_constants/margin_top = 40
-theme_override_constants/margin_right = 40
-theme_override_constants/margin_bottom = 150
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 40
 
-[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/HBoxContainer/MarginContainer" unique_id=983033097]
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/HBoxContainer/MarginContainer" unique_id=741792267]
 layout_mode = 2
-size_flags_horizontal = 3
-size_flags_stretch_ratio = 0.39
 theme_override_constants/separation = 20
 
-[node name="VBoxContainer2" type="VBoxContainer" parent="MarginContainer/HBoxContainer/MarginContainer/HBoxContainer" unique_id=568218871]
+[node name="WindowPanel2" parent="MarginContainer/HBoxContainer/MarginContainer/VBoxContainer" unique_id=623487980 instance=ExtResource("8_816xn")]
 layout_mode = 2
-size_flags_horizontal = 3
 
-[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/HBoxContainer/MarginContainer/HBoxContainer/VBoxContainer2" unique_id=930903882]
+[node name="GameTime" type="RichTextLabel" parent="MarginContainer/HBoxContainer/MarginContainer/VBoxContainer/WindowPanel2" unique_id=1436362771]
 layout_mode = 2
-size_flags_horizontal = 3
+theme_override_fonts/normal_font = ExtResource("7_4bds6")
+theme_override_font_sizes/normal_font_size = 70
+text = "HH:MM:SS:MS"
+horizontal_alignment = 1
+vertical_alignment = 1
+script = ExtResource("8_hdewu")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/HBoxContainer/MarginContainer/VBoxContainer" unique_id=1628628527]
+layout_mode = 2
 size_flags_vertical = 3
+size_flags_stretch_ratio = 8.0
+theme_override_constants/separation = 20
+
+[node name="WindowPanel2" parent="MarginContainer/HBoxContainer/MarginContainer/VBoxContainer/HBoxContainer" unique_id=332280166 instance=ExtResource("8_816xn")]
+layout_mode = 2
+
+[node name="WindowPanel" parent="MarginContainer/HBoxContainer/MarginContainer/VBoxContainer/HBoxContainer" unique_id=1680672794 instance=ExtResource("8_816xn")]
+layout_mode = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/HBoxContainer/MarginContainer/VBoxContainer/HBoxContainer/WindowPanel" unique_id=1045832322]
+layout_mode = 2
 theme_override_constants/margin_left = 10
-theme_override_constants/margin_top = 50
 theme_override_constants/margin_right = 10
-theme_override_constants/margin_bottom = 50
 
-[node name="ProgressBar" type="ProgressBar" parent="MarginContainer/HBoxContainer/MarginContainer/HBoxContainer/VBoxContainer2/MarginContainer" unique_id=920620135]
+[node name="HBoxContainer2" type="HBoxContainer" parent="MarginContainer/HBoxContainer/MarginContainer/VBoxContainer/HBoxContainer/WindowPanel/MarginContainer" unique_id=908676761]
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/HBoxContainer/MarginContainer/VBoxContainer/HBoxContainer/WindowPanel/MarginContainer/HBoxContainer2" unique_id=983033097]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="VBoxContainer2" type="VBoxContainer" parent="MarginContainer/HBoxContainer/MarginContainer/VBoxContainer/HBoxContainer/WindowPanel/MarginContainer/HBoxContainer2/HBoxContainer" unique_id=568218871]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/HBoxContainer/MarginContainer/VBoxContainer/HBoxContainer/WindowPanel/MarginContainer/HBoxContainer2/HBoxContainer/VBoxContainer2" unique_id=930903882]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/margin_left = 15
+theme_override_constants/margin_top = 25
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 25
+
+[node name="ProgressBar" type="ProgressBar" parent="MarginContainer/HBoxContainer/MarginContainer/VBoxContainer/HBoxContainer/WindowPanel/MarginContainer/HBoxContainer2/HBoxContainer/VBoxContainer2/MarginContainer" unique_id=920620135]
 layout_mode = 2
 size_flags_vertical = 3
+theme_override_colors/font_color = Color(0.9490196, 0.9490196, 0.9490196, 0)
+theme_override_styles/background = SubResource("StyleBoxFlat_816xn")
+theme_override_styles/fill = SubResource("StyleBoxFlat_hdewu")
 value = 22.03
 fill_mode = 3
 
-[node name="Label" type="Label" parent="MarginContainer/HBoxContainer/MarginContainer/HBoxContainer/VBoxContainer2" unique_id=1450505501]
-layout_mode = 2
-theme_override_fonts/font = ExtResource("2_vecup")
-theme_override_font_sizes/font_size = 20
-text = "Patience"
-horizontal_alignment = 1
-
-[node name="HSeparator" type="HSeparator" parent="MarginContainer/HBoxContainer/MarginContainer/HBoxContainer/VBoxContainer2" unique_id=1338354259]
+[node name="HSeparator" type="HSeparator" parent="MarginContainer/HBoxContainer/MarginContainer/VBoxContainer/HBoxContainer/WindowPanel/MarginContainer/HBoxContainer2/HBoxContainer/VBoxContainer2" unique_id=1338354259]
+visible = false
 modulate = Color(1, 1, 1, 0)
 layout_mode = 2
 size_flags_vertical = 3
 size_flags_stretch_ratio = 0.04
 
-[node name="VBoxContainer3" type="VBoxContainer" parent="MarginContainer/HBoxContainer/MarginContainer/HBoxContainer" unique_id=2078566339]
+[node name="VBoxContainer3" type="VBoxContainer" parent="MarginContainer/HBoxContainer/MarginContainer/VBoxContainer/HBoxContainer/WindowPanel/MarginContainer/HBoxContainer2/HBoxContainer" unique_id=2078566339]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/HBoxContainer/MarginContainer/HBoxContainer/VBoxContainer3" unique_id=593013154]
+[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/HBoxContainer/MarginContainer/VBoxContainer/HBoxContainer/WindowPanel/MarginContainer/HBoxContainer2/HBoxContainer/VBoxContainer3" unique_id=593013154]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 theme_override_constants/margin_left = 10
-theme_override_constants/margin_top = 50
-theme_override_constants/margin_right = 10
-theme_override_constants/margin_bottom = 50
+theme_override_constants/margin_top = 25
+theme_override_constants/margin_right = 15
+theme_override_constants/margin_bottom = 25
 
-[node name="ProgressBar" type="ProgressBar" parent="MarginContainer/HBoxContainer/MarginContainer/HBoxContainer/VBoxContainer3/MarginContainer" unique_id=2124816428]
+[node name="ProgressBar2" type="ProgressBar" parent="MarginContainer/HBoxContainer/MarginContainer/VBoxContainer/HBoxContainer/WindowPanel/MarginContainer/HBoxContainer2/HBoxContainer/VBoxContainer3/MarginContainer" unique_id=1448351948]
 layout_mode = 2
 size_flags_vertical = 3
+theme_override_colors/font_color = Color(0.9490196, 0.9490196, 0.9490196, 0)
+theme_override_styles/background = SubResource("StyleBoxFlat_4bds6")
+theme_override_styles/fill = SubResource("StyleBoxFlat_3yp31")
 value = 22.03
 fill_mode = 3
 
-[node name="Label" type="Label" parent="MarginContainer/HBoxContainer/MarginContainer/HBoxContainer/VBoxContainer3" unique_id=1288177147]
-layout_mode = 2
-theme_override_fonts/font = ExtResource("2_vecup")
-theme_override_font_sizes/font_size = 20
-text = "Patience"
-horizontal_alignment = 1
-
-[node name="HSeparator" type="HSeparator" parent="MarginContainer/HBoxContainer/MarginContainer/HBoxContainer/VBoxContainer3" unique_id=2053109729]
+[node name="HSeparator" type="HSeparator" parent="MarginContainer/HBoxContainer/MarginContainer/VBoxContainer/HBoxContainer/WindowPanel/MarginContainer/HBoxContainer2/HBoxContainer/VBoxContainer3" unique_id=2053109729]
+visible = false
 modulate = Color(1, 1, 1, 0)
 layout_mode = 2
 size_flags_vertical = 3
@@ -158,37 +415,56 @@ layout_mode = 2
 size_flags_horizontal = 3
 size_flags_stretch_ratio = 10.0
 theme_override_constants/margin_left = 10
-theme_override_constants/margin_top = 50
-theme_override_constants/margin_right = 50
-theme_override_constants/margin_bottom = 50
+theme_override_constants/margin_top = 40
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 40
 
 [node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/HBoxContainer/MarginContainer2" unique_id=1718995261]
 layout_mode = 2
 size_flags_horizontal = 3
-theme_override_constants/separation = 30
+theme_override_constants/separation = 20
 
-[node name="VarRenderer" type="Control" parent="MarginContainer/HBoxContainer/MarginContainer2/VBoxContainer" unique_id=1166360567 node_paths=PackedStringArray("BattleManager")]
+[node name="WindowPanel2" parent="MarginContainer/HBoxContainer/MarginContainer2/VBoxContainer" unique_id=2051751634 instance=ExtResource("8_816xn")]
+layout_mode = 2
+
+[node name="Panel" parent="MarginContainer/HBoxContainer/MarginContainer2/VBoxContainer/WindowPanel2" index="0" unique_id=517038730]
+z_index = 10
+theme_override_styles/panel = SubResource("StyleBoxFlat_y1mx5")
+
+[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/HBoxContainer/MarginContainer2/VBoxContainer/WindowPanel2" unique_id=1538653709]
+layout_mode = 2
+theme_override_constants/margin_left = 4
+theme_override_constants/margin_top = 4
+theme_override_constants/margin_right = 4
+theme_override_constants/margin_bottom = 4
+
+[node name="VarRenderer" type="Control" parent="MarginContainer/HBoxContainer/MarginContainer2/VBoxContainer/WindowPanel2/MarginContainer" unique_id=1166360567 node_paths=PackedStringArray("BattleManager")]
 layout_mode = 2
 size_flags_vertical = 3
 script = ExtResource("6_2anr5")
 DrawBackground = true
+BackgroundColor = Color(0.078431375, 0.09019608, 0.10980392, 0.69411767)
 RenderGrid = true
-BattleManager = NodePath("../../../../../BattleManager")
+BattleManager = NodePath("../../../../../../../BattleManager")
 metadata/_custom_type_script = "uid://de1oryn5icnbq"
 
-[node name="PanelContainer" type="PanelContainer" parent="MarginContainer/HBoxContainer/MarginContainer2/VBoxContainer" unique_id=416854844]
+[node name="WindowPanel" parent="MarginContainer/HBoxContainer/MarginContainer2/VBoxContainer" unique_id=387059429 instance=ExtResource("8_816xn")]
+material = SubResource("ShaderMaterial_4bds6")
 layout_mode = 2
-size_flags_vertical = 3
 size_flags_stretch_ratio = 0.5
+theme_override_styles/panel = SubResource("StyleBoxFlat_0mgrt")
 
-[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/HBoxContainer/MarginContainer2/VBoxContainer/PanelContainer" unique_id=1478602741]
+[node name="Panel" parent="MarginContainer/HBoxContainer/MarginContainer2/VBoxContainer/WindowPanel" index="0" unique_id=517038730]
+theme_override_styles/panel = SubResource("StyleBoxFlat_xdr2y")
+
+[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/HBoxContainer/MarginContainer2/VBoxContainer/WindowPanel" unique_id=1478602741]
 layout_mode = 2
 theme_override_constants/margin_left = 20
 theme_override_constants/margin_top = 20
 theme_override_constants/margin_right = 20
 theme_override_constants/margin_bottom = 20
 
-[node name="Console" type="RichTextLabel" parent="MarginContainer/HBoxContainer/MarginContainer2/VBoxContainer/PanelContainer/MarginContainer" unique_id=1812832563 node_paths=PackedStringArray("ConsoleManager")]
+[node name="Console" type="RichTextLabel" parent="MarginContainer/HBoxContainer/MarginContainer2/VBoxContainer/WindowPanel/MarginContainer" unique_id=1812832563 node_paths=PackedStringArray("ConsoleManager")]
 layout_mode = 2
 theme_override_fonts/normal_font = ExtResource("3_3p7la")
 theme_override_fonts/bold_font = ExtResource("2_vecup")
@@ -199,6 +475,8 @@ theme_override_font_sizes/bold_font_size = 20
 theme_override_font_sizes/bold_italics_font_size = 20
 theme_override_font_sizes/italics_font_size = 20
 theme_override_font_sizes/mono_font_size = 20
+bbcode_enabled = true
+scroll_following = true
 script = ExtResource("10_utud6")
 ConsoleManager = NodePath("../../../../../../../ConsoleManager")
 
@@ -209,7 +487,7 @@ size_flags_stretch_ratio = 3.0
 theme_override_constants/margin_left = 10
 theme_override_constants/margin_top = 40
 theme_override_constants/margin_right = 30
-theme_override_constants/margin_bottom = 50
+theme_override_constants/margin_bottom = 40
 
 [node name="ChooseVar" type="Control" parent="MarginContainer/HBoxContainer/MarginContainer3" unique_id=1261672753]
 layout_mode = 2
@@ -217,14 +495,8 @@ script = ExtResource("11_b3sdv")
 PanelId = "ChooseVar"
 metadata/_custom_type_script = "uid://sa26p4j2xfk4"
 
-[node name="PanelContainer" type="PanelContainer" parent="MarginContainer/HBoxContainer/MarginContainer3/ChooseVar" unique_id=607573787]
+[node name="WindowPanel" parent="MarginContainer/HBoxContainer/MarginContainer3/ChooseVar" unique_id=655739655 instance=ExtResource("8_816xn")]
 layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-size_flags_vertical = 3
 
 [node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/HBoxContainer/MarginContainer3/ChooseVar" unique_id=1172201399]
 layout_mode = 1
@@ -238,15 +510,17 @@ grow_vertical = 2
 layout_mode = 2
 size_flags_vertical = 3
 size_flags_stretch_ratio = 0.07
-theme_override_constants/margin_left = 10
-theme_override_constants/margin_top = 10
-theme_override_constants/margin_right = 250
-theme_override_constants/margin_bottom = 10
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 20
+theme_override_constants/margin_right = 200
+theme_override_constants/margin_bottom = 0
 
 [node name="ReturnButton" type="Button" parent="MarginContainer/HBoxContainer/MarginContainer3/ChooseVar/VBoxContainer/MarginContainer" unique_id=394799611]
 layout_mode = 2
 size_flags_vertical = 3
 theme_override_fonts/font = ExtResource("4_35cd8")
+theme_override_styles/normal = SubResource("StyleBoxFlat_dkdgh")
+theme_override_styles/hover = SubResource("StyleBoxFlat_2nynh")
 text = "<-"
 
 [node name="MarginContainer2" type="MarginContainer" parent="MarginContainer/HBoxContainer/MarginContainer3/ChooseVar/VBoxContainer" unique_id=1139721577]
@@ -276,7 +550,7 @@ SelectedVarLabels = [NodePath("VarOpUnit/VBoxContainer/PanelContainer/SelectedVa
 LocationLabels = [NodePath("VarAddUnit/VBoxContainer/ScrollContainer/VBoxContainer/PanelContainer/LocationLabel"), NodePath("VarMoveUnit/VBoxContainer/ScrollContainer/VBoxContainer/PanelContainer/LocationLabel")]
 VarManager = NodePath("../../../../../../../../../VarManager")
 _varListContainer = NodePath("VarUnit/VBoxContainer/ScrollContainer/VBoxContainer")
-VarRenderer = NodePath("../../../../../../../MarginContainer2/VBoxContainer/VarRenderer")
+VarRenderer = NodePath("../../../../../../../MarginContainer2/VBoxContainer/WindowPanel2/MarginContainer/VarRenderer")
 ButtonBindings = Array[ExtResource("11_2anr5")]([SubResource("Resource_b3sdv"), SubResource("Resource_2anr5"), SubResource("Resource_utud6"), SubResource("Resource_xxvh7")])
 metadata/_custom_type_script = "uid://kdydruu63l2c"
 
@@ -316,14 +590,10 @@ theme_override_constants/separation = 12
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_8oyud")
 
-[node name="SelectVarButton" parent="MarginContainer/HBoxContainer/MarginContainer3/ChooseVar/VBoxContainer/MarginContainer2/PanelContainer/MarginContainer/PanelNavigator/VarUnit/VBoxContainer/PanelContainer" unique_id=1869583073 instance=ExtResource("11_8oyud")]
+[node name="SelectVarButton" parent="MarginContainer/HBoxContainer/MarginContainer3/ChooseVar/VBoxContainer/MarginContainer2/PanelContainer/MarginContainer/PanelNavigator/VarUnit/VBoxContainer/PanelContainer" unique_id=1993803341 instance=ExtResource("11_8oyud")]
 layout_mode = 2
 
-[node name="ColorRect" parent="MarginContainer/HBoxContainer/MarginContainer3/ChooseVar/VBoxContainer/MarginContainer2/PanelContainer/MarginContainer/PanelNavigator/VarUnit/VBoxContainer/PanelContainer/SelectVarButton" index="0" unique_id=1894200065]
-color = Color(0.4506483, 0.4506483, 0.45064825, 1)
-
 [node name="RichTextLabel" parent="MarginContainer/HBoxContainer/MarginContainer3/ChooseVar/VBoxContainer/MarginContainer2/PanelContainer/MarginContainer/PanelNavigator/VarUnit/VBoxContainer/PanelContainer/SelectVarButton" index="1" unique_id=1388884413]
-theme_override_colors/default_color = Color(1, 1, 1, 1)
 text = "[b]+[/b]
 "
 
@@ -751,6 +1021,8 @@ theme_override_colors/default_color = Color(1, 1, 1, 1)
 [node name="Button" parent="MarginContainer/HBoxContainer/MarginContainer3/ChooseVar/VBoxContainer/MarginContainer2/PanelContainer/MarginContainer/PanelNavigator/VarMoveUnit/VBoxContainer/PanelContainer/SelectedVarButton" index="2" unique_id=1223400032]
 disabled = true
 
+[editable path="MarginContainer/HBoxContainer/MarginContainer2/VBoxContainer/WindowPanel2"]
+[editable path="MarginContainer/HBoxContainer/MarginContainer2/VBoxContainer/WindowPanel"]
 [editable path="MarginContainer/HBoxContainer/MarginContainer3/ChooseVar/VBoxContainer/MarginContainer2/PanelContainer/MarginContainer/PanelNavigator/VarUnit/VBoxContainer/PanelContainer/SelectVarButton"]
 [editable path="MarginContainer/HBoxContainer/MarginContainer3/ChooseVar/VBoxContainer/MarginContainer2/PanelContainer/MarginContainer/PanelNavigator/VarOpUnit/VBoxContainer/ScrollContainer/VBoxContainer/OpStatusButton"]
 [editable path="MarginContainer/HBoxContainer/MarginContainer3/ChooseVar/VBoxContainer/MarginContainer2/PanelContainer/MarginContainer/PanelNavigator/VarOpUnit/VBoxContainer/ScrollContainer/VBoxContainer/OpCommandButton"]

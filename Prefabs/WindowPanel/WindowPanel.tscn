@@ -1,0 +1,44 @@
+[gd_scene format=3 uid="uid://dhd46rm8iamsn"]
+
+[ext_resource type="Shader" uid="uid://ql424av8n4oq" path="res://Shaders/Blur2.gdshader" id="1_xobnf"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_xobnf"]
+shader = ExtResource("1_xobnf")
+shader_parameter/blur_type = 0
+shader_parameter/blur_amount = 10
+shader_parameter/blur_radius = 1.0
+shader_parameter/blur_direction = Vector2(1, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_tri2q"]
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_gklbn"]
+bg_color = Color(0.6, 0.6, 0.6, 0)
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 4
+border_color = Color(1, 1, 1, 1)
+corner_radius_top_left = 21
+corner_radius_top_right = 21
+corner_radius_bottom_right = 21
+corner_radius_bottom_left = 21
+corner_detail = 10
+
+[node name="WindowPanel" type="PanelContainer" unique_id=623487980]
+material = SubResource("ShaderMaterial_xobnf")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_styles/panel = SubResource("StyleBoxFlat_tri2q")
+
+[node name="Panel" type="Panel" parent="." unique_id=517038730]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_gklbn")

@@ -1,0 +1,185 @@
+[gd_scene format=3 uid="uid://cmfcqmhv4puv3"]
+
+[ext_resource type="Shader" uid="uid://3r8j0oq1mkrl" path="res://Shaders/LineGlow.gdshader" id="1_w2nl1"]
+
+[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_uh35l"]
+load_path = "res://.godot/imported/bg_light.png-5bf6abf713af66bce57c5733758bc0ce.ctex"
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_w2nl1"]
+shader = ExtResource("1_w2nl1")
+shader_parameter/dot_color = Color(0.6, 1, 0.42352942, 1)
+shader_parameter/speed = 0.806000038285
+shader_parameter/pause_duration = 1.0
+shader_parameter/dot_size = 0.10000000149012
+shader_parameter/trail_length = 0.12
+shader_parameter/intensity = 1.0
+
+[sub_resource type="Gradient" id="Gradient_q3rjb"]
+colors = PackedColorArray(1, 1, 1, 1, 1, 1, 1, 1)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_q3rjb"]
+gradient = SubResource("Gradient_q3rjb")
+width = 2
+height = 1
+
+[sub_resource type="Shader" id="Shader_rv5hj"]
+code = "shader_type canvas_item;
+
+// === 参数 ===
+// 光点颜色
+uniform vec4 dot_color : source_color = vec4(0.6, 1.0, 0.8, 1.0);
+// 流动速度
+uniform float speed : hint_range(0.0, 10.0) = 2.0;
+// 走完一轮后的停顿时间（秒）
+uniform float pause_duration : hint_range(0.0, 5.0) = 1.0;
+// 光点大小（沿线条比例）
+uniform float dot_size : hint_range(0.005, 0.1) = 0.02;
+// 拖尾长度（沿线条比例）
+uniform float trail_length : hint_range(0.0, 0.5) = 0.12;
+// 发光强度
+uniform float intensity : hint_range(1.0, 30.0) = 8.0;
+
+void fragment() {
+    // 走动耗时 = 1/speed 秒走完一圈
+    float move_time = 1.0 / max(speed, 0.001);
+    float cycle_time = move_time + pause_duration;
+    float t = mod(TIME, cycle_time);
+    
+    float mask = 0.0;
+    
+    // 走动阶段才计算光点，停顿阶段保持 mask=0（完全隐藏）
+    if (t < move_time) {
+        float dot_pos = t / move_time;
+        
+        // 当前片段到光点的距离（沿 UV.x 增大方向，不绕回）
+        // diff < 0：光点后方（已走过，拖尾区域）
+        // diff > 0：光点前方（未到达）
+        float diff = UV.x - dot_pos;
+        
+        // 光点本身（高斯尖峰）
+        float dot = exp(-diff * diff / (dot_size * dot_size));
+        
+        // 拖尾（光点后方指数衰减）
+        float trail = 0.0;
+        if (diff < 0.0 && trail_length > 0.0) {
+            trail = exp(diff / trail_length) * 0.4;
+        }
+        
+        mask = max(dot, trail);
+    }
+    
+    COLOR = vec4(dot_color.rgb * intensity * mask, mask);
+}"
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_2g8hk"]
+shader = SubResource("Shader_rv5hj")
+shader_parameter/dot_color = Color(0.6, 1, 0.42352942, 1)
+shader_parameter/speed = 1.0000000475
+shader_parameter/pause_duration = 2.46800011723
+shader_parameter/dot_size = 0.10000000149012
+shader_parameter/trail_length = 0.12
+shader_parameter/intensity = 1.0
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_ti51i"]
+shader = ExtResource("1_w2nl1")
+shader_parameter/dot_color = Color(0.6, 1, 0.42352942, 1)
+shader_parameter/speed = 0.4310000204725
+shader_parameter/pause_duration = 0.98400004674
+shader_parameter/dot_size = 0.06100000254824
+shader_parameter/trail_length = 0.5
+shader_parameter/intensity = 3.474000117515
+
+[sub_resource type="Shader" id="Shader_w2nl1"]
+code = "shader_type canvas_item;
+
+// === 参数 ===
+// 光点颜色
+uniform vec4 dot_color : source_color = vec4(0.6, 1.0, 0.8, 1.0);
+// 流动速度
+uniform float speed : hint_range(0.0, 10.0) = 2.0;
+// 走完一轮后的停顿时间（秒）
+uniform float pause_duration : hint_range(0.0, 5.0) = 1.0;
+// 光点大小（沿线条比例）
+uniform float dot_size : hint_range(0.005, 0.5) = 0.02;
+// 拖尾长度（沿线条比例）
+uniform float trail_length : hint_range(0.0, 0.5) = 0.12;
+// 发光强度
+uniform float intensity : hint_range(1.0, 30.0) = 8.0;
+
+void fragment() {
+    // 走动耗时 = 1/speed 秒走完一圈
+    float move_time = 1.0 / max(speed, 0.001);
+    float cycle_time = move_time + pause_duration;
+    float t = mod(TIME, cycle_time);
+    
+    float mask = 0.0;
+    
+    // 走动阶段才计算光点，停顿阶段保持 mask=0（完全隐藏）
+    if (t < move_time) {
+        float dot_pos = t / move_time;
+        
+        // 当前片段到光点的距离（沿 UV.x 增大方向，不绕回）
+        // diff < 0：光点后方（已走过，拖尾区域）
+        // diff > 0：光点前方（未到达）
+        float diff = UV.x - dot_pos;
+        
+        // 光点本身（高斯尖峰）
+        float dot = exp(-diff * diff / (dot_size * dot_size));
+        
+        // 拖尾（光点后方指数衰减）
+        float trail = 0.0;
+        if (diff < 0.0 && trail_length > 0.0) {
+            trail = exp(diff / trail_length) * 0.4;
+        }
+        
+        mask = max(dot, trail);
+    }
+    
+    COLOR = vec4(dot_color.rgb * intensity * mask, mask);
+}"
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_ttmqy"]
+shader = SubResource("Shader_w2nl1")
+shader_parameter/dot_color = Color(0.6, 1, 0.42352942, 1)
+shader_parameter/speed = 0.4310000204725
+shader_parameter/pause_duration = 1.56400007429
+shader_parameter/dot_size = 0.21800001000573999
+shader_parameter/trail_length = 0.5
+shader_parameter/intensity = 6.34400025384
+
+[node name="Bg" type="Node2D" unique_id=61670994]
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=1126925073]
+z_index = -1
+position = Vector2(960, 533)
+texture = SubResource("CompressedTexture2D_uh35l")
+
+[node name="Node2D" type="Node2D" parent="." unique_id=594122090]
+
+[node name="Line2D" type="Line2D" parent="Node2D" unique_id=448373763]
+material = SubResource("ShaderMaterial_w2nl1")
+points = PackedVector2Array(286, 531, 865, 530, 1023, 373, 1023, 68, 1150, -60, 1150, -140)
+width = 6.81
+texture = SubResource("GradientTexture2D_q3rjb")
+texture_mode = 2
+
+[node name="Line2D2" type="Line2D" parent="Node2D" unique_id=363851968]
+material = SubResource("ShaderMaterial_2g8hk")
+points = PackedVector2Array(23, 964, 294, 964, 528, 731, 650, 731, 682, 701, 758, 701, 813, 645)
+width = 9.84
+texture = SubResource("GradientTexture2D_q3rjb")
+texture_mode = 2
+
+[node name="Line2D3" type="Line2D" parent="Node2D" unique_id=1948932216]
+material = SubResource("ShaderMaterial_ti51i")
+points = PackedVector2Array(236, 905, 495, 645, 531, 645, 545, 630, 734, 630, 792, 573)
+width = 9.84
+texture = SubResource("GradientTexture2D_q3rjb")
+texture_mode = 2
+
+[node name="Line2D4" type="Line2D" parent="Node2D" unique_id=129344906]
+material = SubResource("ShaderMaterial_ttmqy")
+points = PackedVector2Array(365, 1261, 515, 1112, 582, 1112, 637, 1055, 637, 923, 786, 774, 787, 708, 1126, 362, 1125, 287, 1285, 130, 1283, 6, 1372, -83, 1371, -209)
+width = 9.84
+texture = SubResource("GradientTexture2D_q3rjb")
+texture_mode = 2

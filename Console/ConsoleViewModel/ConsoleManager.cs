@@ -114,5 +114,21 @@ public partial class ConsoleManager : Node
         AddLog(new HealthAck(v));
     }
 
+    public override void _Input(InputEvent @event)
+    {
+        if (@event.IsPressed() && @event is InputEventKey keyEvent && keyEvent.Keycode == Key.W)
+        {
+            AddLog(new AttackedWarning(
+                new Var { Stats = new VarStats { Name = "TestVar", CurrentHealth = 50, MaxHealth = 100, Position = Vector2.Zero, Direction = Vector2.Right } },
+                new AttackInfo { Source = new Var { Stats = new VarStats { Name = "Attacker", CurrentHealth = 100, MaxHealth = 100, Position = Vector2.Zero, Direction = Vector2.Right } }, Damage = 20 }
+            ));
+        }
+        else if (@event.IsPressed() && @event is InputEventKey keyEvent2 && keyEvent2.Keycode == Key.E)
+        {
+            AddLog(new DeathError(
+                new Var { Stats = new VarStats { Name = "TestVar", CurrentHealth = 0, MaxHealth = 100, Position = Vector2.Zero, Direction = Vector2.Right } }
+            ));
+        }
+    }
 
 }

@@ -459,8 +459,12 @@ public partial class ConsoleView : Control
 				VarTeam = VarStats.Team.Hostile
 			}
 		};
-
-		target.EmitSignal(Var.SignalName.OnDetected, detected);
+		DetectInfo info = new()
+		{
+			Detector = target,
+			DetectedVar = detected
+		};
+		target.EmitSignal(Var.SignalName.OnDetected, info);
 		AddLog($"[System] Simulated detection of {detected} by {target}");
 	}
 

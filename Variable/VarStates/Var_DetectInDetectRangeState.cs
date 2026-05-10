@@ -38,6 +38,8 @@ public partial class Var_DetectInDetectRangeState : STNode
     }
 
     private MapData MapData => _blackboard.Get<MapData>("MapData");
+
+    private GameData GameData => _blackboard.Get<GameData>("GameData");
     protected override void OnPhysicsUpdate(double delta)
     {
         TryGetEnemyInRange();
@@ -79,7 +81,13 @@ public partial class Var_DetectInDetectRangeState : STNode
 
             _seenEnemyIds.Add(id);
             _detectionOrder.Add(id);
-            Self.EmitSignal(Var.SignalName.OnDetected, enemy);
+            DetectInfo info = new()
+            {
+                Detector = Self,
+                DetectedVar = enemy
+            };
+            GameData.SkillManager.OnDetected(info);
+            Self.EmitSignal(Var.SignalName.OnDetected, info);
         }
 
         _detectionOrder.RemoveAll(id => !foundIds.Contains(id));

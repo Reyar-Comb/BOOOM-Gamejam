@@ -9,5 +9,7 @@ public class CrowdOfChar : Skill
     public override RarityLevel Rarity => RarityLevel.Rare;
     public override void Apply(GameData data)
     {
+        data.SkillManager.AddRuntime(GetSkillRuntime());
     }
+    public override ISkillRuntime GetSkillRuntime() => new CrowdOfCharRuntime();
 }

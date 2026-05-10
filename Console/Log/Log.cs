@@ -111,9 +111,9 @@ public class AttackedWarning : Log
 
 public class DetectedWarning : Log
 {
-    public DetectedWarning(Var targetVar, Var detectedVar) : base(LogType.Warning, targetVar.Stats.Name)
+    public DetectedWarning(DetectInfo detectInfo) : base(LogType.Warning, detectInfo.Detector.Stats.Name)
     {
-        Message = $"Detected {detectedVar.Stats.Name}";
+        Message = $"Detected {detectInfo.DetectedVar.Stats.Name}";
     }
 
     protected override string FormatMessage()

@@ -25,7 +25,7 @@ public partial class Var : RefCounted, ICleanable
     private GameData GameData => _blackboard.Get<GameData>("GameData");
 
     [Signal] 
-    public delegate void OnDetectedEventHandler(Var detectedVar);
+    public delegate void OnDetectedEventHandler(DetectInfo detectInfo);
     
     [Signal] 
     public delegate void OnAttackedEventHandler(int damage, Var source);

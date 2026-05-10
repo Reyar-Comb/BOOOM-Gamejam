@@ -117,11 +117,11 @@ public partial class BattleManager : Node
 
 		var.Stats = (VarStats)template.Duplicate(true);
 		var.Stats.SetGridPosition(position);
+		var.Stats.Type = type;
+		var.Stats.Name = $"{type}_{VarManager.CountVar(type) + 1}";
 		VarManager.AddVar(var);
 		VarRenderer.AddVar(var);
 		ConsoleManager.RegisterVar(var);
-		var.Stats.Type = type;
-		var.Stats.Name = $"{type}_{VarManager.CountVar(type)}";
 		PanelNavigator.RefreshVarList();
 		GD.Print($"Registered var of type {type} at position {position}");
 	}

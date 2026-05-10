@@ -89,6 +89,7 @@ public partial class VarManager : Node
 
         var.Initialize(_sharedBlackboard);
         var.InitStatsWithGameData(_gameData);
+        _gameData.SkillManager.OnVarCreated(new VarCreationInfo { Var = var });
     }
 
     private void ConnectOnDeath(Var var)

@@ -48,8 +48,8 @@ public partial class ConsoleManager : Node
 
         var callables = new List<Callable>();
 
-        var onDetectedCallable = Callable.From((Var detectedVar) => {
-            AddLog(new DetectedWarning(v, detectedVar));
+        var onDetectedCallable = Callable.From((DetectInfo detectInfo) => {
+            AddLog(new DetectedWarning(detectInfo));
         });
         v.Connect(Var.SignalName.OnDetected, onDetectedCallable);
         callables.Add(onDetectedCallable);

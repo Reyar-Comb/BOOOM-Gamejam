@@ -21,4 +21,20 @@ public class SkillManager
             runtime.OnBeforeAttack(info);
         }
     }
+
+    public void OnVarCreated(VarCreationInfo info)
+    {
+        foreach (var runtime in _activeSkillRuntimes)
+        {
+            runtime.OnVarCreated(info);
+        }
+    }
+
+    public void OnDetected(DetectInfo info)
+    {
+        foreach (var runtime in _activeSkillRuntimes)
+        {
+            runtime.OnDetected(info);
+        }
+    }
 }

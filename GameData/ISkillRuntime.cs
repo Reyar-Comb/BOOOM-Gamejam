@@ -4,8 +4,8 @@ using System;
 public interface ISkillRuntime
 {
     void OnWaveStarted();
-    void OnVarCreated();
+    void OnVarCreated(VarCreationInfo info);
     void OnBeforeAttack(AttackInfo info);
-    void OnDetected();
+    void OnDetected(DetectInfo info);
     void OnTokenOperation();
 }

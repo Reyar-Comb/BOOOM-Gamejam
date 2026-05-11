@@ -1,15 +1,14 @@
-[gd_resource type="Resource" script_class="SkillResource" format=3]
+[gd_resource type="Resource" script_class="SkillResource" format=3 uid="uid://bigukf2280ft8"]
 
-[ext_resource type="Script" path="res://GameData/SkillResource.cs" id="1"]
+[ext_resource type="Script" uid="uid://uv786iry0jub" path="res://GameData/SkillResource.cs" id="1"]
 
 [resource]
 script = ExtResource("1")
 Name = "singleton-long-double"
 Description = "If you create a LongDouble var as the first var in a wave, it gains large fixed health and attack bonuses but defense is set to 0. Doing this blocks future Float, Double, and LongDouble creation."
-Icon = null
 Rarity = 2
-Values = Dictionary[String, float]({
-"AttackDamageBonus": 270.0,
-"DefenseOverride": 0.0,
-"HealthBonus": 1800.0
+Values = Dictionary[String, int]({
+"AttackDamageBonus": 270,
+"DefenseOverride": 0,
+"HealthBonus": 1800
 })

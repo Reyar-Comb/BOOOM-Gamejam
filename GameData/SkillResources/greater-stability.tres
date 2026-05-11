@@ -1,13 +1,11 @@
-[gd_resource type="Resource" script_class="SkillResource" format=3]
+[gd_resource type="Resource" script_class="SkillResource" format=3 uid="uid://bi4rgplpacctx"]
 
-[ext_resource type="Script" path="res://GameData/SkillResource.cs" id="1"]
+[ext_resource type="Script" uid="uid://uv786iry0jub" path="res://GameData/SkillResource.cs" id="1"]
 
 [resource]
 script = ExtResource("1")
 Name = "greater-stability"
 Description = "Increases health of created vars."
-Icon = null
-Rarity = 0
-Values = Dictionary[String, float]({
-"HealthBonus": 10.0
+Values = Dictionary[String, int]({
+"HealthBonus": 10
 })

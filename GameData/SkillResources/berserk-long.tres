@@ -1,11 +1,9 @@
-[gd_resource type="Resource" script_class="SkillResource" format=3]
+[gd_resource type="Resource" script_class="SkillResource" format=3 uid="uid://dhltxufau2m78"]
 
-[ext_resource type="Script" path="res://GameData/SkillResource.cs" id="1"]
+[ext_resource type="Script" uid="uid://uv786iry0jub" path="res://GameData/SkillResource.cs" id="1"]
 
 [resource]
 script = ExtResource("1")
 Name = "berserk-long"
 Description = "Long vars double attack and halve defense while exactly one enemy is in detect range."
-Icon = null
 Rarity = 2
-Values = Dictionary[String, float]({})

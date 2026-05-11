@@ -306,8 +306,7 @@ theme_override_constants/separation = 0
 [node name="MarginContainer" type="MarginContainer" parent="MarginContainer/HBoxContainer" unique_id=1845521549]
 layout_mode = 2
 size_flags_horizontal = 3
-size_flags_stretch_ratio = 4.0
-theme_override_constants/margin_left = 50
+theme_override_constants/margin_left = 30
 theme_override_constants/margin_top = 40
 theme_override_constants/margin_right = 10
 theme_override_constants/margin_bottom = 40
@@ -413,7 +412,7 @@ size_flags_stretch_ratio = 0.04
 [node name="MarginContainer2" type="MarginContainer" parent="MarginContainer/HBoxContainer" unique_id=337682986]
 layout_mode = 2
 size_flags_horizontal = 3
-size_flags_stretch_ratio = 10.0
+size_flags_stretch_ratio = 3.0
 theme_override_constants/margin_left = 10
 theme_override_constants/margin_top = 40
 theme_override_constants/margin_right = 10
@@ -483,7 +482,6 @@ ConsoleManager = NodePath("../../../../../../../ConsoleManager")
 [node name="MarginContainer3" type="MarginContainer" parent="MarginContainer/HBoxContainer" unique_id=279241852]
 layout_mode = 2
 size_flags_horizontal = 3
-size_flags_stretch_ratio = 3.0
 theme_override_constants/margin_left = 10
 theme_override_constants/margin_top = 40
 theme_override_constants/margin_right = 30

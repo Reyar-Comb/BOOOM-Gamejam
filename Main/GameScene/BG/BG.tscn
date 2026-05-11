@@ -1,11 +1,11 @@
 [gd_scene format=3 uid="uid://cmfcqmhv4puv3"]
 
-[ext_resource type="Texture2D" uid="uid://dq373vw2r04qi" path="res://assets/Image/bg.png" id="1_rv5hj"]
+[ext_resource type="Texture2D" uid="uid://kc0os5sm3svb" path="res://assets/Image/549CBBF3332D9B41935EB31218153CDA.png" id="1_rv5hj"]
 [ext_resource type="Shader" uid="uid://3r8j0oq1mkrl" path="res://Shaders/LineGlow.gdshader" id="1_w2nl1"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_w2nl1"]
 shader = ExtResource("1_w2nl1")
-shader_parameter/dot_color = Color(0.3232542, 0.72962266, 0, 1)
+shader_parameter/dot_color = Color(0.36263117, 0.7312101, 0, 1)
 shader_parameter/speed = 0.806000038285
 shader_parameter/pause_duration = 1.0
 shader_parameter/dot_size = 0.10000000149012
@@ -81,10 +81,10 @@ shader_parameter/intensity = 1.0
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_ti51i"]
 shader = ExtResource("1_w2nl1")
 shader_parameter/dot_color = Color(0.6, 1, 0.42352942, 1)
-shader_parameter/speed = 0.4310000204725
-shader_parameter/pause_duration = 0.98400004674
-shader_parameter/dot_size = 0.06100000254824
-shader_parameter/trail_length = 0.5
+shader_parameter/speed = 3.3510001591725
+shader_parameter/pause_duration = 2.4970001186075
+shader_parameter/dot_size = 0.07200000307074
+shader_parameter/trail_length = 0.0750000035625
 shader_parameter/intensity = 3.474000117515
 
 [sub_resource type="Shader" id="Shader_w2nl1"]
@@ -138,12 +138,523 @@ void fragment() {
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_ttmqy"]
 shader = SubResource("Shader_w2nl1")
-shader_parameter/dot_color = Color(0.6, 1, 0.42352942, 1)
-shader_parameter/speed = 0.4310000204725
+shader_parameter/dot_color = Color(0.34466043, 0.77487236, 1.5016794e-05, 1)
+shader_parameter/speed = 1.98800009443
 shader_parameter/pause_duration = 1.56400007429
-shader_parameter/dot_size = 0.14900000672824
-shader_parameter/trail_length = 0.5
-shader_parameter/intensity = 6.34400025384
+shader_parameter/dot_size = 0.08500000368824
+shader_parameter/trail_length = 0.06000000285
+shader_parameter/intensity = 1.0
+
+[sub_resource type="Shader" id="Shader_2g8hk"]
+code = "shader_type canvas_item;
+
+// === 参数 ===
+// 光点颜色
+uniform vec4 dot_color : source_color = vec4(0.6, 1.0, 0.8, 1.0);
+// 流动速度
+uniform float speed : hint_range(0.0, 10.0) = 2.0;
+// 走完一轮后的停顿时间（秒）
+uniform float pause_duration : hint_range(0.0, 5.0) = 1.0;
+// 光点大小（沿线条比例）
+uniform float dot_size : hint_range(0.005, 0.5) = 0.02;
+// 拖尾长度（沿线条比例）
+uniform float trail_length : hint_range(0.0, 0.5) = 0.12;
+// 发光强度
+uniform float intensity : hint_range(1.0, 30.0) = 8.0;
+
+void fragment() {
+    // 走动耗时 = 1/speed 秒走完一圈
+    float move_time = 1.0 / max(speed, 0.001);
+    float cycle_time = move_time + pause_duration;
+    float t = mod(TIME, cycle_time);
+    
+    float mask = 0.0;
+    
+    // 走动阶段才计算光点，停顿阶段保持 mask=0（完全隐藏）
+    if (t < move_time) {
+        float dot_pos = t / move_time;
+        
+        // 当前片段到光点的距离（沿 UV.x 增大方向，不绕回）
+        // diff < 0：光点后方（已走过，拖尾区域）
+        // diff > 0：光点前方（未到达）
+        float diff = UV.x - dot_pos;
+        
+        // 光点本身（高斯尖峰）
+        float dot = exp(-diff * diff / (dot_size * dot_size));
+        
+        // 拖尾（光点后方指数衰减）
+        float trail = 0.0;
+        if (diff < 0.0 && trail_length > 0.0) {
+            trail = exp(diff / trail_length) * 0.4;
+        }
+        
+        mask = max(dot, trail);
+    }
+    
+    COLOR = vec4(dot_color.rgb * intensity * mask, mask);
+}"
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_xsst3"]
+shader = SubResource("Shader_2g8hk")
+shader_parameter/dot_color = Color(0.36023498, 0.8895203, 0, 1)
+shader_parameter/speed = 1.56400007429
+shader_parameter/pause_duration = 2.1200001007
+shader_parameter/dot_size = 0.11500000511324
+shader_parameter/trail_length = 0.1450000068875
+shader_parameter/intensity = 1.0
+
+[sub_resource type="Gradient" id="Gradient_ic8q7"]
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_04k6o"]
+gradient = SubResource("Gradient_ic8q7")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_rv5hj"]
+shader = ExtResource("1_w2nl1")
+shader_parameter/dot_color = Color(0.27699107, 0.74652594, 1.1551381e-06, 1)
+shader_parameter/speed = 1.7600000836
+shader_parameter/pause_duration = 1.6950000805125
+shader_parameter/dot_size = 0.07000000297574
+shader_parameter/trail_length = 0.16400000779
+shader_parameter/intensity = 1.0
+
+[sub_resource type="Gradient" id="Gradient_2g8hk"]
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_ti51i"]
+gradient = SubResource("Gradient_2g8hk")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_ic8q7"]
+shader = ExtResource("1_w2nl1")
+shader_parameter/dot_color = Color(0.6, 1, 0.8, 1)
+shader_parameter/speed = 3.09200014687
+shader_parameter/pause_duration = 2.2130001051175
+shader_parameter/dot_size = 0.02
+shader_parameter/trail_length = 0.12
+shader_parameter/intensity = 8.0
+
+[sub_resource type="Gradient" id="Gradient_04k6o"]
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_umqsf"]
+gradient = SubResource("Gradient_04k6o")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_wwceq"]
+shader = ExtResource("1_w2nl1")
+shader_parameter/dot_color = Color(0.40483835, 0.68574995, 1.92523e-07, 1)
+shader_parameter/speed = 2.0
+shader_parameter/pause_duration = 2.0930000994175
+shader_parameter/dot_size = 0.10500000463824
+shader_parameter/trail_length = 0.12
+shader_parameter/intensity = 1.0
+
+[sub_resource type="Gradient" id="Gradient_wvo4b"]
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_xprup"]
+gradient = SubResource("Gradient_wvo4b")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_b6u3n"]
+shader = ExtResource("1_w2nl1")
+shader_parameter/dot_color = Color(0.27597448, 0.6463995, 0.06756394, 1)
+shader_parameter/speed = 1.49600007106
+shader_parameter/pause_duration = 2.366000112385
+shader_parameter/dot_size = 0.06000000250074
+shader_parameter/trail_length = 0.12
+shader_parameter/intensity = 1.0
+
+[sub_resource type="Gradient" id="Gradient_hvv2c"]
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_dvvnc"]
+gradient = SubResource("Gradient_hvv2c")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_21n3u"]
+shader = ExtResource("1_w2nl1")
+shader_parameter/dot_color = Color(0.3685518, 0.69949853, 0, 1)
+shader_parameter/speed = 2.75600013091
+shader_parameter/pause_duration = 2.450000116375
+shader_parameter/dot_size = 0.09500000416324
+shader_parameter/trail_length = 0.12
+shader_parameter/intensity = 1.0
+
+[sub_resource type="Gradient" id="Gradient_iso6g"]
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_cyyne"]
+gradient = SubResource("Gradient_iso6g")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_3k7fs"]
+shader = ExtResource("1_w2nl1")
+shader_parameter/dot_color = Color(0.16500759, 0.66210955, 0, 1)
+shader_parameter/speed = 1.3270000630325
+shader_parameter/pause_duration = 0.7690000365275
+shader_parameter/dot_size = 0.05000000202574
+shader_parameter/trail_length = 0.12
+shader_parameter/intensity = 1.0
+
+[sub_resource type="Gradient" id="Gradient_lx7k5"]
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_q568v"]
+gradient = SubResource("Gradient_lx7k5")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_3npeu"]
+shader = ExtResource("1_w2nl1")
+shader_parameter/dot_color = Color(1.2995303e-06, 0.7099841, 0.08073356, 1)
+shader_parameter/speed = 1.538000073055
+shader_parameter/pause_duration = 1.58800007543
+shader_parameter/dot_size = 0.08000000345074
+shader_parameter/trail_length = 0.12
+shader_parameter/intensity = 1.0
+
+[sub_resource type="Gradient" id="Gradient_aleor"]
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_4vfa8"]
+gradient = SubResource("Gradient_aleor")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_qbqq8"]
+shader = ExtResource("1_w2nl1")
+shader_parameter/dot_color = Color(0.24668688, 0.7067467, 0, 1)
+shader_parameter/speed = 1.538000073055
+shader_parameter/pause_duration = 2.0800000988
+shader_parameter/dot_size = 0.06000000250074
+shader_parameter/trail_length = 0.12
+shader_parameter/intensity = 1.0
+
+[sub_resource type="Gradient" id="Gradient_ceeul"]
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_j6nxt"]
+gradient = SubResource("Gradient_ceeul")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_r6xxx"]
+shader = ExtResource("1_w2nl1")
+shader_parameter/dot_color = Color(0.6, 1, 0.8, 1)
+shader_parameter/speed = 4.7310002247225
+shader_parameter/pause_duration = 1.966000093385
+shader_parameter/dot_size = 0.14500000653824002
+shader_parameter/trail_length = 0.12
+shader_parameter/intensity = 8.0
+
+[sub_resource type="Gradient" id="Gradient_2cuiv"]
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_1yjri"]
+gradient = SubResource("Gradient_2cuiv")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_c2ew2"]
+shader = ExtResource("1_w2nl1")
+shader_parameter/dot_color = Color(0.6846361, 0.99999994, 0.58618927, 1)
+shader_parameter/speed = 2.58800012293
+shader_parameter/pause_duration = 0.8530000405175
+shader_parameter/dot_size = 0.20500000938823998
+shader_parameter/trail_length = 0.12
+shader_parameter/intensity = 1.0
+
+[sub_resource type="Gradient" id="Gradient_yk0x8"]
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_c1dor"]
+gradient = SubResource("Gradient_yk0x8")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_1lto4"]
+shader = ExtResource("1_w2nl1")
+shader_parameter/dot_color = Color(0.44103453, 0.64512783, 0.10879413, 1)
+shader_parameter/speed = 1.538000073055
+shader_parameter/pause_duration = 1.630000077425
+shader_parameter/dot_size = 0.04500000178824
+shader_parameter/trail_length = 0.1070000050825
+shader_parameter/intensity = 1.0
+
+[sub_resource type="Gradient" id="Gradient_fcspy"]
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_deo0p"]
+gradient = SubResource("Gradient_fcspy")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_r3e8l"]
+shader = ExtResource("1_w2nl1")
+shader_parameter/dot_color = Color(0.6, 1, 0.8, 1)
+shader_parameter/speed = 3.5450001683875
+shader_parameter/pause_duration = 1.7550000833625
+shader_parameter/dot_size = 0.08500000368824
+shader_parameter/trail_length = 0.198000009405
+shader_parameter/intensity = 8.0
+
+[sub_resource type="Gradient" id="Gradient_sad7f"]
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_uh2s1"]
+gradient = SubResource("Gradient_sad7f")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_8t8vk"]
+shader = ExtResource("1_w2nl1")
+shader_parameter/dot_color = Color(0.23482376, 0.5387409, 7.70092e-07, 1)
+shader_parameter/speed = 3.3310001582225
+shader_parameter/pause_duration = 1.3710000651225
+shader_parameter/dot_size = 0.22900001052823998
+shader_parameter/trail_length = 0.10000000475
+shader_parameter/intensity = 1.0
+
+[sub_resource type="Gradient" id="Gradient_v8dew"]
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_8rymb"]
+gradient = SubResource("Gradient_v8dew")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_vmj41"]
+shader = ExtResource("1_w2nl1")
+shader_parameter/dot_color = Color(0.6, 1, 0.8, 1)
+shader_parameter/speed = 3.5970001708575
+shader_parameter/pause_duration = 2.6810001273475
+shader_parameter/dot_size = 0.04500000178824
+shader_parameter/trail_length = 0.12
+shader_parameter/intensity = 8.0
+
+[sub_resource type="Gradient" id="Gradient_84twt"]
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_upwuw"]
+gradient = SubResource("Gradient_84twt")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_mbpfs"]
+shader = ExtResource("1_w2nl1")
+shader_parameter/dot_color = Color(0.6, 1, 0.8, 1)
+shader_parameter/speed = 1.490000070775
+shader_parameter/pause_duration = 2.0710000983725
+shader_parameter/dot_size = 0.09500000416324
+shader_parameter/trail_length = 0.1600000076
+shader_parameter/intensity = 8.0
+
+[sub_resource type="Gradient" id="Gradient_4400d"]
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_fwnkr"]
+gradient = SubResource("Gradient_4400d")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_kdfa3"]
+shader = ExtResource("1_w2nl1")
+shader_parameter/dot_color = Color(0.37199393, 0.67157704, 0, 1)
+shader_parameter/speed = 1.41200006707
+shader_parameter/pause_duration = 2.0290000963775
+shader_parameter/dot_size = 0.06500000273824
+shader_parameter/trail_length = 0.170000008075
+shader_parameter/intensity = 1.0
+
+[sub_resource type="Gradient" id="Gradient_pb3ei"]
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_2b7ou"]
+gradient = SubResource("Gradient_pb3ei")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_uvs1r"]
+shader = ExtResource("1_w2nl1")
+shader_parameter/dot_color = Color(0.3924946, 0.67788833, 0, 1)
+shader_parameter/speed = 2.802000133095
+shader_parameter/pause_duration = 1.7070000810825001
+shader_parameter/dot_size = 0.12500000558823998
+shader_parameter/trail_length = 0.1870000088825
+shader_parameter/intensity = 1.0
+
+[sub_resource type="Gradient" id="Gradient_7djaq"]
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_f3gwv"]
+gradient = SubResource("Gradient_7djaq")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_mu73v"]
+shader = ExtResource("1_w2nl1")
+shader_parameter/dot_color = Color(0.4241026, 0.75828063, 0, 1)
+shader_parameter/speed = 2.9650001408374997
+shader_parameter/pause_duration = 1.4830000704425
+shader_parameter/dot_size = 0.11500000511324
+shader_parameter/trail_length = 0.15200000722
+shader_parameter/intensity = 1.0
+
+[sub_resource type="Gradient" id="Gradient_h8bqw"]
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_3urn7"]
+gradient = SubResource("Gradient_h8bqw")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_k1es2"]
+shader = ExtResource("1_w2nl1")
+shader_parameter/dot_color = Color(0.014323278, 0.8442097, 1.92523e-06, 1)
+shader_parameter/speed = 1.7070000810825001
+shader_parameter/pause_duration = 0.8530000405175
+shader_parameter/dot_size = 0.08000000345074
+shader_parameter/trail_length = 0.12
+shader_parameter/intensity = 1.0
+
+[sub_resource type="Gradient" id="Gradient_d4xc4"]
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_r2kkf"]
+gradient = SubResource("Gradient_d4xc4")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_y7mgh"]
+shader = ExtResource("1_w2nl1")
+shader_parameter/dot_color = Color(0.40063655, 0.77292573, 1.1551381e-06, 1)
+shader_parameter/speed = 2.67200012692
+shader_parameter/pause_duration = 1.4410000684475
+shader_parameter/dot_size = 0.07500000321324
+shader_parameter/trail_length = 0.0930000044175
+shader_parameter/intensity = 1.0
+
+[sub_resource type="Gradient" id="Gradient_vgubd"]
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_pv6of"]
+gradient = SubResource("Gradient_vgubd")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_tlhln"]
+shader = ExtResource("1_w2nl1")
+shader_parameter/dot_color = Color(0.12545985, 0.7751658, 1.1551381e-06, 1)
+shader_parameter/speed = 2.630000124925
+shader_parameter/pause_duration = 0.8530000405175
+shader_parameter/dot_size = 0.06000000250074
+shader_parameter/trail_length = 0.1450000068875
+shader_parameter/intensity = 1.0
+
+[sub_resource type="Gradient" id="Gradient_xnsmo"]
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_6cqld"]
+gradient = SubResource("Gradient_xnsmo")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_8ppt8"]
+shader = ExtResource("1_w2nl1")
+shader_parameter/dot_color = Color(0.31681374, 0.8091851, 0, 1)
+shader_parameter/speed = 1.662000078945
+shader_parameter/pause_duration = 1.61200007657
+shader_parameter/dot_size = 0.08500000368824
+shader_parameter/trail_length = 0.2400000114
+shader_parameter/intensity = 1.0
+
+[sub_resource type="Gradient" id="Gradient_2vpqn"]
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_w8p52"]
+gradient = SubResource("Gradient_2vpqn")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_ln2uq"]
+shader = ExtResource("1_w2nl1")
+shader_parameter/dot_color = Color(0.37634626, 0.7631995, 0, 1)
+shader_parameter/speed = 1.578000074955
+shader_parameter/pause_duration = 1.46400006954
+shader_parameter/dot_size = 0.07400000316574
+shader_parameter/trail_length = 0.12
+shader_parameter/intensity = 1.0
+
+[sub_resource type="Gradient" id="Gradient_0gj42"]
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_5oe4i"]
+gradient = SubResource("Gradient_0gj42")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_gx685"]
+shader = ExtResource("1_w2nl1")
+shader_parameter/dot_color = Color(0.2955017, 0.7375786, 3.85046e-07, 1)
+shader_parameter/speed = 2.2530001070175
+shader_parameter/pause_duration = 0.8750000415625
+shader_parameter/dot_size = 0.15000000677574
+shader_parameter/trail_length = 0.12
+shader_parameter/intensity = 1.0
+
+[sub_resource type="Gradient" id="Gradient_s5buc"]
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_iciaa"]
+gradient = SubResource("Gradient_s5buc")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_04k6o"]
+shader = ExtResource("1_w2nl1")
+shader_parameter/dot_color = Color(0.2152189, 0.83601594, 1.1551381e-06, 1)
+shader_parameter/speed = 1.690000080275
+shader_parameter/pause_duration = 1.422000067545
+shader_parameter/dot_size = 0.03900000150324
+shader_parameter/trail_length = 0.190000009025
+shader_parameter/intensity = 1.0
+
+[sub_resource type="Gradient" id="Gradient_umqsf"]
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_wwceq"]
+gradient = SubResource("Gradient_umqsf")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_wvo4b"]
+shader = ExtResource("1_w2nl1")
+shader_parameter/dot_color = Color(0.21619767, 0.68689173, 0, 1)
+shader_parameter/speed = 2.5910001230725
+shader_parameter/pause_duration = 1.3160000625100001
+shader_parameter/dot_size = 0.06600000278574
+shader_parameter/trail_length = 0.1750000083125
+shader_parameter/intensity = 1.0
+
+[sub_resource type="Gradient" id="Gradient_xprup"]
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_b6u3n"]
+gradient = SubResource("Gradient_xprup")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_hvv2c"]
+shader = ExtResource("1_w2nl1")
+shader_parameter/dot_color = Color(0.2846662, 0.7623777, 1.540184e-06, 1)
+shader_parameter/speed = 1.4940000709649999
+shader_parameter/pause_duration = 1.7590000835525
+shader_parameter/dot_size = 0.07400000316574
+shader_parameter/trail_length = 0.18800000893
+shader_parameter/intensity = 1.0
+
+[sub_resource type="Gradient" id="Gradient_dvvnc"]
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_21n3u"]
+gradient = SubResource("Gradient_dvvnc")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_iso6g"]
+shader = ExtResource("1_w2nl1")
+shader_parameter/dot_color = Color(0.32921696, 0.75328314, 1.1551381e-06, 1)
+shader_parameter/speed = 2.84400013509
+shader_parameter/pause_duration = 0.810000038475
+shader_parameter/dot_size = 0.13500000606323997
+shader_parameter/trail_length = 0.1230000058425
+shader_parameter/intensity = 1.0
+
+[sub_resource type="Gradient" id="Gradient_cyyne"]
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_3k7fs"]
+gradient = SubResource("Gradient_cyyne")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_lx7k5"]
+shader = ExtResource("1_w2nl1")
+shader_parameter/dot_color = Color(0.29790893, 0.69000226, 0.05373212, 1)
+shader_parameter/speed = 1.7890000849774998
+shader_parameter/pause_duration = 1.2870000611324999
+shader_parameter/dot_size = 0.08500000368824
+shader_parameter/trail_length = 0.0800000038
+shader_parameter/intensity = 1.0
+
+[sub_resource type="Gradient" id="Gradient_q568v"]
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_3npeu"]
+gradient = SubResource("Gradient_q568v")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_aleor"]
+shader = ExtResource("1_w2nl1")
+shader_parameter/dot_color = Color(0.44118565, 0.70851576, 0.09712758, 1)
+shader_parameter/speed = 1.4090000669275
+shader_parameter/pause_duration = 1.4850000705375
+shader_parameter/dot_size = 0.04900000197824
+shader_parameter/trail_length = 0.2050000097375
+shader_parameter/intensity = 1.0
+
+[sub_resource type="Gradient" id="Gradient_4vfa8"]
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_qbqq8"]
+gradient = SubResource("Gradient_4vfa8")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_ceeul"]
+shader = ExtResource("1_w2nl1")
+shader_parameter/dot_color = Color(0.28662163, 0.7453833, 0, 1)
+shader_parameter/speed = 2.5510001211724997
+shader_parameter/pause_duration = 1.57200007467
+shader_parameter/dot_size = 0.10500000463824
+shader_parameter/trail_length = 0.0800000038
+shader_parameter/intensity = 1.0
+
+[sub_resource type="Gradient" id="Gradient_j6nxt"]
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_r6xxx"]
+gradient = SubResource("Gradient_j6nxt")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_umqsf"]
+shader = ExtResource("1_w2nl1")
+shader_parameter/dot_color = Color(0.31885087, 0.63379014, 3.85046e-07, 1)
+shader_parameter/speed = 2.3600001121
+shader_parameter/pause_duration = 1.7200000816999998
+shader_parameter/dot_size = 0.06500000273824
+shader_parameter/trail_length = 0.12
+shader_parameter/intensity = 1.0
+
+[sub_resource type="Gradient" id="Gradient_wwceq"]
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_wvo4b"]
+gradient = SubResource("Gradient_wwceq")
 
 [node name="Bg" type="Node2D" unique_id=61670994]
 
@@ -177,7 +688,219 @@ texture_mode = 2
 
 [node name="Line2D4" type="Line2D" parent="Node2D" unique_id=129344906]
 material = SubResource("ShaderMaterial_ttmqy")
-points = PackedVector2Array(365, 1261, 515, 1112, 582, 1112, 637, 1055, 637, 923, 786, 774, 787, 708, 1126, 362, 1125, 287, 1285, 130, 1283, 6, 1372, -83, 1370, -610)
+points = PackedVector2Array(365, 1261, 515, 1112, 582, 1112, 637, 1055, 637, 923, 786, 774, 787, 708, 1126, 362, 1125, 287, 1285, 130, 1283, 6, 1372, -83, 1374, -176)
 width = 9.84
 texture = SubResource("GradientTexture2D_q3rjb")
+texture_mode = 2
+
+[node name="Line2D5" type="Line2D" parent="Node2D" unique_id=1657909558]
+material = SubResource("ShaderMaterial_xsst3")
+points = PackedVector2Array(86, 1056, 371, 1057, 429, 995, 428, 905, 536, 794)
+width = 5.0
+texture = SubResource("GradientTexture1D_04k6o")
+texture_mode = 2
+
+[node name="Line2D6" type="Line2D" parent="Node2D" unique_id=352609716]
+material = SubResource("ShaderMaterial_rv5hj")
+points = PackedVector2Array(358, 1179, 577, 965, 576, 876, 682, 774, 526, 770, 448, 845)
+width = 6.0
+texture = SubResource("GradientTexture1D_ti51i")
+texture_mode = 2
+
+[node name="Line2D7" type="Line2D" parent="Node2D" unique_id=2008036873]
+material = SubResource("ShaderMaterial_ic8q7")
+points = PackedVector2Array(33, 530, 187, 533, 232, 487, 305, 487, 324, 471, 364, 470)
+width = 6.0
+texture = SubResource("GradientTexture1D_umqsf")
+texture_mode = 2
+
+[node name="Line2D8" type="Line2D" parent="Node2D" unique_id=907485632]
+material = SubResource("ShaderMaterial_wwceq")
+points = PackedVector2Array(172, 278, 277, 382, 426, 384, 486, 444, 640, 447, 657, 468, 765, 467)
+width = 9.08
+texture = SubResource("GradientTexture1D_xprup")
+texture_mode = 2
+
+[node name="Line2D9" type="Line2D" parent="Node2D" unique_id=1622050284]
+material = SubResource("ShaderMaterial_b6u3n")
+points = PackedVector2Array(16, 196, 267, 197, 523, 450, 639, 447, 658, 470, 766, 467)
+width = 6.0
+texture = SubResource("GradientTexture1D_dvvnc")
+texture_mode = 2
+
+[node name="Line2D10" type="Line2D" parent="Node2D" unique_id=1861313780]
+material = SubResource("ShaderMaterial_21n3u")
+points = PackedVector2Array(53, 130, 237, 130, 493, 375, 633, 372, 683, 425, 784, 423)
+texture = SubResource("GradientTexture1D_cyyne")
+texture_mode = 2
+
+[node name="Line2D11" type="Line2D" parent="Node2D" unique_id=1165843241]
+material = SubResource("ShaderMaterial_3k7fs")
+points = PackedVector2Array(288, 68, 532, 310, 711, 307, 832, 433)
+texture = SubResource("GradientTexture1D_q568v")
+texture_mode = 2
+
+[node name="Line2D12" type="Line2D" parent="Node2D" unique_id=58096338]
+material = SubResource("ShaderMaterial_3npeu")
+points = PackedVector2Array(57, 0, 377, 0, 443, 66)
+texture = SubResource("GradientTexture1D_4vfa8")
+texture_mode = 2
+
+[node name="Line2D13" type="Line2D" parent="Node2D" unique_id=542437863]
+material = SubResource("ShaderMaterial_qbqq8")
+points = PackedVector2Array(645, 1158, 742, 1051, 745, 917, 799, 875)
+texture = SubResource("GradientTexture1D_j6nxt")
+texture_mode = 2
+
+[node name="Line2D14" type="Line2D" parent="Node2D" unique_id=1443894260]
+material = SubResource("ShaderMaterial_r6xxx")
+points = PackedVector2Array(531, 110, 633, 213)
+texture = SubResource("GradientTexture1D_1yjri")
+texture_mode = 2
+
+[node name="Line2D15" type="Line2D" parent="Node2D" unique_id=1758539646]
+material = SubResource("ShaderMaterial_c2ew2")
+points = PackedVector2Array(263, -189, 517, 61)
+texture = SubResource("GradientTexture1D_c1dor")
+texture_mode = 2
+
+[node name="Line2D16" type="Line2D" parent="Node2D" unique_id=1640540753]
+material = SubResource("ShaderMaterial_1lto4")
+points = PackedVector2Array(538, -26, 598, -28, 639, 10, 638, 129, 752, 248)
+texture = SubResource("GradientTexture1D_deo0p")
+texture_mode = 2
+
+[node name="Line2D17" type="Line2D" parent="Node2D" unique_id=899843795]
+material = SubResource("ShaderMaterial_r3e8l")
+points = PackedVector2Array(645, -189, 646, -124, 829, 55, 831, 311)
+texture = SubResource("GradientTexture1D_uh2s1")
+texture_mode = 2
+
+[node name="Line2D18" type="Line2D" parent="Node2D" unique_id=1828408282]
+material = SubResource("ShaderMaterial_8t8vk")
+position = Vector2(-22, -39)
+points = PackedVector2Array(942, -133, 942, 272)
+texture = SubResource("GradientTexture1D_8rymb")
+texture_mode = 2
+
+[node name="Line2D37" type="Line2D" parent="Node2D" unique_id=598685161]
+material = SubResource("ShaderMaterial_8t8vk")
+position = Vector2(14, 108)
+points = PackedVector2Array(942, -133, 942, 253, 824, 378)
+texture = SubResource("GradientTexture1D_8rymb")
+texture_mode = 2
+
+[node name="Line2D19" type="Line2D" parent="Node2D" unique_id=2068544823]
+material = SubResource("ShaderMaterial_vmj41")
+points = PackedVector2Array(1235, -190, 1235, -94, 1150, -13, 1150, 138, 1106, 186)
+texture = SubResource("GradientTexture1D_upwuw")
+texture_mode = 2
+
+[node name="Line2D20" type="Line2D" parent="Node2D" unique_id=274200711]
+material = SubResource("ShaderMaterial_mbpfs")
+points = PackedVector2Array(835, 942, 833, 728)
+texture = SubResource("GradientTexture1D_fwnkr")
+texture_mode = 2
+
+[node name="Line2D21" type="Line2D" parent="Node2D" unique_id=459280013]
+material = SubResource("ShaderMaterial_kdfa3")
+position = Vector2(44, -43)
+points = PackedVector2Array(925, 1088, 924, 751)
+texture = SubResource("GradientTexture1D_2b7ou")
+texture_mode = 2
+
+[node name="Line2D22" type="Line2D" parent="Node2D" unique_id=2027910559]
+material = SubResource("ShaderMaterial_uvs1r")
+points = PackedVector2Array(1072, 1204, 1070, 905, 1032, 866, 1032, 736, 1065, 693)
+texture = SubResource("GradientTexture1D_f3gwv")
+texture_mode = 2
+
+[node name="Line2D23" type="Line2D" parent="Node2D" unique_id=946885775]
+material = SubResource("ShaderMaterial_mu73v")
+points = PackedVector2Array(1464, 1248, 1270, 1059, 1271, 920, 1136, 780)
+texture = SubResource("GradientTexture1D_3urn7")
+texture_mode = 2
+
+[node name="Line2D24" type="Line2D" parent="Node2D" unique_id=1058145669]
+material = SubResource("ShaderMaterial_k1es2")
+points = PackedVector2Array(731, 1159, 887, 998, 885, 719, 1074, 530, 1616, 527)
+texture = SubResource("GradientTexture1D_r2kkf")
+texture_mode = 2
+
+[node name="Line2D25" type="Line2D" parent="Node2D" unique_id=2054287142]
+material = SubResource("ShaderMaterial_y7mgh")
+points = PackedVector2Array(1916, 976, 1633, 975, 1392, 727, 1195, 726, 1122, 656)
+texture = SubResource("GradientTexture1D_pv6of")
+texture_mode = 2
+
+[node name="Line2D26" type="Line2D" parent="Node2D" unique_id=296940420]
+material = SubResource("ShaderMaterial_tlhln")
+points = PackedVector2Array(1917, 846, 1628, 848, 1400, 620, 1278, 622, 1255, 598, 1149, 600)
+texture = SubResource("GradientTexture1D_6cqld")
+texture_mode = 2
+
+[node name="Line2D27" type="Line2D" parent="Node2D" unique_id=1912461035]
+material = SubResource("ShaderMaterial_8ppt8")
+points = PackedVector2Array(1658, 690, 1515, 692, 1447, 620, 1278, 623, 1254, 599, 1147, 596)
+texture = SubResource("GradientTexture1D_w8p52")
+texture_mode = 2
+
+[node name="Line2D28" type="Line2D" parent="Node2D" unique_id=1815002813]
+material = SubResource("ShaderMaterial_ln2uq")
+points = PackedVector2Array(1921, 709, 1822, 709, 1757, 649, 1567, 647, 1493, 574)
+texture = SubResource("GradientTexture1D_5oe4i")
+texture_mode = 2
+
+[node name="Line2D29" type="Line2D" parent="Node2D" unique_id=812086487]
+material = SubResource("ShaderMaterial_gx685")
+points = PackedVector2Array(1922, 544, 1739, 544, 1696, 579, 1607, 579, 1589, 596)
+texture = SubResource("GradientTexture1D_iciaa")
+texture_mode = 2
+
+[node name="Line2D30" type="Line2D" parent="Node2D" unique_id=1126859283]
+material = SubResource("ShaderMaterial_04k6o")
+points = PackedVector2Array(1870, 1170, 1760, 1061, 1552, 1064, 1479, 990)
+texture = SubResource("GradientTexture1D_wwceq")
+texture_mode = 2
+
+[node name="Line2D31" type="Line2D" parent="Node2D" unique_id=196887027]
+material = SubResource("ShaderMaterial_wvo4b")
+points = PackedVector2Array(1827, 68, 1637, 68, 1383, 325, 1269, 323, 1231, 366)
+texture = SubResource("GradientTexture1D_b6u3n")
+texture_mode = 2
+
+[node name="Line2D32" type="Line2D" parent="Node2D" unique_id=847567021]
+material = SubResource("ShaderMaterial_hvv2c")
+points = PackedVector2Array(1563, 37, 1315, 289, 1245, 289, 999, 534)
+texture = SubResource("GradientTexture1D_21n3u")
+texture_mode = 2
+
+[node name="Line2D33" type="Line2D" parent="Node2D" unique_id=1947075194]
+material = SubResource("ShaderMaterial_iso6g")
+points = PackedVector2Array(1237, -190, 1240, -90, 1151, -9, 1154, 143, 1108, 188)
+texture = SubResource("GradientTexture1D_3k7fs")
+texture_mode = 2
+
+[node name="Line2D34" type="Line2D" parent="Node2D" unique_id=861660667]
+material = SubResource("ShaderMaterial_lx7k5")
+points = PackedVector2Array(1632, -190, 1348, 93, 1349, 150, 1400, 100, 1213, 288)
+texture = SubResource("GradientTexture1D_3npeu")
+texture_mode = 2
+
+[node name="Line2D35" type="Line2D" parent="Node2D" unique_id=2053539096]
+material = SubResource("ShaderMaterial_aleor")
+points = PackedVector2Array(1534, 309, 1422, 422, 1375, 421, 1354, 436, 1188, 437, 1135, 488)
+texture = SubResource("GradientTexture1D_qbqq8")
+texture_mode = 2
+
+[node name="Line2D36" type="Line2D" parent="Node2D" unique_id=1357857977]
+material = SubResource("ShaderMaterial_ceeul")
+points = PackedVector2Array(1766, 260, 1656, 370, 1525, 372)
+texture = SubResource("GradientTexture1D_r6xxx")
+texture_mode = 2
+
+[node name="Line2D38" type="Line2D" parent="Node2D" unique_id=329414893]
+material = SubResource("ShaderMaterial_umqsf")
+points = PackedVector2Array(882, -188, 885, 165, 850, 137, 853, 9)
+texture = SubResource("GradientTexture1D_wvo4b")
 texture_mode = 2

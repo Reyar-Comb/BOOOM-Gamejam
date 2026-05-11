@@ -3,12 +3,16 @@ using System.Collections.Generic;
 
 public class SingletonLongDoubleRuntime : ISkillRuntime
 {
-    private const int HealthMultiplier = 10;
-    private const int AttackDamageMultiplier = 10;
+    private readonly SkillResource _resource;
 
     private bool _isWaitingForFirstCreation;
     private bool _isFloatingPointCreationLocked;
     private bool _hasResolvedFirstCreation;
+
+    public SingletonLongDoubleRuntime(SkillResource resource)
+    {
+        _resource = resource;
+    }
 
     public void OnWaveStarted()
     {
@@ -38,10 +42,10 @@ public class SingletonLongDoubleRuntime : ISkillRuntime
             return;
         }
 
-        firstCreatedVar.Stats.MaxHealth *= HealthMultiplier;
+        firstCreatedVar.Stats.MaxHealth += (int)_resource.GetValue("HealthBonus");
         firstCreatedVar.Stats.CurrentHealth = firstCreatedVar.Stats.MaxHealth;
-        firstCreatedVar.Stats.AttackDamage *= AttackDamageMultiplier;
-        firstCreatedVar.Stats.Defense = 0;
+        firstCreatedVar.Stats.AttackDamage += (int)_resource.GetValue("AttackDamageBonus");
+        firstCreatedVar.Stats.Defense = (int)_resource.GetValue("DefenseOverride");
 
         _isFloatingPointCreationLocked = true;
     }

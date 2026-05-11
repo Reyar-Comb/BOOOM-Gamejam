@@ -12,5 +12,5 @@ public class GrowingInt : Skill
         data.SkillManager.AddRuntime(GetSkillRuntime());
     }
 
-    public override ISkillRuntime GetSkillRuntime() => new GrowingIntRuntime();
+    public override ISkillRuntime GetSkillRuntime() => new GrowingIntRuntime(Resource);
 }

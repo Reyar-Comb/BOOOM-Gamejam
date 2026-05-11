@@ -11,5 +11,5 @@ public class CrowdOfChar : Skill
     {
         data.SkillManager.AddRuntime(GetSkillRuntime());
     }
-    public override ISkillRuntime GetSkillRuntime() => new CrowdOfCharRuntime();
+    public override ISkillRuntime GetSkillRuntime() => new CrowdOfCharRuntime(Resource);
 }

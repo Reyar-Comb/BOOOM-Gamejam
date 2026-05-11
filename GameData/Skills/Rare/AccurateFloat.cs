@@ -12,5 +12,5 @@ public class AccurateFloat : Skill
         data.SkillManager.AddRuntime(GetSkillRuntime());
     }
 
-    public override ISkillRuntime GetSkillRuntime() => new AccurateFloatRuntime();
+    public override ISkillRuntime GetSkillRuntime() => new AccurateFloatRuntime(Resource);
 }

@@ -12,5 +12,5 @@ public class BiasedRecognition : Skill
         data.SkillManager.AddRuntime(GetSkillRuntime());
     }
 
-    public override ISkillRuntime GetSkillRuntime() => new BiasedRecognitionRuntime();
+    public override ISkillRuntime GetSkillRuntime() => new BiasedRecognitionRuntime(Resource);
 }

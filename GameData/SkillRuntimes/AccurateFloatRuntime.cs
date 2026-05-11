@@ -4,7 +4,12 @@ using System.Collections.Generic;
 
 public class AccurateFloatRuntime : ISkillRuntime
 {
-    private const int SameAxisDamageBonus = 3;
+    private readonly SkillResource _resource;
+
+    public AccurateFloatRuntime(SkillResource resource)
+    {
+        _resource = resource;
+    }
 
     public void OnBeforeAttack(AttackInfo info)
     {
@@ -24,7 +29,7 @@ public class AccurateFloatRuntime : ISkillRuntime
         Vector2I targetCell = Grid.WorldToGrid(target.Stats.Position);
         if (sourceCell.X == targetCell.X || sourceCell.Y == targetCell.Y)
         {
-            info.Damage += SameAxisDamageBonus;
+            info.Damage += (int)_resource.GetValue("SameAxisDamageBonus");
         }
     }
 }

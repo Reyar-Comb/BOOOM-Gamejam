@@ -4,11 +4,11 @@ using System;
 public class GreaterStability : Skill
 {
     public override string Name => "greater-stability";
-    public override string Description => "Increases the health of created vars.";
+    public override string Description => "Increases health of created vars.";
     public override Texture2D Icon => null;
     public override RarityLevel Rarity => RarityLevel.Common;
     public override void Apply(GameData data, int stack = 1)
     {
-        data.NumericData.Set("HealthMultiplier", 1.1f);
+        data.NumericData.Set("HealthBonus", GetValue("HealthBonus") * stack);
     }
 }

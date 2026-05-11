@@ -4,7 +4,7 @@ using System;
 public class FriendOfClasses : Skill
 {
     public override string Name => "friend-of-classes";
-    public override string Description => "Vars gain +10% positive stats when entering a new region for the first time.";
+    public override string Description => "Vars gain fixed positive stats when entering a new region for the first time.";
     public override Texture2D Icon => null;
     public override RarityLevel Rarity => RarityLevel.Rare;
     public override void Apply(GameData data, int stack = 1)
@@ -12,5 +12,5 @@ public class FriendOfClasses : Skill
         data.SkillManager.AddRuntime(GetSkillRuntime());
     }
 
-    public override ISkillRuntime GetSkillRuntime() => new FriendOfClassesRuntime();
+    public override ISkillRuntime GetSkillRuntime() => new FriendOfClassesRuntime(Resource);
 }

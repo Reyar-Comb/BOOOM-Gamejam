@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="SkillResource" format=3]
+
+[ext_resource type="Script" path="res://GameData/SkillResource.cs" id="1"]
+
+[resource]
+script = ExtResource("1")
+Values = Dictionary[String, float]({
+"AttackBonusPerGrowth": 1.0,
+"DefenseBonusPerGrowth": 1.0,
+"HealthBonusPerGrowth": 1.0
+})

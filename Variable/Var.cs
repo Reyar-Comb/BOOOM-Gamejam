@@ -51,8 +51,21 @@ public partial class Var : RefCounted, ICleanable
     }
     public void InitStatsWithGameData(GameData data)
     {
-        Stats.MaxHealth = (int)(Stats.MaxHealth * data.NumericData.Get("HealthMultiplier"));
+        Stats.MaxHealth += (int)data.NumericData.Get("HealthBonus");
         Stats.CurrentHealth = Stats.MaxHealth;
+        Stats.AttackDamage += (int)data.NumericData.Get("AttackBonus");
+        Stats.Defense += (int)data.NumericData.Get("DefenseBonus");
+        Stats.MoveSpeed += data.NumericData.Get("MoveSpeedBonus");
+
+        if (Stats.Type is VarStats.VarType.Int or VarStats.VarType.Long)
+        {
+            Stats.Defense += (int)data.NumericData.Get("IntegerDefenseBonus");
+        }
+
+        if (Stats.Type is VarStats.VarType.Float or VarStats.VarType.Double or VarStats.VarType.LongDouble)
+        {
+            Stats.AttackDamage += (int)data.NumericData.Get("FloatingPointAttackBonus");
+        }
     }
     public void Cleanup()
     {

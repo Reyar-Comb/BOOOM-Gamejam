@@ -48,13 +48,12 @@ public partial class BattleManager : Node
 	private double _accumulator = 0.0;
 
 	private bool _isTicking = false;
-	
+
 	private MapData _mapData = null!;
-	
+
 	private GameData _gameData = null!;
+
 	public long GameTime = 0;
-
-
 
 	public override void _Ready()
 	{
@@ -72,7 +71,7 @@ public partial class BattleManager : Node
 		if (State != BattleState.Running) return;
 
 		_accumulator += delta * TickScale;
-		
+
 		while (_accumulator >= TickInterval)
 		{
 			Tick();
@@ -97,11 +96,13 @@ public partial class BattleManager : Node
 		return timeSpan.ToString(@"mm\:ss");
 	}
 
-
-
-	public void RegisterVar(VarStats.VarType type, Vector2I position)
+	public void RegisterVar(
+		VarStats.VarType type,
+		Vector2I position,
+		VarStats.Team team = VarStats.Team.Friendly)
 	{
 		Var var = new();
+
 		VarStats template = type switch
 		{
 			VarStats.VarType.Int => ResourceLoader.Load<VarStats>("res://Variable/VarResources/Int/IntStats.tres"),
@@ -114,17 +115,25 @@ public partial class BattleManager : Node
 			_ => throw new ArgumentException($"Unsupported VarStats.Type: {type}")
 		};
 
-
 		var.Stats = (VarStats)template.Duplicate(true);
 		var.Stats.SetGridPosition(position);
 		var.Stats.Type = type;
+		var.Stats.VarTeam = team;
 		var.Stats.Name = $"{type}_{VarManager.CountVar(type) + 1}";
+
 		VarManager.AddVar(var);
-		VarRenderer.AddVar(var);
-		ConsoleManager.RegisterVar(var);
-		PanelNavigator.RefreshVarList();
+
+		Color color = team == VarStats.Team.Hostile ? Colors.DeepSkyBlue : Colors.OrangeRed;
+		VarRenderer.AddVar(var, color);
+
+		if (team == VarStats.Team.Friendly)
+		{
+			ConsoleManager.RegisterVar(var);
+			PanelNavigator.RefreshVarList();
+		}
 		GD.Print($"Registered var of type {type} at position {position}");
 	}
+
 
 	public void MoveVar(Var var, Vector2I newPosition)
 	{

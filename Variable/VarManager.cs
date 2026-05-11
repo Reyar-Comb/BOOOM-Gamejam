@@ -82,14 +82,17 @@ public partial class VarManager : Node
             var.FrameUpdate(delta);
         }
     }
-    public void AddVar(Var var)
+    public void AddVar(Var var, bool applyGameData = true)
     {
         Vars.Add(var);
         ConnectOnDeath(var);
 
         var.Initialize(_sharedBlackboard);
-        var.InitStatsWithGameData(_gameData);
-        _gameData.SkillManager.OnVarCreated(new VarCreationInfo { Var = var });
+        if (applyGameData)
+        {
+            var.InitStatsWithGameData(_gameData);
+            _gameData.SkillManager.OnVarCreated(new VarCreationInfo { Var = var });
+        }
     }
 
     private void ConnectOnDeath(Var var)

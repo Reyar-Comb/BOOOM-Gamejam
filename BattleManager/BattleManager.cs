@@ -39,6 +39,8 @@ public partial class BattleManager : Node
 
 	[Export] public VarRenderer VarRenderer { get; private set; } = null!;
 
+	[Export] public TokenManager TokenManager { get; private set; } = null!;
+
 	public long CurrentTick { get; private set; } = 0;
 
 	public BattleState State { get; private set; } = BattleState.Running;
@@ -64,6 +66,7 @@ public partial class BattleManager : Node
 		_mapData.CreateRegions(6);
 		_gameData = new GameData();
 		VarManager.Initialize(_mapData, _gameData);
+		TokenManager.Initialize(_gameData);
 	}
 
 	public override void _Process(double delta)
@@ -108,7 +111,7 @@ public partial class BattleManager : Node
 	public void RegisterVar(
 		VarStats.VarType type,
 		Vector2I position,
-		VarStats.Team team = VarStats.Team.Friendly)
+		VarStats.Team team = VarStats.Team.Friendly, bool isHovering = false)
 	{
 		Var var = new();
 
@@ -130,6 +133,13 @@ public partial class BattleManager : Node
 		var.Stats.VarTeam = team;
 		var.Stats.Name = $"{type}_{VarManager.CountVar(type) + 1}";
 
+		if (isHovering)
+		{
+			TokenManager.OnHoverRegisterVar(var);
+			return;
+		}
+		TokenManager.RegisterVar(var);
+
 		VarManager.AddVar(var);
 
 		Color color = team == VarStats.Team.Hostile ? Colors.DeepSkyBlue : Colors.OrangeRed;
@@ -144,19 +154,42 @@ public partial class BattleManager : Node
 	}
 
 
-	public void MoveVar(Var var, Vector2I newPosition)
+	public void MoveVar(Var var, Vector2I newPosition, bool isHovering = false)
 	{
+		if (isHovering)
+		{
+			TokenManager.OnHoverMoveVar(var);
+			return;
+		}
+		TokenManager.MoveVar(var);
 		var.MoveTo(Grid.GridToWorld(newPosition));
 		ConsoleManager.MoveVar(var, Grid.GridToWorld(newPosition));
 	}
 
-	public void QueryVarLocation(Var var)
+	public void QueryVarLocation(Var var, bool isHovering = false)
 	{
+		if (isHovering)
+		{
+			TokenManager.OnHoverQueryVarLocation(var);
+			return;
+		}
+		TokenManager.QueryVarLocation(var);
 		ConsoleManager.QueryLocation(var);
 	}
 
-	public void QueryVarHealth(Var var)
+	public void QueryVarHealth(Var var, bool isHovering = false)
 	{
+		if (isHovering)
+		{
+			TokenManager.OnHoverQueryVarHealth(var);
+			return;
+		}
+		TokenManager.QueryVarHealth(var);
 		ConsoleManager.QueryHealth(var);
+	}
+
+	public void ClearTokenCostRef()
+	{
+		TokenManager.ClearTokenCostRef();
 	}
 }

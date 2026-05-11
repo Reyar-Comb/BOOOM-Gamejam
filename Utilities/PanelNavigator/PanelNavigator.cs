@@ -70,7 +70,7 @@ public partial class PanelNavigator : Control
 	/// 在导航前由按钮 onPressed 设置，目标面板 OnNavigatedTo 中读取。
 	/// GoBack / GoToRoot 会自动清空。
 	/// </summary>
-	public string CurrentVarType { get; set; } = "";
+	public VarStats.VarType? CurrentVarType { get; set; } = null;
 
 	/// <summary>
 	/// 当前操作的变量名。
@@ -314,7 +314,7 @@ public partial class PanelNavigator : Control
 
 	private void ClearBlackboard()
 	{
-		CurrentVarType = "";
+		CurrentVarType = null;
 		CurrentVarName = "";
 	}
 
@@ -337,7 +337,9 @@ public partial class PanelNavigator : Control
 	/// <param name="targetPanelId">目标面板 ID。传空字符串跳过导航。</param>
 	/// <param name="onPressed">可选：点击回调，在导航之前执行（通常用于设置 CurrentVarType/CurrentVarName）</param>
 	public void RegisterButton(Node buttonNode, string targetPanelId,
-		Action onPressed = null)
+		Action onPressed = null,
+		Action onHoverEnter = null,
+		Action onHoverLeave = null)
 	{
 		var pressable = TryGetPressable(buttonNode);
 		if (pressable == null)
@@ -352,6 +354,12 @@ public partial class PanelNavigator : Control
 			if (!string.IsNullOrEmpty(targetPanelId))
 				NavigateTo(targetPanelId);
 		};
+
+		if (buttonNode is VarButton varBtn)
+		{
+			varBtn.OnHoverEnter = onHoverEnter;
+			varBtn.OnHoverLeave = onHoverLeave;
+		}
 	}
 
 	/// <summary>

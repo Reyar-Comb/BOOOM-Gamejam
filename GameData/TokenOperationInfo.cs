@@ -5,8 +5,7 @@ public class TokenOperationInfo
         CreateVar,
         MoveVar,
         QueryVarLocation,
-        QueryVarHealth,
-        QueryVarStatus
+        QueryVarHealth
     }
 
     public OperationType Type { get; set; }

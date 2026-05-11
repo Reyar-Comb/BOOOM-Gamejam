@@ -123,16 +123,28 @@ public class MapData
     {
         ResetRegion();
 
+        regionCount = Math.Max(regionCount, 2);
         EnsureDeciderCount(regionCount);
 
         Vector2I[] regionSeedPositions = new Vector2I[regionCount];
-        for (int i = 1; i <= regionCount; i++)
+        CreateSeed(regionSeedPositions, 1, new Vector2I(0, Height / 2));
+        CreateSeed(regionSeedPositions, 2, new Vector2I(Width - 1, Height / 2));
+
+        for (int i = 3; i <= regionCount; i++)
         {
             DecideSeedPositions(regionSeedPositions, i);
         }
         Expand(randomness);
         CreateBridges();
     }
+
+    private void CreateSeed(Vector2I[] seedPositions, int currentRegionId, Vector2I seedPosition)
+    {
+        seedPositions[currentRegionId - 1] = seedPosition;
+        SetRegion(seedPosition.X, seedPosition.Y, currentRegionId);
+        EnqueueNeighbors(seedPosition.X, seedPosition.Y, currentRegionId, 0.0f, 0.0f);
+    }
+
     private void DecideSeedPositions(Vector2I[] seedPositions, int currentRegionId)
     {
         while (true)

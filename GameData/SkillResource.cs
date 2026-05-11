@@ -8,11 +8,11 @@ public partial class SkillResource : Resource
     [Export(PropertyHint.MultilineText)] public string Description { get; set; } = "";
     [Export] public Texture2D Icon { get; set; }
     [Export] public Skill.RarityLevel Rarity { get; set; } = Skill.RarityLevel.Common;
-    [Export] public Dictionary<string, float> Values { get; set; } = new();
+    [Export] public Dictionary<string, int> Values { get; set; } = new();
 
-    public float GetValue(string key, float fallback = 0f)
+    public int GetValue(string key, int fallback = 0)
     {
-        if (Values.TryGetValue(key, out float value))
+        if (Values.TryGetValue(key, out int value))
         {
             return value;
         }

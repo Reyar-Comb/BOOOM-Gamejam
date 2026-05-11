@@ -6,7 +6,7 @@ public class NumericData
 {
     private const string DATA_PATH = "res://GameData/Data.tres";
     private readonly NumericDataResource _resource = null;
-    private Dictionary<string, float> _data = new Dictionary<string, float>();
+    private Dictionary<string, int> _data = new Dictionary<string, int>();
     public NumericData()
     {
         _resource = ResourceLoader.Load<NumericDataResource>(DATA_PATH);
@@ -19,16 +19,16 @@ public class NumericData
             _data[kvp.Key] = kvp.Value;
         }
     }
-    public float Get(string key)
+    public int Get(string key)
     {
         if (_data.TryGetValue(key, out var value))
         {
             return value;
         }
         GD.PushError($"NumericData: Key '{key}' not found.");
-        return 0f;
+        return 0;
     }
-    public float Set(string key, float value)
+    public int Set(string key, int value)
     {
         _data[key] = value;
         return value;

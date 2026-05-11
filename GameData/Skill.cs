@@ -17,7 +17,7 @@ public abstract class Skill
     public abstract void Apply(GameData data, int stack = 1);
     public virtual ISkillRuntime GetSkillRuntime() => new EmptySkillRuntime();
 
-    protected float GetValue(string key, float fallback = 0f)
+    protected int GetValue(string key, int fallback = 0)
     {
         return Resource.GetValue(key, fallback);
     }

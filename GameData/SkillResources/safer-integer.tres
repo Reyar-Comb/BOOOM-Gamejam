@@ -4,6 +4,10 @@
 
 [resource]
 script = ExtResource("1")
+Name = "safer-integer"
+Description = "Increases defense of created integer vars."
+Icon = null
+Rarity = 1
 Values = Dictionary[String, float]({
 "IntegerDefenseBonus": 3.0
 })

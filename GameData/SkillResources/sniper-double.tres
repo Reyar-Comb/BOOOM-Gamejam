@@ -4,4 +4,8 @@
 
 [resource]
 script = ExtResource("1")
+Name = "sniper-double"
+Description = "Double vars can attack enemies in detect range when they share the same x or y axis."
+Icon = null
+Rarity = 2
 Values = Dictionary[String, float]({})

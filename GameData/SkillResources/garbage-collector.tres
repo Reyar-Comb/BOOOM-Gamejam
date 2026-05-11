@@ -4,6 +4,10 @@
 
 [resource]
 script = ExtResource("1")
+Name = "garbage-collector"
+Description = "Refunds a fixed amount of tokens when a var dies."
+Icon = null
+Rarity = 2
 Values = Dictionary[String, float]({
 "DeathTokenRefund": 3.0
 })

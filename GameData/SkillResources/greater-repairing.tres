@@ -4,6 +4,10 @@
 
 [resource]
 script = ExtResource("1")
+Name = "greater-repairing"
+Description = "Increases attack of created vars."
+Icon = null
+Rarity = 0
 Values = Dictionary[String, float]({
 "AttackBonus": 3.0
 })

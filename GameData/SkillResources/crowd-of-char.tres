@@ -4,6 +4,10 @@
 
 [resource]
 script = ExtResource("1")
+Name = "crowd-of-char"
+Description = ""
+Icon = null
+Rarity = 2
 Values = Dictionary[String, float]({
 "DamageBonusPerCharAttacker": 1.0
 })

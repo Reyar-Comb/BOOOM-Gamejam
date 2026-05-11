@@ -4,6 +4,10 @@
 
 [resource]
 script = ExtResource("1")
+Name = "accurate-float"
+Description = "Float vars deal +3 damage when attacking a target on the same x or y axis."
+Icon = null
+Rarity = 2
 Values = Dictionary[String, float]({
 "SameAxisDamageBonus": 3.0
 })

@@ -4,6 +4,10 @@
 
 [resource]
 script = ExtResource("1")
+Name = "singleton-long-double"
+Description = "If you create a LongDouble var as the first var in a wave, it gains large fixed health and attack bonuses but defense is set to 0. Doing this blocks future Float, Double, and LongDouble creation."
+Icon = null
+Rarity = 2
 Values = Dictionary[String, float]({
 "AttackDamageBonus": 270.0,
 "DefenseOverride": 0.0,

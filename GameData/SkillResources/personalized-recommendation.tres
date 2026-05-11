@@ -4,6 +4,10 @@
 
 [resource]
 script = ExtResource("1")
+Name = "personalized-recommendation"
+Description = "Reduces patience consumed when requesting tokens from users by a fixed amount."
+Icon = null
+Rarity = 1
 Values = Dictionary[String, float]({
 "TokenRequestPatienceCostReduction": 2.0
 })

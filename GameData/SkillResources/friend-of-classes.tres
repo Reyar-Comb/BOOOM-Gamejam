@@ -4,6 +4,10 @@
 
 [resource]
 script = ExtResource("1")
+Name = "friend-of-classes"
+Description = "Vars gain fixed positive stats when entering a new region for the first time."
+Icon = null
+Rarity = 2
 Values = Dictionary[String, float]({
 "AttackBonus": 2.0,
 "AttackSpeedBonus": 0.1,

@@ -4,6 +4,10 @@
 
 [resource]
 script = ExtResource("1")
+Name = "effective-feedback"
+Description = "Reduces token cost when querying or commanding vars by a fixed amount."
+Icon = null
+Rarity = 0
 Values = Dictionary[String, float]({
 "CommandTokenCostReduction": 1.0
 })

@@ -4,6 +4,10 @@
 
 [resource]
 script = ExtResource("1")
+Name = "effective-creation"
+Description = "Reduces token cost when creating vars by a fixed amount."
+Icon = null
+Rarity = 1
 Values = Dictionary[String, float]({
 "CreateTokenCostReduction": 2.0
 })

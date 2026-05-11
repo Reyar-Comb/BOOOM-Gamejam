@@ -4,4 +4,8 @@
 
 [resource]
 script = ExtResource("1")
+Name = "drone-bool"
+Description = ""
+Icon = null
+Rarity = 2
 Values = Dictionary[String, float]({})

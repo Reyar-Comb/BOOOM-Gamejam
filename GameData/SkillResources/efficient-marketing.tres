@@ -4,6 +4,10 @@
 
 [resource]
 script = ExtResource("1")
+Name = "efficient-marketing"
+Description = "Increases tokens gained when requesting them from users."
+Icon = null
+Rarity = 1
 Values = Dictionary[String, float]({
 "TokenRequestGainBonus": 5.0
 })

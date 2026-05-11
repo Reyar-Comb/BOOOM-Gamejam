@@ -4,6 +4,10 @@
 
 [resource]
 script = ExtResource("1")
+Name = "growing-int"
+Description = "Each created Int randomly increases health, attack, or defense for future Int vars."
+Icon = null
+Rarity = 2
 Values = Dictionary[String, float]({
 "AttackBonusPerGrowth": 1.0,
 "DefenseBonusPerGrowth": 1.0,

@@ -4,6 +4,10 @@
 
 [resource]
 script = ExtResource("1")
+Name = "fast-iteration"
+Description = "Increases move speed of created vars."
+Icon = null
+Rarity = 0
 Values = Dictionary[String, float]({
 "MoveSpeedBonus": 2.0
 })

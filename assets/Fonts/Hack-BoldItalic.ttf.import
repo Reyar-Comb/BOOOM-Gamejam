@@ -2,13 +2,13 @@
 
 importer="font_data_dynamic"
 type="FontFile"
-uid="uid://bnl5ekwhqxwkt"
-path="res://.godot/imported/Hack-Bold.ttf-9c5253bd1f0653ba4d49962b0051212f.fontdata"
+uid="uid://jky4nd5a8wec"
+path="res://.godot/imported/Hack-BoldItalic.ttf-8185add2c8bce5b41b072ef5dd846509.fontdata"
 
 [deps]
 
-source_file="res://assets/Hack-Bold.ttf"
-dest_files=["res://.godot/imported/Hack-Bold.ttf-9c5253bd1f0653ba4d49962b0051212f.fontdata"]
+source_file="res://assets/Fonts/Hack-BoldItalic.ttf"
+dest_files=["res://.godot/imported/Hack-BoldItalic.ttf-8185add2c8bce5b41b072ef5dd846509.fontdata"]
 
 [params]
 

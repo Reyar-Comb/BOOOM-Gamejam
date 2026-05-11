@@ -11,4 +11,5 @@ public class TokenOperationInfo
 
     public OperationType Type { get; set; }
     public int TokenCost { get; set; }
+    public bool ShowOnly { get; set; }
 }

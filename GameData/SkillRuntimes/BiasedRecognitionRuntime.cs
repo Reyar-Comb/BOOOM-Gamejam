@@ -26,6 +26,11 @@ public class BiasedRecognitionRuntime : ISkillRuntime
 
         int reduction = GetReduction(info.Type);
         info.TokenCost = Math.Max(0, info.TokenCost - reduction);
+        
+        if (info.ShowOnly)
+        {
+            return;
+        }
         _tokenCostReductions[info.Type] = reduction - ReductionLossPerOperation;
     }
 

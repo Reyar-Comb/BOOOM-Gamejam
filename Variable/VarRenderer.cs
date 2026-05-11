@@ -662,16 +662,28 @@ public partial class VarRenderer : Control, IVarRenderer
             Mathf.Max(topLeftWorld.X, bottomRightWorld.X),
             Mathf.Max(topLeftWorld.Y, bottomRightWorld.Y)));
 
-        for (int x = minCell.X - 1; x <= maxCell.X + 1; x++)
+        int startX = minCell.X - 1;
+        int endX = maxCell.X + 1;
+        int startY = minCell.Y - 1;
+        int endY = maxCell.Y + 1;
+
+        float left = WorldToScreen(Grid.GridToWorld(startX, startY)).X - Grid.CellSize * Zoom / 2.0f;
+        float right = WorldToScreen(Grid.GridToWorld(endX, startY)).X + Grid.CellSize * Zoom / 2.0f;
+        float top = WorldToScreen(Grid.GridToWorld(startX, startY)).Y - Grid.CellSize * Zoom / 2.0f;
+        float bottom = WorldToScreen(Grid.GridToWorld(startX, endY)).Y + Grid.CellSize * Zoom / 2.0f;
+
+        for (int x = startX; x <= endX + 1; x++)
         {
-            for (int y = minCell.Y - 1; y <= maxCell.Y + 1; y++)
-            {
-                Vector2 cellCenter = WorldToScreen(Grid.GridToWorld(x, y));
-                Vector2 cellSize = Vector2.One * Grid.CellSize * Zoom;
-                Rect2 rect = new(cellCenter - cellSize / 2.0f, cellSize);
-                Color lineColor = x == 0 || y == 0 ? AxisGridColor : GridColor;
-                DrawRect(rect, lineColor, false, 1.0f);
-            }
+            float screenX = WorldToScreen(Grid.GridToWorld(x, startY)).X - Grid.CellSize * Zoom / 2.0f;
+            Color lineColor = x == 0 ? AxisGridColor : GridColor;
+            DrawLine(new Vector2(screenX, top), new Vector2(screenX, bottom), lineColor, 2.0f);
+        }
+
+        for (int y = startY; y <= endY + 1; y++)
+        {
+            float screenY = WorldToScreen(Grid.GridToWorld(startX, y)).Y - Grid.CellSize * Zoom / 2.0f;
+            Color lineColor = y == 0 ? AxisGridColor : GridColor;
+            DrawLine(new Vector2(left, screenY), new Vector2(right, screenY), lineColor, 2.0f);
         }
     }
 

@@ -15,6 +15,8 @@ Data = Dictionary[String, float]({
 "IntegerDefenseBonus": 0.0,
 "MoveSpeedBonus": 0.0,
 "TokenRequestGainBonus": 0.0,
-"TokenRequestPatienceCostReduction": 0.0
+"TokenRequestPatienceCostReduction": 0.0,
+"Token": 0.0,
+"MaxToken": 0.0
 })
 metadata/_custom_type_script = "uid://cg6o6txvgp36k"

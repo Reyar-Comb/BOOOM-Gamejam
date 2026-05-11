@@ -18,6 +18,7 @@ public class SkillManager
 
     public void ApplyOwnedSkills(GameData data)
     {
+        _activeSkillRuntimes.Clear();
         foreach (var skillGroup in OwnedSkills.GroupBy(skill => skill.GetType()))
         {
             skillGroup.First().Apply(data, skillGroup.Count());

@@ -5,10 +5,7 @@
 [resource]
 script = ExtResource("1")
 Name = "berserk-long"
-Description = "Long vars gain fixed damage and lose fixed defense while exactly one enemy is in detect range."
+Description = "Long vars double attack and halve defense while exactly one enemy is in detect range."
 Icon = null
 Rarity = 2
-Values = Dictionary[String, float]({
-"DamageBonus": 40.0,
-"DefenseReduction": 8.0
-})
+Values = Dictionary[String, float]({})

@@ -5,23 +5,20 @@ using System.Linq;
 
 public class BerserkLongRuntime : ISkillRuntime
 {
-    private readonly SkillResource _resource;
-
     public BerserkLongRuntime(SkillResource resource)
     {
-        _resource = resource;
     }
 
     public void OnBeforeAttack(AttackInfo info)
     {
         if (IsBerserk(info?.Source, info))
         {
-            info.Damage += (int)_resource.GetValue("DamageBonus");
+            info.Damage *= 2;
         }
 
         if (IsBerserk(info?.Target, info))
         {
-            info.Defense = Math.Max(0, info.Defense - (int)_resource.GetValue("DefenseReduction"));
+            info.Defense /= 2;
         }
     }
 

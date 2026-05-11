@@ -95,6 +95,18 @@ public partial class VarManager : Node
         }
     }
 
+    public void ClearAllVars()
+    {
+        foreach (Var var in Vars)
+        {
+            DisconnectOnDeath(var);
+            var.Cleanup();
+        }
+
+        Vars.Clear();
+        _onDeathCallablesByVar.Clear();
+    }
+
     private void ConnectOnDeath(Var var)
     {
         Callable onDeathCallable = Callable.From(() => OnVarDeath(var));

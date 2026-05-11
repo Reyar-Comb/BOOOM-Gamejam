@@ -96,6 +96,15 @@ public partial class BattleManager : Node
 		return timeSpan.ToString(@"mm\:ss");
 	}
 
+	public void ClearAll()
+	{
+		_gameData.SkillManager.Reset();
+		ConsoleManager?.UnsubscribeAllVarEvents();
+		VarManager?.ClearAllVars();
+		VarRenderer?.ClearVars();
+		PanelNavigator?.RefreshVarList();
+	}
+
 	public void RegisterVar(
 		VarStats.VarType type,
 		Vector2I position,

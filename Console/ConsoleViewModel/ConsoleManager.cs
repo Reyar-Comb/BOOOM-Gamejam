@@ -82,6 +82,14 @@ public partial class ConsoleManager : Node
         _logSources.Remove(v);
     }
 
+    public void UnsubscribeAllVarEvents()
+    {
+        foreach (Var v in new List<Var>(_logSources.Keys))
+        {
+            UnsubscribeVarEvents(v);
+        }
+    }
+
 
     public void RegisterVar(Var v)
     {

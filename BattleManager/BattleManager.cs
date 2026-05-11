@@ -90,7 +90,26 @@ public partial class BattleManager : Node
 		var context = new BattleTickContext(CurrentTick, TickInterval, this);
 
 		VarManager.Tick(TickInterval);
+		TokenManager.Tick(TickInterval);
 		GameTime += (long)(TickInterval * 1000); // Convert to milliseconds
+	}
+
+	public void OnDie()
+	{
+		State = BattleState.End;
+		GD.Print("Game Over!");
+	}
+
+	public void TogglePause()
+	{
+		if (State == BattleState.Running)
+		{
+			State = BattleState.Paused;
+		}
+		else if (State == BattleState.Paused)
+		{
+			State = BattleState.Running;
+		}
 	}
 
 	public String GetTimeString()
@@ -188,8 +207,53 @@ public partial class BattleManager : Node
 		ConsoleManager.QueryHealth(var);
 	}
 
-	public void ClearTokenCostRef()
+	public void ClearCostRef()
 	{
-		TokenManager.ClearTokenCostRef();
+		TokenManager.ClearCostRef();
+	}
+
+	public void ExchangeToken(bool isHovering = false)
+	{
+		if (isHovering)
+		{
+			TokenManager.OnHoverExchangeToken();
+			return;
+		}
+		TokenManager.ExchangeToken();
+	}
+
+
+
+	// TEST METHODS
+
+	public override void _Input(InputEvent @event)
+	{
+		if (@event is InputEventKey keyEvent)
+		{
+			if(keyEvent.Pressed)
+			{
+				if (keyEvent.Keycode == Key.Escape)
+				{
+					TogglePause();
+					return;
+				}
+				if (keyEvent.Keycode == Key.O)
+				{
+					ExchangeToken();
+					return;
+				}
+				if (keyEvent.Keycode == Key.P)
+				{
+					ExchangeToken(isHovering:true);
+					return;
+				}
+				if (keyEvent.Keycode == Key.L)
+				{
+					ClearCostRef();
+					return;
+				}
+			}
+		}
+			
 	}
 }

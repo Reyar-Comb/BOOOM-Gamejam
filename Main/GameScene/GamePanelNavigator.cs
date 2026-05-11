@@ -82,7 +82,7 @@ public partial class GamePanelNavigator : PanelNavigator
 			onHoverLeave: () =>
 			{
 				GD.Print($"Hover leave");
-				BattleManager.Instance.ClearTokenCostRef();
+				BattleManager.Instance.ClearCostRef();
 			}
 		);
 		var mvBtn = FindInPanel<VarButton>("VarMoveUnit", "VBoxContainer/PanelContainer2/MoveButton");
@@ -95,10 +95,11 @@ public partial class GamePanelNavigator : PanelNavigator
 			onHoverEnter: () =>
 			{
 				BattleManager.Instance.MoveVar(VarManager.GetVarByName(CurrentVarName), LastClickedGrid, isHovering: true);
+				//BattleManager.Instance.ExchangeToken(isHovering: true);
 			},
 			onHoverLeave: () =>
 			{
-				BattleManager.Instance.ClearTokenCostRef();
+				BattleManager.Instance.ClearCostRef();
 			}
 		);
 		var locationBtn = FindInPanel<VarButton>("VarStatusUnit", "VBoxContainer/ScrollContainer/VBoxContainer/OpLocationButton");
@@ -114,7 +115,7 @@ public partial class GamePanelNavigator : PanelNavigator
 			},
 			onHoverLeave: () =>
 			{
-				BattleManager.Instance.ClearTokenCostRef();
+				BattleManager.Instance.ClearCostRef();
 			}
 		);
 		var healthBtn = FindInPanel<VarButton>("VarStatusUnit", "VBoxContainer/ScrollContainer/VBoxContainer/OpHealthButton");
@@ -130,7 +131,7 @@ public partial class GamePanelNavigator : PanelNavigator
 			},
 			onHoverLeave: () =>
 			{
-				BattleManager.Instance.ClearTokenCostRef();
+				BattleManager.Instance.ClearCostRef();
 			}
 		);
 	}

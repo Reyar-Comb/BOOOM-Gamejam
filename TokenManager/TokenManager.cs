@@ -12,7 +12,7 @@ public partial class TokenManager : Node
 		int cost = info.TokenCost;
 		if (_gameData.NumericData.Get("Token") <= cost)
 		{
-			GD.Print("You Died!");
+			BattleManager.Instance.OnDie();
 			return;
 		}
 		int rest = _gameData.NumericData.Get("Token") - cost;
@@ -23,10 +23,22 @@ public partial class TokenManager : Node
 
 	public float GetTokenCostRefPercent(TokenOperationInfo info)
 	{
-		_gameData.SkillManager.OnTokenOperation(info);
+		if (info.TokenCost > 0)
+		{
+			_gameData.SkillManager.OnTokenOperation(info);
+		}
 		int rest = _gameData.NumericData.Get("Token") - info.TokenCost;
 		if (rest < 0) rest = 0;
 		return (float)rest / _gameData.NumericData.Get("MaxToken");
+		
+		
+	}
+
+	public float GetPatienceCostRefPercent(int patienceCost)
+	{
+		int rest = _gameData.NumericData.Get("Patience") - patienceCost;
+		if (rest < 0) rest = 0;
+		return (float)rest / _gameData.NumericData.Get("MaxPatience");
 	}
 
 	public void Initialize(GameData gameData)
@@ -34,11 +46,61 @@ public partial class TokenManager : Node
 		_gameData = gameData;
 	}
 
-	public void ClearTokenCostRef()
+	public void ClearCostRef()
 	{
 		BarController.ClearTokenCostRef();
+		BarController.ClearPatienceCostRef();
 	}
 
+	public void Tick(double delta)
+	{
+		UpdatePatience(delta);
+	}
+
+	private void UpdatePatience(double delta)
+	{
+		int patience = _gameData.NumericData.Get("Patience");
+		if (patience <= 0)
+		{
+			BattleManager.Instance.OnDie();
+		}
+		patience -= (int)(delta * _gameData.NumericData.Get("PatienceDecayRate"));
+		_gameData.NumericData.Set("Patience", patience);
+		float percent = (float)patience / _gameData.NumericData.Get("MaxPatience");
+		BarController.RefreshPatienceProgress(percent);
+	}
+
+	public void ExchangeToken()
+	{
+		int token = _gameData.NumericData.Get("Token");
+		int tokenEx = _gameData.NumericData.Get("TokenExchangeAmount");
+		int patience = _gameData.NumericData.Get("Patience");
+		int patienceEx = _gameData.NumericData.Get("PatienceExchangeAmount");
+		if (patience - patienceEx <= 0)
+		{
+			BattleManager.Instance.OnDie();
+			return;
+		}
+		_gameData.NumericData.Set("Token", Math.Min(token + tokenEx, _gameData.NumericData.Get("MaxToken")));
+		_gameData.NumericData.Set("Patience", patience - patienceEx);
+		BarController.ApplyTokenCost((float)_gameData.NumericData.Get("Token") / _gameData.NumericData.Get("MaxToken"));
+		BarController.ApplyPatienceCost((float)_gameData.NumericData.Get("Patience") / _gameData.NumericData.Get("MaxPatience"));
+		GD.Print($"Exchanged {patienceEx} patience for {tokenEx} tokens. Current token: {_gameData.NumericData.Get("Token")}, current patience: {_gameData.NumericData.Get("Patience")}");
+	}
+
+	public void OnHoverExchangeToken()
+	{
+		int tokenEx = _gameData.NumericData.Get("TokenExchangeAmount");
+		int patienceEx = _gameData.NumericData.Get("PatienceExchangeAmount");
+		TokenOperationInfo info = new()
+		{
+			Type = TokenOperationInfo.OperationType.CreateVar,
+			TokenCost = -tokenEx,
+			ShowOnly = true
+		};
+		BarController.ShowTokenCostRef(GetTokenCostRefPercent(info));
+		BarController.ShowPatienceCostRef(GetPatienceCostRefPercent(patienceEx));
+	}
 
 	public void OnHoverRegisterVar(Var var)
 	{

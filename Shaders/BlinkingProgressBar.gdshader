@@ -70,8 +70,8 @@ void fragment()
 		// ---- 内容区域 ----
 		color = bg_color;
 
-		// 基础填充（从下往上）
-		float fill = step(1.0 - UV.y, progress);
+		// 基础填充（从下往上，延伸到 progress 和 target 的较高值，确保 ghost 段也覆盖 base_color）
+		float fill = step(1.0 - UV.y, max(progress, target));
 		if (fill > 0.5)
 		{
 			if (target <= 0.0)

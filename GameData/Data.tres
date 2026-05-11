@@ -4,22 +4,27 @@
 
 [resource]
 script = ExtResource("1_w8qnj")
-Data = Dictionary[String, float]({
-"AttackBonus": 0.0,
-"CommandTokenCostReduction": 0.0,
-"CreateTokenCostReduction": 0.0,
-"DeathTokenRefund": 0.0,
-"DefenseBonus": 0.0,
-"FloatingPointAttackBonus": 0.0,
-"HealthBonus": 0.0,
-"IntegerDefenseBonus": 0.0,
+Data = Dictionary[String, int]({
+"AttackBonus": 0,
+"CommandTokenCostReduction": 0,
+"CreateTokenCostReduction": 0,
+"DeathTokenRefund": 0,
+"DefenseBonus": 0,
+"FloatingPointAttackBonus": 0,
+"HealthBonus": 0,
+"IntegerDefenseBonus": 0,
+"MaxPatience": 100000,
 "MaxToken": 100,
 "MoveCost": 10,
-"MoveSpeedBonus": 0.0,
+"MoveSpeedBonus": 0,
+"Patience": 100000,
+"PatienceDecayRate": 50,
+"PatienceExchangeAmount": 20000,
 "QueryHealthCost": 90,
 "QueryLocationCost": 10,
 "Token": 100,
-"TokenRequestGainBonus": 0.0,
-"TokenRequestPatienceCostReduction": 0.0
+"TokenExchangeAmount": 50,
+"TokenRequestGainBonus": 0,
+"TokenRequestPatienceCostReduction": 0
 })
 metadata/_custom_type_script = "uid://cg6o6txvgp36k"

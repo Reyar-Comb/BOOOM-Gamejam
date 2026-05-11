@@ -5,7 +5,10 @@ public class DroneBool : Skill
 {
     public override void Apply(GameData data, int stack = 1)
     {
-        data.SkillManager.AddRuntime(GetSkillRuntime());
+        for (int i = 0; i < stack; i++)
+        {
+            data.SkillManager.AddRuntime(GetSkillRuntime());
+        }
     }
     public override ISkillRuntime GetSkillRuntime() => new DroneBoolRuntime();
 }

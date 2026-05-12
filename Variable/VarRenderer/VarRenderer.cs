@@ -38,14 +38,15 @@ public partial class VarRenderer : Control, IVarRenderer
 
     public Vector2I? HoveredGridCell => _hoveredGridCell;
     internal IReadOnlyList<Var> RenderedVars => _renderedVars;
+    internal MapData MapData => _mapData;
     internal VarRendererConfig ActiveConfig => _config ??= CreateWritableConfig(_config);
 
     public VarRenderer()
     {
         _config = CreateWritableConfig(null);
         _backgroundRenderer = new VarBackgroundRenderer(_config);
-        _mapRenderer = new VarMapRenderer(this, _config, _mapData);
-        _gridRenderer = new VarGridRenderer(this, _config, _mapData);
+        _mapRenderer = new VarMapRenderer(this, _config);
+        _gridRenderer = new VarGridRenderer(this, _config);
         _renderStateTracker = new VarRenderStateTracker(this, _config);
         _varLayerRenderer = new VarLayerRenderer(this, _renderStateTracker, _config);
     }

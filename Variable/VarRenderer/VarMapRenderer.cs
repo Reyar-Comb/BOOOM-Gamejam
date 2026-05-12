@@ -19,13 +19,12 @@ internal sealed partial class VarMapRenderer : Control
 
     private readonly VarRenderer _owner;
     private VarRendererConfig _config;
-    private MapData _mapData;
-    public VarMapRenderer(VarRenderer owner, VarRendererConfig config, MapData mapData)
+
+    public VarMapRenderer(VarRenderer owner, VarRendererConfig config)
     {
         Name = nameof(VarMapRenderer);
         _owner = owner;
         _config = config;
-        _mapData = mapData;
         MouseFilter = MouseFilterEnum.Ignore;
         SetAnchorsPreset(LayoutPreset.FullRect);
     }
@@ -38,7 +37,7 @@ internal sealed partial class VarMapRenderer : Control
 
     public override void _Draw()
     {
-        if (_mapData == null || _config.Zoom <= VarRenderer.Epsilon || Grid.CellSize <= 0)
+        if (_owner.MapData == null || _config.Zoom <= VarRenderer.Epsilon || Grid.CellSize <= 0)
         {
             return;
         }
@@ -68,7 +67,7 @@ internal sealed partial class VarMapRenderer : Control
             {
                 Vector2 cellCenter = _owner.WorldToScreen(Grid.GridToWorld(x, y));
                 Rect2 cellRect = new(cellCenter - cellSize / 2.0f, cellSize + Vector2.One);
-                DrawRect(cellRect, GetRegionColor(_mapData.GetRegion(x, y)));
+                DrawRect(cellRect, GetRegionColor(_owner.MapData.GetRegion(x, y)));
             }
         }
     }
@@ -78,7 +77,7 @@ internal sealed partial class VarMapRenderer : Control
         float markerSize = Mathf.Max(2.0f, _config.BridgeMarkerSize * _config.Zoom);
         float lineWidth = Mathf.Max(1.0f, _config.BridgeLineWidth * _config.Zoom);
 
-        foreach (MapData.BridgeConnection bridge in _mapData.GetBridges())
+        foreach (MapData.BridgeConnection bridge in _owner.MapData.GetBridges())
         {
             if (!_owner.IsCellInsideMap(bridge.A) || !_owner.IsCellInsideMap(bridge.B))
             {
@@ -118,8 +117,8 @@ internal sealed partial class VarMapRenderer : Control
 
         startX = Math.Max(minCell.X - 1, 0);
         startY = Math.Max(minCell.Y - 1, 0);
-        endX = Math.Min(maxCell.X + 1, _mapData.Width - 1);
-        endY = Math.Min(maxCell.Y + 1, _mapData.Height - 1);
+        endX = Math.Min(maxCell.X + 1, _owner.MapData.Width - 1);
+        endY = Math.Min(maxCell.Y + 1, _owner.MapData.Height - 1);
         return startX <= endX && startY <= endY;
     }
 

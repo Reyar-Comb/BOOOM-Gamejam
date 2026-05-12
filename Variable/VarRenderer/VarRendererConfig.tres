@@ -6,6 +6,4 @@
 script = ExtResource("1_config")
 DrawBackground = true
 BackgroundColor = Color(0.078431375, 0.09019608, 0.10980392, 0.69411767)
-RenderMapRegions = false
-RenderMapBridges = false
 RenderGrid = true

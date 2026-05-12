@@ -3,6 +3,7 @@
 [ext_resource type="FontFile" uid="uid://bnl5ekwhqxwkt" path="res://assets/Fonts/Hack-Bold.ttf" id="1_l7ksu"]
 [ext_resource type="Script" uid="uid://biwimph8jg21r" path="res://Prefabs/VarButton/VarButton.cs" id="1_lb3j1"]
 [ext_resource type="Shader" uid="uid://b5umigu17eij6" path="res://Shaders/ColorRectRadius.gdshader" id="2_c8htk"]
+[ext_resource type="Script" uid="uid://dmjp5qpxlfunm" path="res://Prefabs/TooltipWindow/TooltipTrigger.cs" id="4_pk4gy"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_c8htk"]
 shader = ExtResource("2_c8htk")
@@ -82,3 +83,7 @@ grow_vertical = 2
 theme_override_styles/normal = SubResource("StyleBoxFlat_c8htk")
 theme_override_styles/pressed = SubResource("StyleBoxFlat_lb3j1")
 theme_override_styles/hover = SubResource("StyleBoxFlat_pk4gy")
+
+[node name="TooltipTrigger" type="Node" parent="Button" unique_id=852389310]
+script = ExtResource("4_pk4gy")
+metadata/_custom_type_script = "uid://dmjp5qpxlfunm"

@@ -76,6 +76,7 @@ public partial class VarRenderer : Control, IVarRenderer
     private readonly Dictionary<Var, RenderState> _renderStatesByVar = new();
     private readonly Dictionary<Var, RenderStyle> _renderStylesByVar = new();
     private Var _renderedVar = null!;
+    private MapData _mapData = null!;
     private Vector2I? _hoveredGridCell;
     private bool _isPanning = false;
 
@@ -114,6 +115,24 @@ public partial class VarRenderer : Control, IVarRenderer
         }
 
         MouseExited += OnMouseExited;
+    }
+
+    public override void _Notification(int what)
+    {
+        if (what == NotificationResized)
+        {
+            ClampZoomToMapBounds();
+            ClampViewCenterToMapBounds();
+            QueueRedraw();
+        }
+    }
+
+    public void Initialize(MapData mapData)
+    {
+        _mapData = mapData;
+        ClampZoomToMapBounds();
+        ClampViewCenterToMapBounds();
+        QueueRedraw();
     }
 
     public void SetVar(Var var)
@@ -261,6 +280,11 @@ public partial class VarRenderer : Control, IVarRenderer
         VarStats stats = renderedVar.Stats;
         UpdateRenderPosition(renderedVar, 0.0);
         Vector2 renderPosition = GetRenderState(renderedVar).DisplayPosition;
+        if (!IsWorldPositionInsideMap(renderPosition))
+        {
+            return;
+        }
+
         RenderStyle renderStyle = GetRenderStyle(renderedVar);
 
         if (RenderDetectRange)
@@ -300,6 +324,11 @@ public partial class VarRenderer : Control, IVarRenderer
 
     private void DrawRangeCell(Vector2I cell, Color color, float fillAlpha)
     {
+        if (!IsCellInsideMap(cell))
+        {
+            return;
+        }
+
         Vector2 cellCenter = WorldToScreen(Grid.GridToWorld(cell));
         Vector2 cellSize = Vector2.One * Grid.CellSize * Zoom;
         Rect2 cellRect = new(cellCenter - cellSize / 2.0f, cellSize);
@@ -598,6 +627,7 @@ public partial class VarRenderer : Control, IVarRenderer
         }
 
         ViewCenterWorld -= mouseMotion.Relative / Zoom;
+        ClampViewCenterToMapBounds();
         QueueRedraw();
         AcceptEvent();
     }
@@ -615,7 +645,8 @@ public partial class VarRenderer : Control, IVarRenderer
             return;
         }
 
-        SetHoveredGridCell(Grid.WorldToGrid(ScreenToWorld(localMousePosition)));
+        Vector2I gridCell = Grid.WorldToGrid(ScreenToWorld(localMousePosition));
+        SetHoveredGridCell(IsCellInsideMap(gridCell) ? gridCell : null);
     }
 
     private void SetHoveredGridCell(Vector2I? gridCell)
@@ -635,7 +666,7 @@ public partial class VarRenderer : Control, IVarRenderer
     private void ZoomAt(Vector2 screenPosition, float zoomFactor)
     {
         Vector2 worldBeforeZoom = ScreenToWorld(screenPosition);
-        float newZoom = Mathf.Clamp(Zoom * zoomFactor, MinZoom, MaxZoom);
+        float newZoom = Mathf.Clamp(Zoom * zoomFactor, GetMinimumAllowedZoom(), MaxZoom);
         if (Mathf.IsEqualApprox(newZoom, Zoom))
         {
             return;
@@ -643,6 +674,7 @@ public partial class VarRenderer : Control, IVarRenderer
 
         Zoom = newZoom;
         ViewCenterWorld = worldBeforeZoom - (screenPosition - Size / 2.0f) / Zoom;
+        ClampViewCenterToMapBounds();
         QueueRedraw();
     }
 
@@ -667,24 +699,107 @@ public partial class VarRenderer : Control, IVarRenderer
         int startY = minCell.Y - 1;
         int endY = maxCell.Y + 1;
 
-        float left = WorldToScreen(Grid.GridToWorld(startX, startY)).X - Grid.CellSize * Zoom / 2.0f;
-        float right = WorldToScreen(Grid.GridToWorld(endX, startY)).X + Grid.CellSize * Zoom / 2.0f;
-        float top = WorldToScreen(Grid.GridToWorld(startX, startY)).Y - Grid.CellSize * Zoom / 2.0f;
-        float bottom = WorldToScreen(Grid.GridToWorld(startX, endY)).Y + Grid.CellSize * Zoom / 2.0f;
+        if (_mapData != null)
+        {
+            startX = Math.Max(startX, 0);
+            startY = Math.Max(startY, 0);
+            endX = Math.Min(endX, _mapData.Width - 1);
+            endY = Math.Min(endY, _mapData.Height - 1);
+        }
+
+        if (startX > endX || startY > endY)
+        {
+            return;
+        }
+
+        float left = GetGridLineScreenX(startX);
+        float right = GetGridLineScreenX(endX + 1);
+        float top = GetGridLineScreenY(startY);
+        float bottom = GetGridLineScreenY(endY + 1);
 
         for (int x = startX; x <= endX + 1; x++)
         {
-            float screenX = WorldToScreen(Grid.GridToWorld(x, startY)).X - Grid.CellSize * Zoom / 2.0f;
+            float screenX = GetGridLineScreenX(x);
             Color lineColor = x == 0 ? AxisGridColor : GridColor;
             DrawLine(new Vector2(screenX, top), new Vector2(screenX, bottom), lineColor, 2.0f);
         }
 
         for (int y = startY; y <= endY + 1; y++)
         {
-            float screenY = WorldToScreen(Grid.GridToWorld(startX, y)).Y - Grid.CellSize * Zoom / 2.0f;
+            float screenY = GetGridLineScreenY(y);
             Color lineColor = y == 0 ? AxisGridColor : GridColor;
             DrawLine(new Vector2(left, screenY), new Vector2(right, screenY), lineColor, 2.0f);
         }
+    }
+
+    private float GetGridLineScreenX(int cellX)
+    {
+        return WorldToScreen(Grid.GridToWorld(cellX, 0)).X - Grid.CellSize * Zoom / 2.0f;
+    }
+
+    private float GetGridLineScreenY(int cellY)
+    {
+        return WorldToScreen(Grid.GridToWorld(0, cellY)).Y - Grid.CellSize * Zoom / 2.0f;
+    }
+
+    private bool IsWorldPositionInsideMap(Vector2 worldPosition)
+    {
+        return IsCellInsideMap(Grid.WorldToGrid(worldPosition));
+    }
+
+    private bool IsCellInsideMap(Vector2I cell)
+    {
+        return _mapData == null || _mapData.ContainsCell(cell);
+    }
+
+    private void ClampZoomToMapBounds()
+    {
+        Zoom = Mathf.Clamp(Zoom, GetMinimumAllowedZoom(), MaxZoom);
+    }
+
+    private float GetMinimumAllowedZoom()
+    {
+        if (_mapData == null || Size == Vector2.Zero || Grid.CellSize <= 0)
+        {
+            return MinZoom;
+        }
+
+        float mapWorldWidth = _mapData.Width * Grid.CellSize;
+        float mapWorldHeight = _mapData.Height * Grid.CellSize;
+        if (mapWorldWidth <= Epsilon || mapWorldHeight <= Epsilon)
+        {
+            return MinZoom;
+        }
+
+        float mapFitZoom = Mathf.Max(Size.X / mapWorldWidth, Size.Y / mapWorldHeight);
+        return Mathf.Min(Mathf.Max(MinZoom, mapFitZoom), MaxZoom);
+    }
+
+    private void ClampViewCenterToMapBounds()
+    {
+        if (_mapData == null || Size == Vector2.Zero || Zoom <= Epsilon || Grid.CellSize <= 0)
+        {
+            return;
+        }
+
+        Vector2 halfViewportWorldSize = Size / (2.0f * Zoom);
+        Rect2 mapWorldRect = GetMapWorldRect();
+        Vector2 mapCenter = mapWorldRect.GetCenter();
+
+        float minX = mapWorldRect.Position.X + halfViewportWorldSize.X;
+        float maxX = mapWorldRect.End.X - halfViewportWorldSize.X;
+        float minY = mapWorldRect.Position.Y + halfViewportWorldSize.Y;
+        float maxY = mapWorldRect.End.Y - halfViewportWorldSize.Y;
+
+        ViewCenterWorld = new Vector2(
+            minX <= maxX ? Mathf.Clamp(ViewCenterWorld.X, minX, maxX) : mapCenter.X,
+            minY <= maxY ? Mathf.Clamp(ViewCenterWorld.Y, minY, maxY) : mapCenter.Y);
+    }
+
+    private Rect2 GetMapWorldRect()
+    {
+        Vector2 topLeft = Grid.GridToWorld(0, 0) - Vector2.One * Grid.CellSize / 2.0f;
+        return new Rect2(topLeft, new Vector2(_mapData.Width, _mapData.Height) * Grid.CellSize);
     }
 
     private static Vector2 GetDrawableDirection(Vector2 direction)

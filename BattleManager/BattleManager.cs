@@ -1,5 +1,6 @@
 using Godot;
 using System;
+using System.Collections.Generic;
 
 public enum BattleState
 {
@@ -57,6 +58,7 @@ public partial class BattleManager : Node
 
 	public long GameTime = 0;
 
+	private Dictionary<VarStats.VarType, VarStats> _varStatsTemplates = new Dictionary<VarStats.VarType, VarStats>();
 	public override void _Ready()
 	{
 		Instance = this;
@@ -134,17 +136,11 @@ public partial class BattleManager : Node
 	{
 		Var var = new();
 
-		VarStats template = type switch
+		if (!_varStatsTemplates.TryGetValue(type, out var template))
 		{
-			VarStats.VarType.Int => ResourceLoader.Load<VarStats>("res://Variable/VarResources/Int/IntStats.tres"),
-			VarStats.VarType.Float => ResourceLoader.Load<VarStats>("res://Variable/VarResources/Float/FloatStats.tres"),
-			VarStats.VarType.Char => ResourceLoader.Load<VarStats>("res://Variable/VarResources/Char/CharStats.tres"),
-			VarStats.VarType.Bool => ResourceLoader.Load<VarStats>("res://Variable/VarResources/Bool/BoolStats.tres"),
-			VarStats.VarType.Long => ResourceLoader.Load<VarStats>("res://Variable/VarResources/Long/LongStats.tres"),
-			VarStats.VarType.Double => ResourceLoader.Load<VarStats>("res://Variable/VarResources/Double/DoubleStats.tres"),
-			VarStats.VarType.LongDouble => ResourceLoader.Load<VarStats>("res://Variable/VarResources/LongDouble/LongDoubleStats.tres"),
-			_ => throw new ArgumentException($"Unsupported VarStats.Type: {type}")
-		};
+			template = ResourceLoader.Load<VarStats>($"res://Variable/VarResources/{type}/{type}Stats.tres");
+			_varStatsTemplates[type] = template;
+		}
 
 		var.Stats = (VarStats)template.Duplicate(true);
 		var.Stats.SetGridPosition(position);
@@ -157,8 +153,11 @@ public partial class BattleManager : Node
 			TokenManager.OnHoverRegisterVar(var);
 			return;
 		}
-		TokenManager.RegisterVar(var);
-
+		if (team == VarStats.Team.Friendly)
+		{
+			TokenManager.RegisterVar(var);
+		}
+		
 		VarManager.AddVar(var);
 
 		Color color = team == VarStats.Team.Hostile ? Colors.DeepSkyBlue : Colors.OrangeRed;

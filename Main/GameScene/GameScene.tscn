@@ -555,9 +555,6 @@ theme_override_constants/margin_bottom = 4
 layout_mode = 2
 size_flags_vertical = 3
 script = ExtResource("6_2anr5")
-DrawBackground = true
-BackgroundColor = Color(0.078431375, 0.09019608, 0.10980392, 0.69411767)
-RenderGrid = true
 BattleManager = NodePath("../../../../../../../BattleManager")
 metadata/_custom_type_script = "uid://de1oryn5icnbq"
 

@@ -24,7 +24,6 @@
 [ext_resource type="PackedScene" uid="uid://c3p8415n1lwy1" path="res://Prefabs/VarButton/VarButton.tscn" id="11_8oyud"]
 [ext_resource type="Script" uid="uid://sa26p4j2xfk4" path="res://Utilities/PanelNavigator/PanelUnit.cs" id="11_b3sdv"]
 [ext_resource type="Shader" uid="uid://cq86ki37hsl8j" path="res://Shaders/BlinkingProgressBar.gdshader" id="11_y1mx5"]
-[ext_resource type="Resource" path="res://Variable/VarRenderer/VarRendererConfig.tres" id="17_27xwp"]
 [ext_resource type="Script" uid="uid://dmjp5qpxlfunm" path="res://Prefabs/TooltipWindow/TooltipTrigger.cs" id="17_xdr2y"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_y1mx5"]
@@ -276,7 +275,7 @@ void fragment(){
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_4bds6"]
 shader = SubResource("Shader_hdewu")
 shader_parameter/blur_type = 0
-shader_parameter/blur_amount = 20
+shader_parameter/blur_amount = 12
 shader_parameter/blur_radius = 1.0
 shader_parameter/blur_direction = Vector2(1, 1)
 
@@ -288,7 +287,7 @@ corner_radius_bottom_left = 5
 shadow_offset = Vector2(10, 0)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_xdr2y"]
-bg_color = Color(0.44097927, 0.44097927, 0.44097915, 0)
+bg_color = Color(0, 0, 0, 0.49019608)
 border_width_left = 4
 border_width_top = 4
 border_width_right = 4
@@ -564,7 +563,6 @@ theme_override_constants/margin_bottom = 4
 layout_mode = 2
 size_flags_vertical = 3
 script = ExtResource("6_2anr5")
-Config = ExtResource("17_27xwp")
 BattleManager = NodePath("../../../../../../../BattleManager")
 metadata/_custom_type_script = "uid://de1oryn5icnbq"
 
@@ -718,6 +716,7 @@ theme_override_styles/panel = SubResource("StyleBoxFlat_8oyud")
 
 [node name="SelectVarButton" parent="MarginContainer/HBoxContainer/MarginContainer3/ChooseVar/VBoxContainer/MarginContainer2/PanelContainer/MarginContainer/PanelNavigator/VarUnit/VBoxContainer/PanelContainer" unique_id=1942279699 instance=ExtResource("11_8oyud")]
 layout_mode = 2
+BlinkMinAlpha = 1.0
 
 [node name="ColorRect" parent="MarginContainer/HBoxContainer/MarginContainer3/ChooseVar/VBoxContainer/MarginContainer2/PanelContainer/MarginContainer/PanelNavigator/VarUnit/VBoxContainer/PanelContainer/SelectVarButton" index="0" unique_id=1894200065]
 color = Color(1, 1, 1, 1)
@@ -974,6 +973,7 @@ text = "[b]Int[/b]
 
 [node name="TooltipTrigger" parent="MarginContainer/HBoxContainer/MarginContainer3/ChooseVar/VBoxContainer/MarginContainer2/PanelContainer/MarginContainer/PanelNavigator/VarAddUnit/VBoxContainer/ScrollContainer/VBoxContainer/AddIntButton/Button" parent_id_path=PackedInt32Array(1029203935, 1223400032) index="0" unique_id=852389310]
 TooltipId = "int_description"
+HideOnClick = false
 
 [node name="AddCharButton" parent="MarginContainer/HBoxContainer/MarginContainer3/ChooseVar/VBoxContainer/MarginContainer2/PanelContainer/MarginContainer/PanelNavigator/VarAddUnit/VBoxContainer/ScrollContainer/VBoxContainer" unique_id=218567015 instance=ExtResource("11_8oyud")]
 layout_mode = 2

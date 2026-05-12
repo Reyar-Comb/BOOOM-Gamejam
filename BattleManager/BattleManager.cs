@@ -54,6 +54,8 @@ public partial class BattleManager : Node
 
 	public double TickInterval => 1.0 / TickRate;
 
+	public ColorData ColorData => _colorData;
+	
 	private double _accumulator = 0.0;
 
 	private bool _isTicking = false;
@@ -63,6 +65,8 @@ public partial class BattleManager : Node
 	private MapData _mapData = null!;
 
 	private GameData _gameData = null!;
+
+	private ColorData _colorData = null!;
 
 	public long GameTime = 0;
 
@@ -88,9 +92,11 @@ public partial class BattleManager : Node
 		_mapData = new MapData(80, 46);
 		_mapData.CreateRegions(6);
 		_gameData = new GameData();
+		_colorData = new ColorData();
 		VarManager.Initialize(_mapData, _gameData);
 		VarRenderer.Initialize(_mapData);
 		TokenManager.Initialize(_gameData);
+		Log.Initialize(_colorData);
 
 		StartWave();
 	}
@@ -219,13 +225,13 @@ public partial class BattleManager : Node
 	{
 		if (type == VarStats.VarType.Dummy)
 		{
-			return Colors.Gray;
+			return _colorData.Get("RenderDummyVar");
 		}
 		if (team == VarStats.Team.Friendly)
 		{
-			return Colors.OrangeRed;
+			return _colorData.Get("RenderFriendlyVar");
 		}
-		return Colors.DeepSkyBlue;
+		return _colorData.Get("RenderHostileVar");
 	}
 	private VarManager.CountQueryType GetQueryType(VarStats.Team team)
 	{

@@ -569,6 +569,7 @@ metadata/_custom_type_script = "uid://de1oryn5icnbq"
 [node name="TooltipTrigger" type="Node" parent="MarginContainer/HBoxContainer/MarginContainer2/VBoxContainer/WindowPanel2/MarginContainer/VarRenderer" unique_id=768718970]
 script = ExtResource("17_xdr2y")
 TooltipId = "map"
+HideOnClick = false
 metadata/_custom_type_script = "uid://dmjp5qpxlfunm"
 
 [node name="WindowPanel" parent="MarginContainer/HBoxContainer/MarginContainer2/VBoxContainer" unique_id=387059429 instance=ExtResource("8_816xn")]
@@ -926,7 +927,6 @@ theme_override_colors/default_color = Color(1, 1, 1, 1)
 disabled = true
 
 [node name="VarAddUnit" type="Control" parent="MarginContainer/HBoxContainer/MarginContainer3/ChooseVar/VBoxContainer/MarginContainer2/PanelContainer/MarginContainer/PanelNavigator" unique_id=2048405454]
-visible = false
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0

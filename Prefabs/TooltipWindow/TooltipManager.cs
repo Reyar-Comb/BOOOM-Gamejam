@@ -14,6 +14,7 @@ public partial class TooltipManager : Node
 
 	private TooltipWindow _tooltipWindow;
 	private Func<string> _currentContentFunc;
+	private bool _currentHideOnClick = true;
 
 	public override void _Ready()
 	{
@@ -30,7 +31,7 @@ public partial class TooltipManager : Node
 		ManualSetTooltipContents();
 	}
 
-	public void ShowTooltip(string tooltipId)
+	public void ShowTooltip(string tooltipId, bool hideOnClick = true)
 	{
 		if (string.IsNullOrEmpty(tooltipId))
 			return;
@@ -42,6 +43,7 @@ public partial class TooltipManager : Node
 		}
 
 		_currentContentFunc = content;
+		_currentHideOnClick = hideOnClick;
 		_tooltipWindow.Show();
 	}
 
@@ -65,7 +67,7 @@ public partial class TooltipManager : Node
 
 	public override void _Input(InputEvent @event)
 	{
-		if (@event is InputEventMouseButton mouseButton && mouseButton.Pressed)
+		if (_currentHideOnClick && @event is InputEventMouseButton mouseButton && mouseButton.Pressed)
 		{
 			HideTooltip();
 		}

@@ -19,6 +19,14 @@ public partial class VarRendererConfig : Resource
     [Export] public bool RenderGrid { get; set; } = false;
     [Export] public Color GridColor { get; set; } = new(1.0f, 1.0f, 1.0f, 0.08f);
     [Export] public Color AxisGridColor { get; set; } = new(1.0f, 1.0f, 1.0f, 0.22f);
+    [Export] public bool RenderClickRipple { get; set; } = true;
+    [Export] public Color ClickRippleColor { get; set; } = new(0.64f, 0.88f, 1.0f, 0.38f);
+    [Export] public Color ClickRippleOutlineColor { get; set; } = new(0.92f, 0.98f, 1.0f, 0.82f);
+    [Export] public float ClickRippleDuration { get; set; } = 0.55f;
+    [Export] public float ClickRippleRadius { get; set; } = 5.0f;
+    [Export] public float ClickRippleRingWidth { get; set; } = 0.55f;
+    [Export] public float ClickRippleOriginFlashPortion { get; set; } = 0.24f;
+    [Export] public float ClickRippleOutlineWidth { get; set; } = 2.0f;
     [Export] public bool RenderVarBody { get; set; } = true;
     [Export] public bool RenderAttackRange { get; set; } = false;
     [Export] public bool RenderDetectRange { get; set; } = false;

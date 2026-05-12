@@ -28,6 +28,7 @@ public partial class VarRenderer : Control, IVarRenderer
     private readonly VarBackgroundRenderer _backgroundRenderer;
     private readonly VarMapRenderer _mapRenderer;
     private readonly VarGridRenderer _gridRenderer;
+    private readonly VarRippleRenderer _rippleRenderer;
     private readonly VarRenderStateTracker _renderStateTracker;
     private readonly VarLayerRenderer _varLayerRenderer;
     private MapData _mapData = null!;
@@ -47,6 +48,7 @@ public partial class VarRenderer : Control, IVarRenderer
         _backgroundRenderer = new VarBackgroundRenderer(_config);
         _mapRenderer = new VarMapRenderer(this, _config);
         _gridRenderer = new VarGridRenderer(this, _config);
+        _rippleRenderer = new VarRippleRenderer(this, _config);
         _renderStateTracker = new VarRenderStateTracker(this, _config);
         _varLayerRenderer = new VarLayerRenderer(this, _renderStateTracker, _config);
     }
@@ -67,6 +69,7 @@ public partial class VarRenderer : Control, IVarRenderer
         AddChild(_backgroundRenderer);
         AddChild(_mapRenderer);
         AddChild(_gridRenderer);
+        AddChild(_rippleRenderer);
         AddChild(_varLayerRenderer);
 
         MouseExited += OnMouseExited;
@@ -157,6 +160,7 @@ public partial class VarRenderer : Control, IVarRenderer
         {
             case InputEventMouseButton mouseButton:
                 UpdateHoveredGridCell(mouseButton.Position);
+                TryStartClickRipple(mouseButton);
                 break;
             case InputEventMouseMotion mouseMotion:
                 UpdateHoveredGridCell(mouseMotion.Position);
@@ -186,6 +190,7 @@ public partial class VarRenderer : Control, IVarRenderer
         {
             _renderStateTracker.Update(renderedVar, delta);
         }
+        _rippleRenderer.UpdateRipples(delta);
         QueueRenderersRedraw();
     }
 
@@ -248,6 +253,16 @@ public partial class VarRenderer : Control, IVarRenderer
             _isPanning = mouseButton.Pressed;
             AcceptEvent();
         }
+    }
+
+    private void TryStartClickRipple(InputEventMouseButton mouseButton)
+    {
+        if (mouseButton.ButtonIndex != MouseButton.Left || !mouseButton.Pressed || !HoveredGridCell.HasValue)
+        {
+            return;
+        }
+
+        _rippleRenderer.AddRipple(HoveredGridCell.Value);
     }
 
     private void HandleMouseMotion(InputEventMouseMotion mouseMotion)
@@ -397,6 +412,7 @@ public partial class VarRenderer : Control, IVarRenderer
         _backgroundRenderer.InjectConfig(config);
         _mapRenderer.InjectConfig(config);
         _gridRenderer.InjectConfig(config);
+        _rippleRenderer.InjectConfig(config);
         _renderStateTracker.InjectConfig(config);
         _varLayerRenderer.InjectConfig(config);
         QueueRenderersRedraw();
@@ -408,6 +424,7 @@ public partial class VarRenderer : Control, IVarRenderer
         _backgroundRenderer?.QueueRedraw();
         _mapRenderer?.QueueRedraw();
         _gridRenderer?.QueueRedraw();
+        _rippleRenderer?.QueueRedraw();
         _varLayerRenderer?.QueueRedraw();
     }
 

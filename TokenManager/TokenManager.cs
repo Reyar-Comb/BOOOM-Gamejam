@@ -46,6 +46,13 @@ public partial class TokenManager : Node
 		_gameData = gameData;
 	}
 
+	public void Reset()
+	{
+		ClearCostRef();
+		RefreshTokenProgress();
+		RefreshPatienceProgress();
+	}
+
 	public void ClearCostRef()
 	{
 		BarController.ClearTokenCostRef();
@@ -68,6 +75,16 @@ public partial class TokenManager : Node
 		_gameData.NumericData.Set("Patience", patience);
 		float percent = (float)patience / _gameData.NumericData.Get("MaxPatience");
 		BarController.RefreshPatienceProgress(percent);
+	}
+
+	private void RefreshTokenProgress()
+	{
+		BarController.ApplyTokenCost((float)_gameData.NumericData.Get("Token") / _gameData.NumericData.Get("MaxToken"));
+	}
+
+	private void RefreshPatienceProgress()
+	{
+		BarController.RefreshPatienceProgress((float)_gameData.NumericData.Get("Patience") / _gameData.NumericData.Get("MaxPatience"));
 	}
 
 	public void ExchangeToken()

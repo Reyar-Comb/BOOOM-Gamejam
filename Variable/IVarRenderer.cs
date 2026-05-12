@@ -8,6 +8,7 @@ public interface IVarRenderer
     bool InterpolateRenderPosition { get; set; }
 
     void SetVar(Var var);
+    void Initialize(MapData mapData);
     void ClearVar();
     void AddVar(Var var);
     void RemoveVar(Var var);

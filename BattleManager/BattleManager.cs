@@ -77,13 +77,14 @@ public partial class BattleManager : Node
 		Instance = this;
 		VarManager.SetPhysicsProcess(false);
 
-		_mapData = new MapData(60, 80);
+		_mapData = new MapData(80, 60);
 		_mapData.CreateRegions(6);
 		_gameData = new GameData();
 		VarManager.Initialize(_mapData, _gameData);
+		VarRenderer.Initialize(_mapData);
 		TokenManager.Initialize(_gameData);
 
-		SpawnEnemies(8);
+		StartWave();
 	}
 
 	public override void _Process(double delta)
@@ -143,10 +144,22 @@ public partial class BattleManager : Node
 
 	public void StartWave()
 	{
-		_gameData.SkillManager.Reset();
+		CurrentTick = 0;
+		// GameTime = 0;
+		_accumulator = 0.0;
+		_isTicking = true;
+		_isWaveFinished = false;
+		State = BattleState.Running;
+
 		ConsoleManager?.UnsubscribeAllVarEvents();
 		VarManager?.ClearAllVars();
 		VarRenderer?.ClearVars();
+
+		_gameData.Reset();
+		_gameData.SkillManager.ApplyOwnedSkills(_gameData);
+		_gameData.SkillManager.OnWaveStarted();
+
+		TokenManager?.Reset();
 		PanelNavigator?.RefreshVarList();
 
 		SpawnEnemies(8);

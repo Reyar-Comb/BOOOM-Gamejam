@@ -90,6 +90,16 @@ public class MapData
         return x >= 0 && x < Width && y >= 0 && y < Height;
     }
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public bool ContainsCell(int x, int y)
+    {
+        return IsValid(x, y);
+    }
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public bool ContainsCell(Vector2I cell)
+    {
+        return ContainsCell(cell.X, cell.Y);
+    }
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public int GetRegion(int x, int y)
     {
         return IsValid(x, y) ? _regionId[x + y * Width] : 0;

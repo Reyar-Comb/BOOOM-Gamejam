@@ -24,6 +24,7 @@
 [ext_resource type="PackedScene" uid="uid://c3p8415n1lwy1" path="res://Prefabs/VarButton/VarButton.tscn" id="11_8oyud"]
 [ext_resource type="Script" uid="uid://sa26p4j2xfk4" path="res://Utilities/PanelNavigator/PanelUnit.cs" id="11_b3sdv"]
 [ext_resource type="Shader" uid="uid://cq86ki37hsl8j" path="res://Shaders/BlinkingProgressBar.gdshader" id="11_y1mx5"]
+[ext_resource type="Resource" path="res://Variable/VarRenderer/VarRendererConfig.tres" id="17_27xwp"]
 [ext_resource type="Script" uid="uid://dmjp5qpxlfunm" path="res://Prefabs/TooltipWindow/TooltipTrigger.cs" id="17_xdr2y"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_y1mx5"]
@@ -563,6 +564,7 @@ theme_override_constants/margin_bottom = 4
 layout_mode = 2
 size_flags_vertical = 3
 script = ExtResource("6_2anr5")
+Config = ExtResource("17_27xwp")
 BattleManager = NodePath("../../../../../../../BattleManager")
 metadata/_custom_type_script = "uid://de1oryn5icnbq"
 
@@ -927,6 +929,7 @@ theme_override_colors/default_color = Color(1, 1, 1, 1)
 disabled = true
 
 [node name="VarAddUnit" type="Control" parent="MarginContainer/HBoxContainer/MarginContainer3/ChooseVar/VBoxContainer/MarginContainer2/PanelContainer/MarginContainer/PanelNavigator" unique_id=2048405454]
+visible = false
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0

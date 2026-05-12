@@ -34,12 +34,15 @@ public partial class Main : Node2D
 	{
 		_varRenderer ??= new VarRenderer
 		{
-			BodyRadius = 50.0f,
-			BodyColor = Colors.Red,
-			DirectionColor = Colors.White,
-			DirectionLength = 60.0f,
-			RenderVarBody = true,
-			RenderDirection = true
+			Config = new VarRendererConfig
+			{
+				BodyRadius = 50.0f,
+				BodyColor = Colors.Red,
+				DirectionColor = Colors.White,
+				DirectionLength = 60.0f,
+				RenderVarBody = true,
+				RenderDirection = true
+			}
 		};
 
 		if (_varRenderer.GetParent() == null)

@@ -6,6 +6,9 @@ public partial class GamePanelNavigator : PanelNavigator
 {
 	[Export]
 	public Button BackButton { get; set; }
+
+	[Export]
+	public Button AskForButton { get; set; }
 	[Export]
 	public Godot.Collections.Array<RichTextLabel> SelectedVarLabels { get; set; }
 	[Export]
@@ -56,13 +59,22 @@ public partial class GamePanelNavigator : PanelNavigator
 
 		// Int 类型变量
 		InitAddButton();
-		// Place 操作
+		
+
+		AskForButton.MouseEntered += () =>
+		{
+			BattleManager.Instance.ExchangeToken(isHovering: true);
+		};
+		AskForButton.MouseExited += () =>
+		{
+			BattleManager.Instance.ClearCostRef();
+		};
+		AskForButton.Pressed += () =>
+		{
+			BattleManager.Instance.ExchangeToken();
+		};
 		
 		var placeBtn = FindInPanel<VarButton>("VarAddUnit", "VBoxContainer/PanelContainer/PlaceButton");
-		if (placeBtn == null)
-		{
-			GD.PrintErr("PlaceButton not found in VarAddUnit panel!");
-		}
 		RegisterButton(placeBtn, "",
 			onPressed: () =>
 			{

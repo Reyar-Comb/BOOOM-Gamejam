@@ -236,16 +236,19 @@ public partial class TestChaseOutOfRange : Node2D
     {
         _varRenderer ??= new VarRenderer
         {
-            BodyRadius = 18.0f,
-            BodyColor = Colors.OrangeRed,
-            AttackRangeColor = Colors.OrangeRed,
-            DetectRangeColor = WithAlpha(Colors.OrangeRed, 0.65f),
-            DirectionColor = Colors.White,
             BattleManager = BattleManager,
-            RenderVarBody = true,
-            RenderAttackRange = true,
-            RenderDetectRange = true,
-            RenderDirection = true
+            Config = new VarRendererConfig
+            {
+                BodyRadius = 18.0f,
+                BodyColor = Colors.OrangeRed,
+                AttackRangeColor = Colors.OrangeRed,
+                DetectRangeColor = WithAlpha(Colors.OrangeRed, 0.65f),
+                DirectionColor = Colors.White,
+                RenderVarBody = true,
+                RenderAttackRange = true,
+                RenderDetectRange = true,
+                RenderDirection = true
+            }
         };
 
         if (_varRenderer.GetParent() == null)

@@ -1,0 +1,9 @@
+[gd_resource type="Resource" script_class="VarRendererConfig" format=3]
+
+[ext_resource type="Script" path="res://Variable/VarRenderer/VarRendererConfig.cs" id="1_config"]
+
+[resource]
+script = ExtResource("1_config")
+DrawBackground = true
+BackgroundColor = Color(0.078431375, 0.09019608, 0.10980392, 0.69411767)
+RenderGrid = true

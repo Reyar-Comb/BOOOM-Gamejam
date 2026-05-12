@@ -9,7 +9,7 @@
 [ext_resource type="FontFile" uid="uid://jky4nd5a8wec" path="res://assets/Fonts/Hack-BoldItalic.ttf" id="4_35cd8"]
 [ext_resource type="Script" uid="uid://01fvca8ksf16" path="res://Variable/VarManager.cs" id="5_b3sdv"]
 [ext_resource type="FontFile" uid="uid://cd6jbow8csp81" path="res://assets/Fonts/Hack-Italic.ttf" id="5_ds47p"]
-[ext_resource type="Script" uid="uid://de1oryn5icnbq" path="res://Variable/VarRenderer.cs" id="6_2anr5"]
+[ext_resource type="Script" uid="uid://de1oryn5icnbq" path="res://Variable/VarRenderer/VarRenderer.cs" id="6_2anr5"]
 [ext_resource type="Script" uid="uid://dakmgdxqi7wy" path="res://TokenManager/TokenManager.cs" id="6_2nynh"]
 [ext_resource type="FontFile" uid="uid://bo3cgu1o17h5i" path="res://assets/Fonts/AGENCYR.TTF" id="7_4bds6"]
 [ext_resource type="PackedScene" uid="uid://dhd46rm8iamsn" path="res://Prefabs/WindowPanel/WindowPanel.tscn" id="8_816xn"]
@@ -34,7 +34,7 @@ shader_parameter/empty_color = Color(1, 0.1, 0.1, 0.7)
 shader_parameter/border_color = Color(1, 1, 1, 1)
 shader_parameter/border_width = 2.0
 shader_parameter/corner_radius = 5.0
-shader_parameter/node_size = Vector2(46, 822)
+shader_parameter/node_size = Vector2(46, 710)
 shader_parameter/blink_speed = 3.0
 shader_parameter/ghost_min_alpha = 0.1
 
@@ -52,6 +52,64 @@ shader_parameter/corner_radius = 5.0
 shader_parameter/node_size = Vector2(46, 822)
 shader_parameter/blink_speed = 3.0
 shader_parameter/ghost_min_alpha = 0.1
+
+[sub_resource type="Shader" id="Shader_y1mx5"]
+code = "shader_type canvas_item;
+
+// 请在编辑器中将 ColorRect 的 Size 填入这里，或者通过脚本同步
+uniform vec2 size = vec2(200.0, 100.0);
+// 这里的半径单位是“像素”，例如 20.0 就是 20px 的圆角
+uniform float radius_px : hint_range(0.0, 500.0) = 20.0;
+
+// 圆角矩形 SDF 函数（像素空间版）
+float sdRoundedBox(vec2 p, vec2 b, float r) {
+    vec2 q = abs(p) - b + r;
+    return min(max(q.x, q.y), 0.0) + length(max(q, 0.0)) - r;
+}
+
+void fragment() {
+    // 1. 将 UV 映射到像素空间，并以中心为原点
+    // p 的范围现在是 [-(width/2), -(height/2)] 到 [(width/2), (height/2)]
+    vec2 p = (UV - 0.5) * size;
+    
+    // 2. 计算半宽半高
+    vec2 half_size = size * 0.5;
+    
+    // 3. 计算到边缘的像素距离
+    float d = sdRoundedBox(p, half_size, radius_px);
+    
+    // 4. 抗锯齿：在像素空间中，fade 值通常固定为 1.0 左右
+    float mask = 1.0 - smoothstep(-1.0, 1.0, d);
+    
+    // 5. 应用遮罩
+    COLOR.a *= mask;
+}"
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_0mgrt"]
+shader = SubResource("Shader_y1mx5")
+shader_parameter/size = Vector2(154, 84)
+shader_parameter/radius_px = 17.0000008075
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_jj1xj"]
+bg_color = Color(0, 0, 0, 0.10980392)
+corner_radius_top_left = 16
+corner_radius_top_right = 16
+corner_radius_bottom_right = 16
+corner_radius_bottom_left = 16
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_27xwp"]
+bg_color = Color(0, 0, 0, 0.34509805)
+corner_radius_top_left = 16
+corner_radius_top_right = 16
+corner_radius_bottom_right = 16
+corner_radius_bottom_left = 16
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_mwq4y"]
+bg_color = Color(1, 1, 1, 0)
+corner_radius_top_left = 16
+corner_radius_top_right = 16
+corner_radius_bottom_right = 16
+corner_radius_bottom_left = 16
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_y1mx5"]
 bg_color = Color(0.6, 0.6, 0.6, 0)
@@ -274,7 +332,6 @@ bg_color = Color(0.31764707, 0.31764707, 0.31764707, 0)
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_b3sdv"]
 
 [node name="GameScene" type="Node2D" unique_id=1582491454]
-position = Vector2(-1, 0)
 script = ExtResource("1_wlq8m")
 
 [node name="Bg" parent="." unique_id=61670994 instance=ExtResource("2_4bds6")]
@@ -298,7 +355,7 @@ script = ExtResource("5_b3sdv")
 
 [node name="TokenManager" type="Node" parent="." unique_id=1838876679 node_paths=PackedStringArray("BarController")]
 script = ExtResource("6_2nynh")
-BarController = NodePath("../MarginContainer/HBoxContainer/MarginContainer/VBoxContainer/HBoxContainer/WindowPanel/MarginContainer/HBoxContainer2/BarController")
+BarController = NodePath("../MarginContainer/HBoxContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/WindowPanel/MarginContainer/HBoxContainer2/BarController")
 
 [node name="MarginContainer" type="MarginContainer" parent="." unique_id=347560611]
 anchors_preset = 15
@@ -348,29 +405,34 @@ theme_override_constants/separation = 20
 [node name="WindowPanel2" parent="MarginContainer/HBoxContainer/MarginContainer/VBoxContainer/HBoxContainer" unique_id=332280166 instance=ExtResource("8_816xn")]
 layout_mode = 2
 
-[node name="WindowPanel" parent="MarginContainer/HBoxContainer/MarginContainer/VBoxContainer/HBoxContainer" unique_id=1680672794 instance=ExtResource("8_816xn")]
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/HBoxContainer/MarginContainer/VBoxContainer/HBoxContainer" unique_id=476314208]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 20
+
+[node name="WindowPanel" parent="MarginContainer/HBoxContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer" unique_id=1680672794 instance=ExtResource("8_816xn")]
 layout_mode = 2
 
-[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/HBoxContainer/MarginContainer/VBoxContainer/HBoxContainer/WindowPanel" unique_id=1045832322]
+[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/HBoxContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/WindowPanel" unique_id=1045832322]
 layout_mode = 2
 theme_override_constants/margin_left = 10
 theme_override_constants/margin_right = 10
 
-[node name="HBoxContainer2" type="HBoxContainer" parent="MarginContainer/HBoxContainer/MarginContainer/VBoxContainer/HBoxContainer/WindowPanel/MarginContainer" unique_id=908676761]
+[node name="HBoxContainer2" type="HBoxContainer" parent="MarginContainer/HBoxContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/WindowPanel/MarginContainer" unique_id=908676761]
 layout_mode = 2
 
-[node name="BarController" type="HBoxContainer" parent="MarginContainer/HBoxContainer/MarginContainer/VBoxContainer/HBoxContainer/WindowPanel/MarginContainer/HBoxContainer2" unique_id=983033097 node_paths=PackedStringArray("PatienceBar", "TokenBar")]
+[node name="BarController" type="HBoxContainer" parent="MarginContainer/HBoxContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/WindowPanel/MarginContainer/HBoxContainer2" unique_id=983033097 node_paths=PackedStringArray("PatienceBar", "TokenBar")]
 layout_mode = 2
 size_flags_horizontal = 3
 script = ExtResource("9_dkdgh")
 PatienceBar = NodePath("VBoxContainer2/MarginContainer/PatienceBar")
 TokenBar = NodePath("VBoxContainer3/MarginContainer/TokenBar")
 
-[node name="VBoxContainer2" type="VBoxContainer" parent="MarginContainer/HBoxContainer/MarginContainer/VBoxContainer/HBoxContainer/WindowPanel/MarginContainer/HBoxContainer2/BarController" unique_id=568218871]
+[node name="VBoxContainer2" type="VBoxContainer" parent="MarginContainer/HBoxContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/WindowPanel/MarginContainer/HBoxContainer2/BarController" unique_id=568218871]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/HBoxContainer/MarginContainer/VBoxContainer/HBoxContainer/WindowPanel/MarginContainer/HBoxContainer2/BarController/VBoxContainer2" unique_id=930903882]
+[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/HBoxContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/WindowPanel/MarginContainer/HBoxContainer2/BarController/VBoxContainer2" unique_id=930903882]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
@@ -379,12 +441,12 @@ theme_override_constants/margin_top = 25
 theme_override_constants/margin_right = 8
 theme_override_constants/margin_bottom = 25
 
-[node name="PatienceBar" type="ColorRect" parent="MarginContainer/HBoxContainer/MarginContainer/VBoxContainer/HBoxContainer/WindowPanel/MarginContainer/HBoxContainer2/BarController/VBoxContainer2/MarginContainer" unique_id=377475219]
+[node name="PatienceBar" type="ColorRect" parent="MarginContainer/HBoxContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/WindowPanel/MarginContainer/HBoxContainer2/BarController/VBoxContainer2/MarginContainer" unique_id=377475219]
 material = SubResource("ShaderMaterial_y1mx5")
 layout_mode = 2
 color = Color(0.5669666, 0.5669666, 0.5669666, 1)
 
-[node name="RichTextLabel" type="RichTextLabel" parent="MarginContainer/HBoxContainer/MarginContainer/VBoxContainer/HBoxContainer/WindowPanel/MarginContainer/HBoxContainer2/BarController/VBoxContainer2/MarginContainer" unique_id=579855466]
+[node name="RichTextLabel" type="RichTextLabel" parent="MarginContainer/HBoxContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/WindowPanel/MarginContainer/HBoxContainer2/BarController/VBoxContainer2/MarginContainer" unique_id=579855466]
 layout_mode = 2
 theme_override_fonts/normal_font = ExtResource("9_3yp31")
 theme_override_font_sizes/normal_font_size = 40
@@ -394,11 +456,11 @@ scroll_active = false
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="VBoxContainer3" type="VBoxContainer" parent="MarginContainer/HBoxContainer/MarginContainer/VBoxContainer/HBoxContainer/WindowPanel/MarginContainer/HBoxContainer2/BarController" unique_id=2078566339]
+[node name="VBoxContainer3" type="VBoxContainer" parent="MarginContainer/HBoxContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/WindowPanel/MarginContainer/HBoxContainer2/BarController" unique_id=2078566339]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/HBoxContainer/MarginContainer/VBoxContainer/HBoxContainer/WindowPanel/MarginContainer/HBoxContainer2/BarController/VBoxContainer3" unique_id=593013154]
+[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/HBoxContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/WindowPanel/MarginContainer/HBoxContainer2/BarController/VBoxContainer3" unique_id=593013154]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
@@ -407,12 +469,12 @@ theme_override_constants/margin_top = 25
 theme_override_constants/margin_right = 15
 theme_override_constants/margin_bottom = 25
 
-[node name="TokenBar" type="ColorRect" parent="MarginContainer/HBoxContainer/MarginContainer/VBoxContainer/HBoxContainer/WindowPanel/MarginContainer/HBoxContainer2/BarController/VBoxContainer3/MarginContainer" unique_id=2036310930]
+[node name="TokenBar" type="ColorRect" parent="MarginContainer/HBoxContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/WindowPanel/MarginContainer/HBoxContainer2/BarController/VBoxContainer3/MarginContainer" unique_id=2036310930]
 material = SubResource("ShaderMaterial_jj1xj")
 layout_mode = 2
 color = Color(0.5669666, 0.5669666, 0.5669666, 1)
 
-[node name="RichTextLabel" type="RichTextLabel" parent="MarginContainer/HBoxContainer/MarginContainer/VBoxContainer/HBoxContainer/WindowPanel/MarginContainer/HBoxContainer2/BarController/VBoxContainer3/MarginContainer" unique_id=175776503]
+[node name="RichTextLabel" type="RichTextLabel" parent="MarginContainer/HBoxContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/WindowPanel/MarginContainer/HBoxContainer2/BarController/VBoxContainer3/MarginContainer" unique_id=175776503]
 layout_mode = 2
 theme_override_fonts/normal_font = ExtResource("9_3yp31")
 theme_override_font_sizes/normal_font_size = 40
@@ -424,6 +486,42 @@ N"
 scroll_active = false
 horizontal_alignment = 1
 vertical_alignment = 1
+
+[node name="WindowPanel2" parent="MarginContainer/HBoxContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer" unique_id=1715072893 instance=ExtResource("8_816xn")]
+layout_mode = 2
+size_flags_stretch_ratio = 0.12
+
+[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/HBoxContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/WindowPanel2" unique_id=716730478]
+layout_mode = 2
+theme_override_constants/margin_left = 4
+theme_override_constants/margin_top = 4
+theme_override_constants/margin_right = 4
+theme_override_constants/margin_bottom = 4
+
+[node name="ColorRect" type="ColorRect" parent="MarginContainer/HBoxContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/WindowPanel2/MarginContainer" unique_id=345710773]
+material = SubResource("ShaderMaterial_0mgrt")
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+color = Color(1, 0.14509805, 0.29411766, 0.7529412)
+
+[node name="RichTextLabel" type="RichTextLabel" parent="MarginContainer/HBoxContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/WindowPanel2/MarginContainer" unique_id=1980417073]
+layout_mode = 2
+theme_override_colors/default_color = Color(1, 1, 1, 0.8980392)
+theme_override_fonts/bold_font = ExtResource("2_vecup")
+theme_override_font_sizes/bold_font_size = 30
+bbcode_enabled = true
+text = "[b]Ask For Token[/b]
+"
+scroll_active = false
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="AskForButton" type="Button" parent="MarginContainer/HBoxContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/WindowPanel2/MarginContainer" unique_id=1926974332]
+layout_mode = 2
+theme_override_styles/normal = SubResource("StyleBoxFlat_jj1xj")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_27xwp")
+theme_override_styles/hover = SubResource("StyleBoxFlat_mwq4y")
 
 [node name="MarginContainer2" type="MarginContainer" parent="MarginContainer/HBoxContainer" unique_id=337682986]
 layout_mode = 2
@@ -604,8 +702,11 @@ theme_override_constants/separation = 12
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_8oyud")
 
-[node name="SelectVarButton" parent="MarginContainer/HBoxContainer/MarginContainer3/ChooseVar/VBoxContainer/MarginContainer2/PanelContainer/MarginContainer/PanelNavigator/VarUnit/VBoxContainer/PanelContainer" unique_id=1993803341 instance=ExtResource("11_8oyud")]
+[node name="SelectVarButton" parent="MarginContainer/HBoxContainer/MarginContainer3/ChooseVar/VBoxContainer/MarginContainer2/PanelContainer/MarginContainer/PanelNavigator/VarUnit/VBoxContainer/PanelContainer" unique_id=1942279699 instance=ExtResource("11_8oyud")]
 layout_mode = 2
+
+[node name="ColorRect" parent="MarginContainer/HBoxContainer/MarginContainer3/ChooseVar/VBoxContainer/MarginContainer2/PanelContainer/MarginContainer/PanelNavigator/VarUnit/VBoxContainer/PanelContainer/SelectVarButton" index="0" unique_id=1894200065]
+color = Color(1, 1, 1, 1)
 
 [node name="RichTextLabel" parent="MarginContainer/HBoxContainer/MarginContainer3/ChooseVar/VBoxContainer/MarginContainer2/PanelContainer/MarginContainer/PanelNavigator/VarUnit/VBoxContainer/PanelContainer/SelectVarButton" index="1" unique_id=1388884413]
 text = "[b]+[/b]

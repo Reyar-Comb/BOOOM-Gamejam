@@ -104,6 +104,7 @@ public partial class BattleManager : Node
 	{
 		if (_isWaveFinished)
 		{
+			FinishWave();
 			StartWave();
 			_isWaveFinished = false;
 		}
@@ -136,7 +137,7 @@ public partial class BattleManager : Node
 		}
 	}
 
-	public String GetTimeString()
+	public string GetTimeString()
 	{
 		TimeSpan timeSpan = TimeSpan.FromMilliseconds(GameTime);
 		return timeSpan.ToString(@"mm\:ss");
@@ -162,6 +163,18 @@ public partial class BattleManager : Node
 		TokenManager?.Reset();
 
 		SpawnEnemies(8);
+	}
+	private void FinishWave()
+	{
+		List<Upgrade> choices = _gameData.GetRandomSkillChoices();
+		if (choices.Count == 0)
+		{
+			return;
+		}
+
+		Upgrade upgrade = choices[Random.Shared.Next(choices.Count)];
+		upgrade.Apply(_gameData);
+		GD.Print($"Wave finished. Applied upgrade: {upgrade.Name}");
 	}
 	private Color GetRenderColor(VarStats.VarType type, VarStats.Team team)
 	{
@@ -213,7 +226,7 @@ public partial class BattleManager : Node
 			TokenManager.RegisterVar(var);
 		}
 
-		VarManager.AddVar(var);
+		VarManager.AddVar(var, team == VarStats.Team.Friendly);
 
 		Color color = GetRenderColor(type, team);
 		VarRenderer.AddVar(var, color);

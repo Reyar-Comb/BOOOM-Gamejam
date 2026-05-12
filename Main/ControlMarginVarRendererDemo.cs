@@ -31,16 +31,19 @@ public partial class ControlMarginVarRendererDemo : Control
             Name = "VarRenderer",
             SizeFlagsHorizontal = SizeFlags.ExpandFill,
             SizeFlagsVertical = SizeFlags.ExpandFill,
-            DrawBackground = true,
-            RenderGrid = true,
-            RenderVarBody = true,
-            RenderAttackRange = true,
-            RenderDetectRange = true,
-            RenderDirection = true,
-            BodyRadius = 18.0f,
-            DirectionLength = 42.0f,
-            ViewCenterWorld = Grid.GridToWorld(1, 1),
-            Zoom = 1.0f
+            Config = new VarRendererConfig
+            {
+                DrawBackground = true,
+                RenderGrid = true,
+                RenderVarBody = true,
+                RenderAttackRange = true,
+                RenderDetectRange = true,
+                RenderDirection = true,
+                BodyRadius = 18.0f,
+                DirectionLength = 42.0f,
+                ViewCenterWorld = Grid.GridToWorld(1, 1),
+                Zoom = 1.0f
+            }
         };
         marginContainer.AddChild(_varRenderer);
     }

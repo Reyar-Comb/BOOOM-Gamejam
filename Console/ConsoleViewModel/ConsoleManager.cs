@@ -77,7 +77,8 @@ public partial class ConsoleManager : Node
 		var callables = _logSources[v];
 		v.Disconnect(Var.SignalName.OnDetected, callables[0]);
 		v.Disconnect(Var.SignalName.OnAttacked, callables[1]);
-		v.Stats.Disconnect(VarStats.SignalName.OnDeath, callables[2]);
+		v.Stats?.Disconnect(VarStats.SignalName.OnDeath, callables[2]);
+
 
 		_logSources.Remove(v);
 	}

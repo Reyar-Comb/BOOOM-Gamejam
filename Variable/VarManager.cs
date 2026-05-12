@@ -134,11 +134,27 @@ public partial class VarManager : Node
         var.IsDead = true;
     }
 
-    public int CountVar(VarStats.VarType type)
+    public enum CountQueryType
+    {
+        Total,
+        Friendly,
+        Hostile
+    }
+    public int CountVar(VarStats.VarType type, CountQueryType queryType)
     {
         int count = 0;
         foreach (var var in Vars)
         {
+            switch (queryType)
+            {
+                case CountQueryType.Friendly:
+                    if (var.Stats.VarTeam != VarStats.Team.Friendly) continue;
+                    break;
+                case CountQueryType.Hostile:
+                    if (var.Stats.VarTeam != VarStats.Team.Hostile) continue;
+                    break;
+            }
+
             if (var.Stats.Type == type)
             {
                 count++;

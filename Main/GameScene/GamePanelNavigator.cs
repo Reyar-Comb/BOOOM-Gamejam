@@ -144,6 +144,8 @@ public partial class GamePanelNavigator : PanelNavigator
 
 		foreach (Var var in VarManager.Vars)
 		{
+			if (var.Stats.VarTeam != VarStats.Team.Friendly) continue;
+			
 			VarButton varButton = _buttonScene.Instantiate<VarButton>();
 			CallDeferred("InstantiateVarButton", varButton, var);
 		}

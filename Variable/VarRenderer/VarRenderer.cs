@@ -95,6 +95,7 @@ public partial class VarRenderer : Control, IVarRenderer
     public void Initialize(MapData mapData)
     {
         _mapData = mapData;
+        _mapRenderer.RestartReveal();
         ClampZoomToMapBounds();
         ClampViewCenterToMapBounds();
         QueueRenderersRedraw();
@@ -190,6 +191,7 @@ public partial class VarRenderer : Control, IVarRenderer
         {
             _renderStateTracker.Update(renderedVar, delta);
         }
+        _mapRenderer.UpdateReveal(delta);
         _rippleRenderer.UpdateRipples(delta);
         QueueRenderersRedraw();
     }

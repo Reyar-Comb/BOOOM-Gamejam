@@ -11,6 +11,10 @@ public partial class VarRendererConfig : Resource
     [Export] public Color BackgroundColor { get; set; } = new(0.08f, 0.09f, 0.11f);
     [Export] public bool RenderMapRegions { get; set; } = true;
     [Export] public bool RenderMapBridges { get; set; } = true;
+    [Export] public bool RenderMapFillReveal { get; set; } = true;
+    [Export] public Color MapFillRevealStartColor { get; set; } = new(0.02f, 0.025f, 0.035f, 0.65f);
+    [Export] public float MapFillRevealCellDelay { get; set; } = 0.001f;
+    [Export] public float MapFillRevealCellDuration { get; set; } = 0.16f;
     [Export] public Color EmptyRegionColor { get; set; } = new(0.16f, 0.17f, 0.18f);
     [Export] public float RegionFillAlpha { get; set; } = 0.82f;
     [Export] public Color BridgeColor { get; set; } = new(1.0f, 0.97f, 0.82f);

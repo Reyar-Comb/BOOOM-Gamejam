@@ -67,6 +67,7 @@ public class MapData
     private readonly int _regionSeedTileDistance;
     private RandomNumberGenerator _rg;
     private NoiseTexture2D _noise;
+    private List<List<Vector2I>> _regionTiles = new();
     public MapData(int width, int height, int regionSeedTileDistance = 8)
     {
         Width = width;
@@ -109,8 +110,25 @@ public class MapData
     {
         if (!IsValid(x, y)) return;
         _regionId[x + y * Width] = regionId;
+        AddRegionTile(regionId, new Vector2I(x, y));
     }
-    private void ResetRegion()
+
+    private void AddRegionTile(int regionId, Vector2I cell)
+    {
+        if (regionId <= 0) return;
+        EnsureRegionTileListCount(regionId);
+        _regionTiles[regionId - 1].Add(cell);
+    }
+
+    private void EnsureRegionTileListCount(int regionCount)
+    {
+        for (int i = _regionTiles.Count; i < regionCount; i++)
+        {
+            _regionTiles.Add(new List<Vector2I>());
+        }
+    }
+
+    public void Reset()
     {
         for (int i = 0; i < _regionId.Length; i++)
         {
@@ -118,13 +136,22 @@ public class MapData
             _isBridge[i] = false;
         }
         _bridges.Clear();
+        foreach (List<Vector2I> tiles in _regionTiles)
+        {
+            tiles.Clear();
+        }
+        foreach (PriorityQueue<TileExpansion, float> decider in _nextTileDeciders)
+        {
+            decider.Clear();
+        }
     }
     public void CreateRegions(int regionCount, float randomness = 0.5f)
     {
-        ResetRegion();
+        Reset();
 
         regionCount = Math.Max(regionCount, 2);
         EnsureDeciderCount(regionCount);
+        EnsureRegionTileListCount(regionCount);
 
         Vector2I[] regionSeedPositions = new Vector2I[regionCount];
         CreateSeed(regionSeedPositions, 1, new Vector2I(0, Height / 2));
@@ -314,5 +341,23 @@ public class MapData
     {
         if (!IsValid(cell.X, cell.Y)) return;
         _isBridge[cell.X + cell.Y * Width] = true;
+    }
+    public Vector2I GetRandomPositionInRegion(int regionId)
+    {
+        int regionIndex = regionId - 1;
+        if (regionIndex < 0 || regionIndex >= _regionTiles.Count)
+        {
+            GD.PushError("Region id must match an existing region.");
+            return Vector2I.Zero;
+        }
+
+        List<Vector2I> tiles = _regionTiles[regionIndex];
+        if (tiles.Count == 0)
+        {
+            GD.PushError($"Region {regionId} has no tiles.");
+            return Vector2I.Zero;
+        }
+
+        return tiles[_rg.RandiRange(0, tiles.Count - 1)];
     }
 }

@@ -145,10 +145,14 @@ public partial class Var : RefCounted, ICleanable
         GameData.SkillManager.OnBeforeAttack(atkInfo);
         int finalDamage = atkInfo.Damage;
 
-        //directionFactor is in [1, 2], 1 if attacked from front, 2 if from back.
-        Vector2 facingDirection = Stats.Direction;
-        float directionFactor = atkInfo.GetFromDirection(Stats.Position).Dot(facingDirection) * -0.5f + 1.5f;
-        finalDamage = (int)(finalDamage * directionFactor);
+        // directionFactor is in [1, 2], 1 if attacked from front, 2 if from back.
+        // Vector2 facingDirection = Stats.Direction;
+        // float directionFactor = atkInfo.GetFromDirection(Stats.Position).Dot(facingDirection) * -0.5f + 1.5f;
+        // if (Stats.Type == VarStats.VarType.Dummy)
+        // {
+        //     directionFactor = 1f;
+        // }
+        // finalDamage = (int)(finalDamage * directionFactor);
         finalDamage = Math.Max(0, finalDamage - atkInfo.Defense);
         
         if (!_historyAttackers.Contains(atkInfo.Source))

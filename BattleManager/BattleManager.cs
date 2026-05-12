@@ -132,12 +132,9 @@ public partial class BattleManager : Node
 		_accumulator = 0.0;
 		State = BattleState.BeforeWaveEnd;
 
-		await WaitSeconds(WaveFinishedDelay);
-
-		FinishWave();
+		await FinishWave();
 		State = BattleState.Choice;
-		ChooseUpgrades();
-		await WaitSeconds(SkillChoiceDelay);
+		await ChooseUpgrades();
 
 		StartWave();
 		_isWaveFinished = false;
@@ -200,17 +197,19 @@ public partial class BattleManager : Node
 
 		SpawnEnemies(8);
 	}
-	private void FinishWave()
+	private async Task FinishWave()
 	{
-		
+		await WaitSeconds(WaveFinishedDelay);
 	}
-	private void ChooseUpgrades()
+	private async Task ChooseUpgrades()
 	{
 		List<Upgrade> choices = _gameData.GetRandomSkillChoices();
 		if (choices.Count == 0)
 		{
 			return;
 		}
+
+		await WaitSeconds(SkillChoiceDelay);
 
 		Upgrade upgrade = choices[Random.Shared.Next(choices.Count)];
 		upgrade.Apply(_gameData);

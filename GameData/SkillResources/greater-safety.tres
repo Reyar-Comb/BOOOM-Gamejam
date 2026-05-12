@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="SkillResource" format=3 uid="uid://dlsgi6eg6g05n"]
+
+[ext_resource type="Script" uid="uid://uv786iry0jub" path="res://GameData/SkillResource.cs" id="1"]
+
+[resource]
+script = ExtResource("1")
+Name = "greater-safety"
+Description = "Increases defense of created vars."
+Values = Dictionary[String, int]({
+"DefenseBonus": 2
+})

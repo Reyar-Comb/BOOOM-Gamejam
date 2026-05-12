@@ -82,14 +82,29 @@ public partial class VarManager : Node
             var.FrameUpdate(delta);
         }
     }
-    public void AddVar(Var var)
+    public void AddVar(Var var, bool applyGameData = true)
     {
         Vars.Add(var);
         ConnectOnDeath(var);
 
         var.Initialize(_sharedBlackboard);
-        var.InitStatsWithGameData(_gameData);
-        _gameData.SkillManager.OnVarCreated(new VarCreationInfo { Var = var });
+        if (applyGameData)
+        {
+            var.InitStatsWithGameData(_gameData);
+            _gameData.SkillManager.OnVarCreated(new VarCreationInfo { Var = var });
+        }
+    }
+
+    public void ClearAllVars()
+    {
+        foreach (Var var in Vars)
+        {
+            DisconnectOnDeath(var);
+            var.Cleanup();
+        }
+
+        Vars.Clear();
+        _onDeathCallablesByVar.Clear();
     }
 
     private void ConnectOnDeath(Var var)
@@ -119,11 +134,27 @@ public partial class VarManager : Node
         var.IsDead = true;
     }
 
-    public int CountVar(VarStats.VarType type)
+    public enum CountQueryType
+    {
+        Total,
+        Friendly,
+        Hostile
+    }
+    public int CountVar(VarStats.VarType type, CountQueryType queryType)
     {
         int count = 0;
         foreach (var var in Vars)
         {
+            switch (queryType)
+            {
+                case CountQueryType.Friendly:
+                    if (var.Stats.VarTeam != VarStats.Team.Friendly) continue;
+                    break;
+                case CountQueryType.Hostile:
+                    if (var.Stats.VarTeam != VarStats.Team.Hostile) continue;
+                    break;
+            }
+
             if (var.Stats.Type == type)
             {
                 count++;

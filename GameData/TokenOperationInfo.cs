@@ -5,10 +5,10 @@ public class TokenOperationInfo
         CreateVar,
         MoveVar,
         QueryVarLocation,
-        QueryVarHealth,
-        QueryVarStatus
+        QueryVarHealth
     }
 
     public OperationType Type { get; set; }
     public int TokenCost { get; set; }
+    public bool ShowOnly { get; set; }
 }

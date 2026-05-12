@@ -1,0 +1,7 @@
+[gd_resource type="Resource" script_class="VarRange" format=3 uid="uid://8ar0b7rcvl0h"]
+
+[ext_resource type="Script" uid="uid://b0lmntoimfei1" path="res://Variable/VarRange.cs" id="1_b0efw"]
+
+[resource]
+script = ExtResource("1_b0efw")
+metadata/_custom_type_script = "uid://b0lmntoimfei1"

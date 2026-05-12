@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="SkillResource" format=3 uid="uid://drdt2schrtuf8"]
+
+[ext_resource type="Script" uid="uid://uv786iry0jub" path="res://GameData/SkillResource.cs" id="1"]
+
+[resource]
+script = ExtResource("1")
+Name = "crowd-of-char"
+Rarity = 2
+Values = Dictionary[String, int]({
+"DamageBonusPerCharAttacker": 1
+})

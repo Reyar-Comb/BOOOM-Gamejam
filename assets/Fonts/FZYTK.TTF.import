@@ -2,13 +2,13 @@
 
 importer="font_data_dynamic"
 type="FontFile"
-uid="uid://cd6jbow8csp81"
-path="res://.godot/imported/Hack-Italic.ttf-aa3f4e57176acf06e4e8b87676afffbc.fontdata"
+uid="uid://0id83sf6l5jq"
+path="res://.godot/imported/FZYTK.TTF-868e403c2405c2321e94eebe58b0d82f.fontdata"
 
 [deps]
 
-source_file="res://assets/Hack-Italic.ttf"
-dest_files=["res://.godot/imported/Hack-Italic.ttf-aa3f4e57176acf06e4e8b87676afffbc.fontdata"]
+source_file="res://assets/Fonts/FZYTK.TTF"
+dest_files=["res://.godot/imported/FZYTK.TTF-868e403c2405c2321e94eebe58b0d82f.fontdata"]
 
 [params]
 

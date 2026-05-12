@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="SkillResource" format=3 uid="uid://dwkvgjf4rslcv"]
+
+[ext_resource type="Script" uid="uid://uv786iry0jub" path="res://GameData/SkillResource.cs" id="1"]
+
+[resource]
+script = ExtResource("1")
+Name = "friend-of-classes"
+Description = "Vars gain fixed positive stats when entering a new region for the first time."
+Rarity = 2
+Values = Dictionary[String, int]({
+"AttackBonus": 2,
+"AttackSpeedBonus": 0,
+"DefenseBonus": 1,
+"HealthBonus": 10,
+"MoveSpeedBonus": 1
+})

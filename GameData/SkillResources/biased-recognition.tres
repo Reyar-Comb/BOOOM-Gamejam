@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="SkillResource" format=3 uid="uid://cypo6yyra6t38"]
+
+[ext_resource type="Script" uid="uid://uv786iry0jub" path="res://GameData/SkillResource.cs" id="1"]
+
+[resource]
+script = ExtResource("1")
+Name = "biased-recognition"
+Description = "Greatly reduces token costs for every operation at the start of each wave, but repeated use of the same operation increases its cost."
+Rarity = 2
+Values = Dictionary[String, int]({
+"InitialTokenCostReduction": 10,
+"ReductionLossPerOperation": 1
+})

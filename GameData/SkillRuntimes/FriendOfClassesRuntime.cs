@@ -3,9 +3,13 @@ using System.Collections.Generic;
 
 public class FriendOfClassesRuntime : ISkillRuntime
 {
-    private const float StatMultiplier = 1.1f;
-
+    private readonly SkillResource _resource;
     private readonly Dictionary<ulong, HashSet<int>> _visitedRegionsByVar = new();
+
+    public FriendOfClassesRuntime(SkillResource resource)
+    {
+        _resource = resource;
+    }
 
     public void OnWaveStarted()
     {
@@ -52,29 +56,30 @@ public class FriendOfClassesRuntime : ISkillRuntime
         return visitedRegions;
     }
 
-    private static void BoostStats(VarStats stats)
+    private void BoostStats(VarStats stats)
     {
         int previousMaxHealth = stats.MaxHealth;
-        stats.MaxHealth = BoostPositiveInt(stats.MaxHealth);
+        stats.MaxHealth = AddPositiveInt(stats.MaxHealth, HealthBonus);
         stats.CurrentHealth += stats.MaxHealth - previousMaxHealth;
-        stats.AttackDamage = BoostPositiveInt(stats.AttackDamage);
-        stats.Defense = BoostPositiveInt(stats.Defense);
-        stats.MoveSpeed = BoostPositiveFloat(stats.MoveSpeed);
-        stats.AttackSpeedMult = BoostPositiveFloat(stats.AttackSpeedMult);
+        stats.AttackDamage = AddPositiveInt(stats.AttackDamage, AttackBonus);
+        stats.Defense = AddPositiveInt(stats.Defense, DefenseBonus);
+        stats.MoveSpeed = AddPositiveFloat(stats.MoveSpeed, MoveSpeedBonus);
+        stats.AttackSpeedMult = AddPositiveFloat(stats.AttackSpeedMult, AttackSpeedBonus);
     }
 
-    private static int BoostPositiveInt(int value)
+    private static int AddPositiveInt(int value, int bonus)
     {
-        if (value <= 0)
-        {
-            return value;
-        }
-
-        return Math.Max(value + 1, (int)Math.Ceiling(value * StatMultiplier));
+        return value <= 0 ? value : value + bonus;
     }
 
-    private static float BoostPositiveFloat(float value)
+    private static float AddPositiveFloat(float value, float bonus)
     {
-        return value <= 0f ? value : value * StatMultiplier;
+        return value <= 0f ? value : value + bonus;
     }
+
+    private int HealthBonus => (int)_resource.GetValue("HealthBonus");
+    private int AttackBonus => (int)_resource.GetValue("AttackBonus");
+    private int DefenseBonus => (int)_resource.GetValue("DefenseBonus");
+    private float MoveSpeedBonus => _resource.GetValue("MoveSpeedBonus");
+    private float AttackSpeedBonus => _resource.GetValue("AttackSpeedBonus");
 }

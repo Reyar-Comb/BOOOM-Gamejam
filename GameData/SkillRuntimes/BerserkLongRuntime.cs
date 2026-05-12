@@ -5,6 +5,10 @@ using System.Linq;
 
 public class BerserkLongRuntime : ISkillRuntime
 {
+    public BerserkLongRuntime(SkillResource resource)
+    {
+    }
+
     public void OnBeforeAttack(AttackInfo info)
     {
         if (IsBerserk(info?.Source, info))

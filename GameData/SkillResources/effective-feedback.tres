@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="SkillResource" format=3 uid="uid://dn8y4ix77rjek"]
+
+[ext_resource type="Script" uid="uid://uv786iry0jub" path="res://GameData/SkillResource.cs" id="1"]
+
+[resource]
+script = ExtResource("1")
+Name = "effective-feedback"
+Description = "Reduces token cost when querying or commanding vars by a fixed amount."
+Values = Dictionary[String, int]({
+"CommandTokenCostReduction": 1
+})

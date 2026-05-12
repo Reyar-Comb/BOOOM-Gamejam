@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="SkillResource" format=3 uid="uid://ulke0f2qcedh"]
+
+[ext_resource type="Script" uid="uid://uv786iry0jub" path="res://GameData/SkillResource.cs" id="1"]
+
+[resource]
+script = ExtResource("1")
+Name = "growing-int"
+Description = "Each created Int randomly increases health, attack, or defense for future Int vars."
+Rarity = 2
+Values = Dictionary[String, int]({
+"AttackBonusPerGrowth": 1,
+"DefenseBonusPerGrowth": 1,
+"HealthBonusPerGrowth": 1
+})

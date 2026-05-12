@@ -1,7 +1,6 @@
 [gd_scene format=3 uid="uid://dj4n7p74m5wpu"]
 
 [ext_resource type="Shader" uid="uid://cmtfcbu6k5nsn" path="res://Shaders/CardScene.gdshader" id="1_byatl"]
-[ext_resource type="PackedScene" uid="uid://cmfcqmhv4puv3" path="res://Main/GameScene/BG/BG.tscn" id="1_i30qx"]
 [ext_resource type="PackedScene" uid="uid://d0xq4j2ohsk2q" path="res://Main/GameScene/GameScene.tscn" id="1_k72b0"]
 [ext_resource type="Script" uid="uid://dxmg6qq286ydp" path="res://Main/MainGame/SubView/sub_viewport_container.gd" id="2_i30qx"]
 
@@ -13,9 +12,6 @@ shader_parameter/fov = 0.010000000475
 [node name="MainGame" type="Node2D" unique_id=67133812]
 
 [node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=1860306869]
-
-[node name="Bg" parent="CanvasLayer" unique_id=61670994 instance=ExtResource("1_i30qx")]
-visible = false
 
 [node name="SubViewportContainer" type="SubViewportContainer" parent="CanvasLayer" unique_id=2120081323]
 material = SubResource("ShaderMaterial_byatl")

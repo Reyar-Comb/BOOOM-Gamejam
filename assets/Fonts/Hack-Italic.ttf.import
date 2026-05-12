@@ -2,13 +2,13 @@
 
 importer="font_data_dynamic"
 type="FontFile"
-uid="uid://lthhn5f55vvg"
-path="res://.godot/imported/AGENCYB.TTF-1cbfaa993932d185c3e94c73de2e4885.fontdata"
+uid="uid://cd6jbow8csp81"
+path="res://.godot/imported/Hack-Italic.ttf-2179ed0b84d6926a2396942c7db30a36.fontdata"
 
 [deps]
 
-source_file="res://assets/AGENCYB.TTF"
-dest_files=["res://.godot/imported/AGENCYB.TTF-1cbfaa993932d185c3e94c73de2e4885.fontdata"]
+source_file="res://assets/Fonts/Hack-Italic.ttf"
+dest_files=["res://.godot/imported/Hack-Italic.ttf-2179ed0b84d6926a2396942c7db30a36.fontdata"]
 
 [params]
 

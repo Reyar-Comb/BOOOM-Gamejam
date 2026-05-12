@@ -4,9 +4,15 @@ using System.Collections.Generic;
 
 public class GrowingIntRuntime : ISkillRuntime
 {
+    private readonly SkillResource _resource;
     private int _healthBonus;
     private int _attackBonus;
     private int _defenseBonus;
+
+    public GrowingIntRuntime(SkillResource resource)
+    {
+        _resource = resource;
+    }
 
     public void OnVarCreated(VarCreationInfo info)
     {
@@ -37,13 +43,13 @@ public class GrowingIntRuntime : ISkillRuntime
         switch (Random.Shared.Next(3))
         {
             case 0:
-                _healthBonus++;
+                _healthBonus += (int)_resource.GetValue("HealthBonusPerGrowth");
                 break;
             case 1:
-                _attackBonus++;
+                _attackBonus += (int)_resource.GetValue("AttackBonusPerGrowth");
                 break;
             case 2:
-                _defenseBonus++;
+                _defenseBonus += (int)_resource.GetValue("DefenseBonusPerGrowth");
                 break;
         }
     }

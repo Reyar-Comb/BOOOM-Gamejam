@@ -57,10 +57,10 @@ public partial class VarStats : Resource
         set
         {
             field = value;
-            if (field <= 0 && !IsDead)
+            if (field <= 0 && !_isDead)
             {
                 EmitSignal(SignalName.OnDeath);
-                IsDead = true;
+                _isDead = true;
                 foreach (var tag in _tags)
                 {
                     tag.OnDeath();
@@ -72,7 +72,7 @@ public partial class VarStats : Resource
     public Vector2 Direction { get; set; }
     // public Vector2 AttackDirection;
     public Team VarTeam { get; set; }
-    public bool IsDead { get; set; } = false;
+    private bool _isDead { get; set; } = false;
     private List<VarTag> _tags { get; set; } = new();
     private bool _isInitialized = false;
     public void AddTag(VarTag tag)

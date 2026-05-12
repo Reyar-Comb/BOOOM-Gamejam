@@ -158,6 +158,12 @@ public partial class Var : RefCounted, ICleanable
         }
         
         Stats.CurrentHealth -= finalDamage;
+        if (IsDead) return;
+
+        if (_blackboard.Get<Var>("CurrentAttackTarget") == null)
+        {
+            MoveTo(atkInfo.Source.Stats.Position);
+        }
     }
 
     public void BeginAttacking(Var target)

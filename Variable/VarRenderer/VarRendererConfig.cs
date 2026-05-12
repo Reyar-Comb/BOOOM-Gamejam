@@ -9,6 +9,13 @@ public partial class VarRendererConfig : Resource
 
     [Export] public bool DrawBackground { get; set; } = false;
     [Export] public Color BackgroundColor { get; set; } = new(0.08f, 0.09f, 0.11f);
+    [Export] public bool RenderMapRegions { get; set; } = true;
+    [Export] public bool RenderMapBridges { get; set; } = true;
+    [Export] public Color EmptyRegionColor { get; set; } = new(0.16f, 0.17f, 0.18f);
+    [Export] public float RegionFillAlpha { get; set; } = 0.82f;
+    [Export] public Color BridgeColor { get; set; } = new(1.0f, 0.97f, 0.82f);
+    [Export] public float BridgeLineWidth { get; set; } = 8.0f;
+    [Export] public float BridgeMarkerSize { get; set; } = 24.0f;
     [Export] public bool RenderGrid { get; set; } = false;
     [Export] public Color GridColor { get; set; } = new(1.0f, 1.0f, 1.0f, 0.08f);
     [Export] public Color AxisGridColor { get; set; } = new(1.0f, 1.0f, 1.0f, 0.22f);

@@ -5,12 +5,14 @@ internal sealed partial class VarGridRenderer : Control
 {
     private readonly VarRenderer _owner;
     private VarRendererConfig _config;
+    private MapData _mapData;
 
-    public VarGridRenderer(VarRenderer owner, VarRendererConfig config)
+    public VarGridRenderer(VarRenderer owner, VarRendererConfig config, MapData mapData)
     {
         Name = nameof(VarGridRenderer);
         _owner = owner;
         _config = config;
+        _mapData = mapData;
         MouseFilter = MouseFilterEnum.Ignore;
         SetAnchorsPreset(LayoutPreset.FullRect);
     }
@@ -42,12 +44,12 @@ internal sealed partial class VarGridRenderer : Control
         int startY = minCell.Y - 1;
         int endY = maxCell.Y + 1;
 
-        if (_owner.MapData != null)
+        if (_mapData != null)
         {
             startX = Math.Max(startX, 0);
             startY = Math.Max(startY, 0);
-            endX = Math.Min(endX, _owner.MapData.Width - 1);
-            endY = Math.Min(endY, _owner.MapData.Height - 1);
+            endX = Math.Min(endX, _mapData.Width - 1);
+            endY = Math.Min(endY, _mapData.Height - 1);
         }
 
         if (startX > endX || startY > endY)

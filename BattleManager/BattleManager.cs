@@ -77,7 +77,7 @@ public partial class BattleManager : Node
 		Instance = this;
 		VarManager.SetPhysicsProcess(false);
 
-		_mapData = new MapData(80, 60);
+		_mapData = new MapData(80, 46);
 		_mapData.CreateRegions(6);
 		_gameData = new GameData();
 		VarManager.Initialize(_mapData, _gameData);

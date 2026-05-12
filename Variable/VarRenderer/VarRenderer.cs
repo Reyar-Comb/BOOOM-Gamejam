@@ -26,6 +26,7 @@ public partial class VarRenderer : Control, IVarRenderer
 
     private readonly List<Var> _renderedVars = new();
     private readonly VarBackgroundRenderer _backgroundRenderer;
+    private readonly VarMapRenderer _mapRenderer;
     private readonly VarGridRenderer _gridRenderer;
     private readonly VarRenderStateTracker _renderStateTracker;
     private readonly VarLayerRenderer _varLayerRenderer;
@@ -37,14 +38,14 @@ public partial class VarRenderer : Control, IVarRenderer
 
     public Vector2I? HoveredGridCell => _hoveredGridCell;
     internal IReadOnlyList<Var> RenderedVars => _renderedVars;
-    internal MapData MapData => _mapData;
     internal VarRendererConfig ActiveConfig => _config ??= CreateWritableConfig(_config);
 
     public VarRenderer()
     {
         _config = CreateWritableConfig(null);
         _backgroundRenderer = new VarBackgroundRenderer(_config);
-        _gridRenderer = new VarGridRenderer(this, _config);
+        _mapRenderer = new VarMapRenderer(this, _config, _mapData);
+        _gridRenderer = new VarGridRenderer(this, _config, _mapData);
         _renderStateTracker = new VarRenderStateTracker(this, _config);
         _varLayerRenderer = new VarLayerRenderer(this, _renderStateTracker, _config);
     }
@@ -63,6 +64,7 @@ public partial class VarRenderer : Control, IVarRenderer
         }
 
         AddChild(_backgroundRenderer);
+        AddChild(_mapRenderer);
         AddChild(_gridRenderer);
         AddChild(_varLayerRenderer);
 
@@ -392,6 +394,7 @@ public partial class VarRenderer : Control, IVarRenderer
     {
         VarRendererConfig config = ActiveConfig;
         _backgroundRenderer.InjectConfig(config);
+        _mapRenderer.InjectConfig(config);
         _gridRenderer.InjectConfig(config);
         _renderStateTracker.InjectConfig(config);
         _varLayerRenderer.InjectConfig(config);
@@ -402,6 +405,7 @@ public partial class VarRenderer : Control, IVarRenderer
     {
         QueueRedraw();
         _backgroundRenderer?.QueueRedraw();
+        _mapRenderer?.QueueRedraw();
         _gridRenderer?.QueueRedraw();
         _varLayerRenderer?.QueueRedraw();
     }

@@ -6,11 +6,11 @@
 
 [resource]
 script = ExtResource("1_ffb4u")
-MaxHealth = 200
+MaxHealth = 100
 AttackSpeedMult = 1.0
-AttackFrameInterval = 10
-MoveSpeed = 5.0
-Defense = 18
+AttackFrameInterval = 100
+MoveSpeed = 30.0
+Defense = 12
 AttackRange = ExtResource("1_d7gf5")
 DetectRange = ExtResource("2_5btd1")
 AttackDamage = 30

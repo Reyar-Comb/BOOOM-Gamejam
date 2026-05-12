@@ -8,8 +8,8 @@
 script = ExtResource("1_paovi")
 MaxHealth = 100
 AttackSpeedMult = 1.0
-AttackFrameInterval = 5
-MoveSpeed = 10.0
+AttackFrameInterval = 70
+MoveSpeed = 50.0
 Defense = 10
 AttackRange = ExtResource("1_1c0gj")
 DetectRange = ExtResource("2_k1oga")

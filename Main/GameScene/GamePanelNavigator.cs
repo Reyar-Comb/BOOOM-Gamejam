@@ -48,6 +48,8 @@ public partial class GamePanelNavigator : PanelNavigator
 
 		BackButton.Pressed += GoBack;
 
+		VarManager.VarListUpdated += RefreshVarList;
+
 		_buttonScene = ResourceLoader.Load<PackedScene>("res://Prefabs/VarButton/VarButton.tscn");
 		
 		// ————— VarAddUnit 按钮绑定 —————
@@ -137,6 +139,7 @@ public partial class GamePanelNavigator : PanelNavigator
 	}
 	public void RefreshVarList()
 	{
+		GD.Print("Refreshing var list in UI...");
 		var children = _varListContainer.GetChildren();
 		foreach (Node child in children)		{
 			child.QueueFree();

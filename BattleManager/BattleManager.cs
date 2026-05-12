@@ -160,7 +160,6 @@ public partial class BattleManager : Node
 		_gameData.SkillManager.OnWaveStarted();
 
 		TokenManager?.Reset();
-		PanelNavigator?.RefreshVarList();
 
 		SpawnEnemies(8);
 	}
@@ -222,7 +221,6 @@ public partial class BattleManager : Node
 		if (team == VarStats.Team.Friendly)
 		{
 			ConsoleManager.RegisterVar(var);
-			PanelNavigator.RefreshVarList();
 		}
 		GD.Print($"Registered var of type {type} at position {position}");
 		return var;

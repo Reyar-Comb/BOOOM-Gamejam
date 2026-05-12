@@ -9,6 +9,8 @@ public partial class VarManager : Node
 {
     private MapData _mapData = null!;
     private GameData _gameData = null!;
+
+    [Signal] public delegate void VarListUpdatedEventHandler();
     public static class VarListPool
     {
         private static readonly ConcurrentBag<List<Var>> _pool = new ConcurrentBag<List<Var>>();
@@ -69,11 +71,14 @@ public partial class VarManager : Node
         }
         foreach (var var in varsToRemove)
         {
+            GD.Print($"Removing var {var.Stats.Name} of type {var.Stats.Type} from VarManager.");
             DisconnectOnDeath(var);
             var.Cleanup();
             Vars.Remove(var);
+            EmitSignal(SignalName.VarListUpdated);
         }
         VarListPool.Return(varsToRemove);
+        
     }
     public override void _Process(double delta)
     {
@@ -93,6 +98,7 @@ public partial class VarManager : Node
             var.InitStatsWithGameData(_gameData);
             _gameData.SkillManager.OnVarCreated(new VarCreationInfo { Var = var });
         }
+        EmitSignal(SignalName.VarListUpdated);
     }
 
     public void ClearAllVars()
@@ -105,6 +111,7 @@ public partial class VarManager : Node
 
         Vars.Clear();
         _onDeathCallablesByVar.Clear();
+        EmitSignal(SignalName.VarListUpdated);
     }
 
     private void ConnectOnDeath(Var var)

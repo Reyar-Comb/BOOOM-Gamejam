@@ -81,6 +81,8 @@ GameData/
  RegionEnteredInfo.cs
  Skill.cs
  SkillManager.cs
+ SkillResource.cs
+ SkillResourceCache.cs
  SkillRuntimes/
   AccurateFloatRuntime.cs
   BerserkLongRuntime.cs
@@ -122,13 +124,16 @@ Main/
   Console.cs
   GamePanelNavigator.cs
   GameScene.cs
-  Nodes/GameTimeText.cs
+  Nodes/
+   BarController.cs
+   GameTimeText.cs
  Main.cs
  MapDataGenerationDemo.cs
  TestAttack.cs
  TestAttack/Slider.cs
  TestChaseOutOfRange.cs
 Prefabs/VarButton/VarButton.cs
+TokenManager/TokenManager.cs
 Utilities/
  Benchmark/Benchmark.cs
  Constants/MathConstants.cs

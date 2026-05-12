@@ -6,6 +6,16 @@ using System.Linq;
 public class GameData
 {
     private const int SkillChoiceCount = 3;
+    private static readonly VarStats.VarType[] UnlockableVarTypes =
+    [
+        VarStats.VarType.Int,
+        VarStats.VarType.Float,
+        VarStats.VarType.Long,
+        VarStats.VarType.Double,
+        VarStats.VarType.LongDouble,
+        VarStats.VarType.Char,
+        VarStats.VarType.Bool,
+    ];
     private static readonly Dictionary<Skill.RarityLevel, int> SkillRarityWeights = new()
     {
         { Skill.RarityLevel.Common, 60 },
@@ -16,6 +26,12 @@ public class GameData
 
     public NumericData NumericData;
     public SkillManager SkillManager;
+    public HashSet<VarStats.VarType> UnlockedVarTypes { get; private set; } = new()
+    {
+        VarStats.VarType.Int,
+        VarStats.VarType.Float,
+        VarStats.VarType.Char
+    };
     public GameData()
     {
         NumericData = new NumericData();
@@ -27,19 +43,56 @@ public class GameData
         SkillManager.Reset();
     }
 
-    public List<Skill> GetRandomSkillChoices()
+    public List<Upgrade> GetRandomSkillChoices()
     {
-        List<SkillData> availableSkillData = AllSkillData;
+        List<SkillData> availableSkillData = AllSkillData.ToList();
 
-        List<Skill> choices = new List<Skill>();
+        List<Upgrade> choices = new List<Upgrade>();
         for (int i = 0; i < SkillChoiceCount && availableSkillData.Count > 0; i++)
         {
             Skill skill = CreateWeightedRandomSkill(availableSkillData);
-            choices.Add(skill);
+            choices.Add(new SkillUpgrade(skill));
             availableSkillData.RemoveAll(skillData => skillData.Type == skill.GetType());
         }
 
         return choices;
+    }
+
+    public List<Upgrade> GetRandomUpgradeChoices()
+    {
+        List<Upgrade> choices = GetRandomSkillChoices();
+
+        VarStats.VarType? varType = GetRandomLockedVarType();
+        if (varType != null)
+        {
+            choices.Add(new VarTypeUnlockUpgrade(varType.Value));
+        }
+
+        return choices;
+    }
+
+    public void UnlockVarType(VarStats.VarType varType)
+    {
+        UnlockedVarTypes.Add(varType);
+    }
+
+    public bool IsVarTypeUnlocked(VarStats.VarType varType)
+    {
+        return UnlockedVarTypes.Contains(varType);
+    }
+
+    private VarStats.VarType? GetRandomLockedVarType()
+    {
+        List<VarStats.VarType> lockedVarTypes = UnlockableVarTypes
+            .Where(varType => !UnlockedVarTypes.Contains(varType))
+            .ToList();
+
+        if (lockedVarTypes.Count == 0)
+        {
+            return null;
+        }
+
+        return lockedVarTypes[Random.Shared.Next(lockedVarTypes.Count)];
     }
 
     private static Skill CreateWeightedRandomSkill(List<SkillData> availableSkillData)

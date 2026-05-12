@@ -1,0 +1,61 @@
+using Godot;
+
+[GlobalClass]
+public partial class VarRendererConfig : Resource
+{
+    public const string DefaultPath = "res://Variable/VarRenderer/VarRendererConfig.tres";
+
+    private static VarRendererConfig _defaultConfig;
+
+    [Export] public bool DrawBackground { get; set; } = false;
+    [Export] public Color BackgroundColor { get; set; } = new(0.08f, 0.09f, 0.11f);
+    [Export] public bool RenderGrid { get; set; } = false;
+    [Export] public Color GridColor { get; set; } = new(1.0f, 1.0f, 1.0f, 0.08f);
+    [Export] public Color AxisGridColor { get; set; } = new(1.0f, 1.0f, 1.0f, 0.22f);
+    [Export] public bool RenderVarBody { get; set; } = true;
+    [Export] public bool RenderAttackRange { get; set; } = false;
+    [Export] public bool RenderDetectRange { get; set; } = false;
+    [Export] public bool RenderDirection { get; set; } = false;
+    [Export] public bool EnableViewControls { get; set; } = true;
+    [Export] public bool InterpolateRenderPosition { get; set; } = true;
+    [Export] public bool UseBattleManagerInterpolationDuration { get; set; } = true;
+
+    [Export] public Vector2 ViewCenterWorld { get; set; } = Vector2.Zero;
+    [Export] public float Zoom { get; set; } = 1.0f;
+    [Export] public float MinZoom { get; set; } = 0.25f;
+    [Export] public float MaxZoom { get; set; } = 4.0f;
+    [Export] public float ZoomStep { get; set; } = 1.1f;
+
+    [Export] public float BodyRadius { get; set; } = 20.0f;
+    [Export] public Color BodyColor { get; set; } = Colors.OrangeRed;
+
+    [Export] public Color AttackRangeColor { get; set; } = Colors.OrangeRed;
+    [Export] public float AttackRangeFillAlpha { get; set; } = 0.15f;
+
+    [Export] public Color DetectRangeColor { get; set; } = Colors.DeepSkyBlue;
+    [Export] public float DetectRangeFillAlpha { get; set; } = 0.08f;
+
+    [Export] public float RangeOutlineWidth { get; set; } = 2.0f;
+
+    [Export] public Color DirectionColor { get; set; } = Colors.White;
+    [Export] public float DirectionLength { get; set; } = 34.0f;
+    [Export] public float DirectionHeadLength { get; set; } = 10.0f;
+    [Export] public float DirectionLineWidth { get; set; } = 3.0f;
+
+    [Export] public float FallbackInterpolationDuration { get; set; } = 0.05f;
+    [Export] public float MinimumInterpolationDuration { get; set; } = 0.0f;
+    [Export] public float MaximumInterpolationDuration { get; set; } = 2.0f;
+    [Export] public float SnapDistance { get; set; } = Grid.CellSize * 4.0f;
+    [Export] public float IdleInterpolationResetDelay { get; set; } = 0.25f;
+
+    public static VarRendererConfig GetDefault()
+    {
+        if (_defaultConfig != null)
+        {
+            return _defaultConfig;
+        }
+
+        _defaultConfig = ResourceLoader.Load<VarRendererConfig>(DefaultPath) ?? new VarRendererConfig();
+        return _defaultConfig;
+    }
+}

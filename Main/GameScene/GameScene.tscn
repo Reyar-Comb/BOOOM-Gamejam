@@ -21,7 +21,7 @@
 [ext_resource type="Script" uid="uid://s741c5fm1sb5" path="res://Utilities/PanelNavigator/ButtonBinding.cs" id="11_2anr5"]
 [ext_resource type="PackedScene" uid="uid://c3p8415n1lwy1" path="res://Prefabs/VarButton/VarButton.tscn" id="11_8oyud"]
 [ext_resource type="Script" uid="uid://sa26p4j2xfk4" path="res://Utilities/PanelNavigator/PanelUnit.cs" id="11_b3sdv"]
-[ext_resource type="Shader" uid="uid://cq86ki37hsl8j" path="res://Shaders/BlinkingProgressBar.gdshader" id="11_y1mx5"]
+[ext_resource type="Shader" path="res://Shaders/BlinkingProgressBar.gdshader" id="11_y1mx5"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_y1mx5"]
 shader = ExtResource("11_y1mx5")
@@ -555,9 +555,6 @@ theme_override_constants/margin_bottom = 4
 layout_mode = 2
 size_flags_vertical = 3
 script = ExtResource("6_2anr5")
-DrawBackground = true
-BackgroundColor = Color(0.078431375, 0.09019608, 0.10980392, 0.69411767)
-RenderGrid = true
 BattleManager = NodePath("../../../../../../../BattleManager")
 metadata/_custom_type_script = "uid://de1oryn5icnbq"
 
@@ -653,11 +650,12 @@ theme_override_constants/margin_top = 10
 theme_override_constants/margin_right = 10
 theme_override_constants/margin_bottom = 20
 
-[node name="PanelNavigator" type="Control" parent="MarginContainer/HBoxContainer/MarginContainer3/ChooseVar/VBoxContainer/MarginContainer2/PanelContainer/MarginContainer" unique_id=133855871 node_paths=PackedStringArray("BackButton", "SelectedVarLabels", "LocationLabels", "VarManager", "_varListContainer", "VarRenderer")]
+[node name="PanelNavigator" type="Control" parent="MarginContainer/HBoxContainer/MarginContainer3/ChooseVar/VBoxContainer/MarginContainer2/PanelContainer/MarginContainer" unique_id=133855871 node_paths=PackedStringArray("BackButton", "AskForButton", "SelectedVarLabels", "LocationLabels", "VarManager", "_varListContainer", "VarRenderer")]
 layout_mode = 2
 size_flags_vertical = 3
 script = ExtResource("10_8oyud")
 BackButton = NodePath("../../../../MarginContainer/ReturnButton")
+AskForButton = NodePath("../../../../../../../MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/WindowPanel2/MarginContainer/AskForButton")
 SelectedVarLabels = [NodePath("VarOpUnit/VBoxContainer/PanelContainer/SelectedVarButton/RichTextLabel"), NodePath("VarStatusUnit/VBoxContainer/PanelContainer/SelectedVarButton/RichTextLabel"), NodePath("VarCommandUnit/VBoxContainer/PanelContainer/SelectedVarButton/RichTextLabel"), NodePath("VarMoveUnit/VBoxContainer/PanelContainer/SelectedVarButton/RichTextLabel")]
 LocationLabels = [NodePath("VarAddUnit/VBoxContainer/ScrollContainer/VBoxContainer/PanelContainer/LocationLabel"), NodePath("VarMoveUnit/VBoxContainer/ScrollContainer/VBoxContainer/PanelContainer/LocationLabel")]
 VarManager = NodePath("../../../../../../../../../VarManager")

@@ -3,49 +3,55 @@
 [ext_resource type="Script" uid="uid://barrxhfrmxy8x" path="res://Main/GameScene/GameScene.cs" id="1_wlq8m"]
 [ext_resource type="PackedScene" uid="uid://cmfcqmhv4puv3" path="res://Main/GameScene/BG/BG.tscn" id="2_4bds6"]
 [ext_resource type="Script" uid="uid://bocfjfs3ip7pw" path="res://Console/ConsoleViewModel/ConsoleManager.cs" id="2_jaa4w"]
-[ext_resource type="FontFile" uid="uid://bnl5ekwhqxwkt" path="res://assets/Hack-Bold.ttf" id="2_vecup"]
-[ext_resource type="FontFile" uid="uid://cbst7pqnmxosu" path="res://assets/Hack-Regular.ttf" id="3_3p7la"]
+[ext_resource type="FontFile" uid="uid://bnl5ekwhqxwkt" path="res://assets/Fonts/Hack-Bold.ttf" id="2_vecup"]
+[ext_resource type="FontFile" uid="uid://cbst7pqnmxosu" path="res://assets/Fonts/Hack-Regular.ttf" id="3_3p7la"]
 [ext_resource type="Script" uid="uid://ccuvk7ii52801" path="res://BattleManager/BattleManager.cs" id="4_8oyud"]
-[ext_resource type="FontFile" uid="uid://jky4nd5a8wec" path="res://assets/Hack-BoldItalic.ttf" id="4_35cd8"]
+[ext_resource type="FontFile" uid="uid://jky4nd5a8wec" path="res://assets/Fonts/Hack-BoldItalic.ttf" id="4_35cd8"]
 [ext_resource type="Script" uid="uid://01fvca8ksf16" path="res://Variable/VarManager.cs" id="5_b3sdv"]
-[ext_resource type="FontFile" uid="uid://cd6jbow8csp81" path="res://assets/Hack-Italic.ttf" id="5_ds47p"]
+[ext_resource type="FontFile" uid="uid://cd6jbow8csp81" path="res://assets/Fonts/Hack-Italic.ttf" id="5_ds47p"]
 [ext_resource type="Script" uid="uid://de1oryn5icnbq" path="res://Variable/VarRenderer.cs" id="6_2anr5"]
-[ext_resource type="FontFile" uid="uid://bo3cgu1o17h5i" path="res://assets/AGENCYR.TTF" id="7_4bds6"]
+[ext_resource type="Script" uid="uid://dakmgdxqi7wy" path="res://TokenManager/TokenManager.cs" id="6_2nynh"]
+[ext_resource type="FontFile" uid="uid://bo3cgu1o17h5i" path="res://assets/Fonts/AGENCYR.TTF" id="7_4bds6"]
 [ext_resource type="PackedScene" uid="uid://dhd46rm8iamsn" path="res://Prefabs/WindowPanel/WindowPanel.tscn" id="8_816xn"]
 [ext_resource type="Script" uid="uid://1pprsysgn4ne" path="res://Main/GameScene/Nodes/GameTimeText.cs" id="8_hdewu"]
+[ext_resource type="FontFile" uid="uid://0id83sf6l5jq" path="res://assets/Fonts/FZYTK.TTF" id="9_3yp31"]
+[ext_resource type="Script" uid="uid://dlk4od7rxupns" path="res://Main/GameScene/Nodes/BarController.cs" id="9_dkdgh"]
 [ext_resource type="Script" uid="uid://wjwo0jkmutf6" path="res://Main/GameScene/GamePanelNavigator.cs" id="10_8oyud"]
 [ext_resource type="Script" uid="uid://ccxvuxydhdkh5" path="res://Main/GameScene/Console.cs" id="10_utud6"]
 [ext_resource type="Script" uid="uid://s741c5fm1sb5" path="res://Utilities/PanelNavigator/ButtonBinding.cs" id="11_2anr5"]
 [ext_resource type="PackedScene" uid="uid://c3p8415n1lwy1" path="res://Prefabs/VarButton/VarButton.tscn" id="11_8oyud"]
 [ext_resource type="Script" uid="uid://sa26p4j2xfk4" path="res://Utilities/PanelNavigator/PanelUnit.cs" id="11_b3sdv"]
+[ext_resource type="Shader" uid="uid://cq86ki37hsl8j" path="res://Shaders/BlinkingProgressBar.gdshader" id="11_y1mx5"]
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_816xn"]
-bg_color = Color(0.6, 0.6, 0.6, 0.21568628)
-corner_radius_top_left = 5
-corner_radius_top_right = 5
-corner_radius_bottom_right = 5
-corner_radius_bottom_left = 5
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_y1mx5"]
+shader = ExtResource("11_y1mx5")
+shader_parameter/progress = 0.5
+shader_parameter/target = 0.5
+shader_parameter/bg_color = Color(0.6, 0.6, 0.6, 0.38)
+shader_parameter/base_color = Color(0, 1, 0, 0.56)
+shader_parameter/ghost_color = Color(0.6, 0.6, 0.6, 0.38039216)
+shader_parameter/empty_color = Color(1, 0.1, 0.1, 0.7)
+shader_parameter/border_color = Color(1, 1, 1, 1)
+shader_parameter/border_width = 2.0
+shader_parameter/corner_radius = 5.0
+shader_parameter/node_size = Vector2(46, 822)
+shader_parameter/blink_speed = 3.0
+shader_parameter/ghost_min_alpha = 0.1
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_hdewu"]
-bg_color = Color(0.50980395, 0.6784314, 1, 0.5568628)
-corner_radius_top_left = 5
-corner_radius_top_right = 5
-corner_radius_bottom_right = 5
-corner_radius_bottom_left = 5
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_4bds6"]
-bg_color = Color(0.6, 0.6, 0.6, 0.21568628)
-corner_radius_top_left = 5
-corner_radius_top_right = 5
-corner_radius_bottom_right = 5
-corner_radius_bottom_left = 5
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_3yp31"]
-bg_color = Color(0.92156863, 0.24705882, 0.20784314, 0.5568628)
-corner_radius_top_left = 5
-corner_radius_top_right = 5
-corner_radius_bottom_right = 5
-corner_radius_bottom_left = 5
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_jj1xj"]
+shader = ExtResource("11_y1mx5")
+shader_parameter/progress = 0.5
+shader_parameter/target = 0.5
+shader_parameter/bg_color = Color(0.6, 0.6, 0.6, 0.38)
+shader_parameter/base_color = Color(0, 1, 0, 0.56)
+shader_parameter/ghost_color = Color(0.6, 0.6, 0.6, 0.38039216)
+shader_parameter/empty_color = Color(1, 0.1, 0.1, 0.7)
+shader_parameter/border_color = Color(1, 1, 1, 1)
+shader_parameter/border_width = 2.0
+shader_parameter/corner_radius = 5.0
+shader_parameter/node_size = Vector2(46, 822)
+shader_parameter/blink_speed = 3.0
+shader_parameter/ghost_min_alpha = 0.1
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_y1mx5"]
 bg_color = Color(0.6, 0.6, 0.6, 0)
@@ -277,16 +283,21 @@ scale = Vector2(1.05, 1.05)
 [node name="ConsoleManager" type="Node" parent="." unique_id=51194342]
 script = ExtResource("2_jaa4w")
 
-[node name="BattleManager" type="Node" parent="." unique_id=1363842359 node_paths=PackedStringArray("VarManager", "ConsoleManager", "PanelNavigator", "VarRenderer")]
+[node name="BattleManager" type="Node" parent="." unique_id=1363842359 node_paths=PackedStringArray("VarManager", "ConsoleManager", "PanelNavigator", "VarRenderer", "TokenManager")]
 script = ExtResource("4_8oyud")
 TickScale = 5.0
 VarManager = NodePath("../VarManager")
 ConsoleManager = NodePath("../ConsoleManager")
 PanelNavigator = NodePath("../MarginContainer/HBoxContainer/MarginContainer3/ChooseVar/VBoxContainer/MarginContainer2/PanelContainer/MarginContainer/PanelNavigator")
 VarRenderer = NodePath("../MarginContainer/HBoxContainer/MarginContainer2/VBoxContainer/WindowPanel2/MarginContainer/VarRenderer")
+TokenManager = NodePath("../TokenManager")
 
 [node name="VarManager" type="Node" parent="." unique_id=1602613892]
 script = ExtResource("5_b3sdv")
+
+[node name="TokenManager" type="Node" parent="." unique_id=1838876679 node_paths=PackedStringArray("BarController")]
+script = ExtResource("6_2nynh")
+BarController = NodePath("../MarginContainer/HBoxContainer/MarginContainer/VBoxContainer/HBoxContainer/WindowPanel/MarginContainer/HBoxContainer2/BarController")
 
 [node name="MarginContainer" type="MarginContainer" parent="." unique_id=347560611]
 anchors_preset = 15
@@ -347,67 +358,71 @@ theme_override_constants/margin_right = 10
 [node name="HBoxContainer2" type="HBoxContainer" parent="MarginContainer/HBoxContainer/MarginContainer/VBoxContainer/HBoxContainer/WindowPanel/MarginContainer" unique_id=908676761]
 layout_mode = 2
 
-[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/HBoxContainer/MarginContainer/VBoxContainer/HBoxContainer/WindowPanel/MarginContainer/HBoxContainer2" unique_id=983033097]
+[node name="BarController" type="HBoxContainer" parent="MarginContainer/HBoxContainer/MarginContainer/VBoxContainer/HBoxContainer/WindowPanel/MarginContainer/HBoxContainer2" unique_id=983033097 node_paths=PackedStringArray("PatienceBar", "TokenBar")]
+layout_mode = 2
+size_flags_horizontal = 3
+script = ExtResource("9_dkdgh")
+PatienceBar = NodePath("VBoxContainer2/MarginContainer/PatienceBar")
+TokenBar = NodePath("VBoxContainer3/MarginContainer/TokenBar")
+
+[node name="VBoxContainer2" type="VBoxContainer" parent="MarginContainer/HBoxContainer/MarginContainer/VBoxContainer/HBoxContainer/WindowPanel/MarginContainer/HBoxContainer2/BarController" unique_id=568218871]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="VBoxContainer2" type="VBoxContainer" parent="MarginContainer/HBoxContainer/MarginContainer/VBoxContainer/HBoxContainer/WindowPanel/MarginContainer/HBoxContainer2/HBoxContainer" unique_id=568218871]
-layout_mode = 2
-size_flags_horizontal = 3
-
-[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/HBoxContainer/MarginContainer/VBoxContainer/HBoxContainer/WindowPanel/MarginContainer/HBoxContainer2/HBoxContainer/VBoxContainer2" unique_id=930903882]
+[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/HBoxContainer/MarginContainer/VBoxContainer/HBoxContainer/WindowPanel/MarginContainer/HBoxContainer2/BarController/VBoxContainer2" unique_id=930903882]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 theme_override_constants/margin_left = 15
 theme_override_constants/margin_top = 25
-theme_override_constants/margin_right = 10
+theme_override_constants/margin_right = 8
 theme_override_constants/margin_bottom = 25
 
-[node name="ProgressBar" type="ProgressBar" parent="MarginContainer/HBoxContainer/MarginContainer/VBoxContainer/HBoxContainer/WindowPanel/MarginContainer/HBoxContainer2/HBoxContainer/VBoxContainer2/MarginContainer" unique_id=920620135]
+[node name="PatienceBar" type="ColorRect" parent="MarginContainer/HBoxContainer/MarginContainer/VBoxContainer/HBoxContainer/WindowPanel/MarginContainer/HBoxContainer2/BarController/VBoxContainer2/MarginContainer" unique_id=377475219]
+material = SubResource("ShaderMaterial_y1mx5")
 layout_mode = 2
-size_flags_vertical = 3
-theme_override_colors/font_color = Color(0.9490196, 0.9490196, 0.9490196, 0)
-theme_override_styles/background = SubResource("StyleBoxFlat_816xn")
-theme_override_styles/fill = SubResource("StyleBoxFlat_hdewu")
-value = 22.03
-fill_mode = 3
+color = Color(0.5669666, 0.5669666, 0.5669666, 1)
 
-[node name="HSeparator" type="HSeparator" parent="MarginContainer/HBoxContainer/MarginContainer/VBoxContainer/HBoxContainer/WindowPanel/MarginContainer/HBoxContainer2/HBoxContainer/VBoxContainer2" unique_id=1338354259]
-visible = false
-modulate = Color(1, 1, 1, 0)
+[node name="RichTextLabel" type="RichTextLabel" parent="MarginContainer/HBoxContainer/MarginContainer/VBoxContainer/HBoxContainer/WindowPanel/MarginContainer/HBoxContainer2/BarController/VBoxContainer2/MarginContainer" unique_id=579855466]
 layout_mode = 2
-size_flags_vertical = 3
-size_flags_stretch_ratio = 0.04
+theme_override_fonts/normal_font = ExtResource("9_3yp31")
+theme_override_font_sizes/normal_font_size = 40
+text = "耐
+心"
+scroll_active = false
+horizontal_alignment = 1
+vertical_alignment = 1
 
-[node name="VBoxContainer3" type="VBoxContainer" parent="MarginContainer/HBoxContainer/MarginContainer/VBoxContainer/HBoxContainer/WindowPanel/MarginContainer/HBoxContainer2/HBoxContainer" unique_id=2078566339]
+[node name="VBoxContainer3" type="VBoxContainer" parent="MarginContainer/HBoxContainer/MarginContainer/VBoxContainer/HBoxContainer/WindowPanel/MarginContainer/HBoxContainer2/BarController" unique_id=2078566339]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/HBoxContainer/MarginContainer/VBoxContainer/HBoxContainer/WindowPanel/MarginContainer/HBoxContainer2/HBoxContainer/VBoxContainer3" unique_id=593013154]
+[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/HBoxContainer/MarginContainer/VBoxContainer/HBoxContainer/WindowPanel/MarginContainer/HBoxContainer2/BarController/VBoxContainer3" unique_id=593013154]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
-theme_override_constants/margin_left = 10
+theme_override_constants/margin_left = 8
 theme_override_constants/margin_top = 25
 theme_override_constants/margin_right = 15
 theme_override_constants/margin_bottom = 25
 
-[node name="ProgressBar2" type="ProgressBar" parent="MarginContainer/HBoxContainer/MarginContainer/VBoxContainer/HBoxContainer/WindowPanel/MarginContainer/HBoxContainer2/HBoxContainer/VBoxContainer3/MarginContainer" unique_id=1448351948]
+[node name="TokenBar" type="ColorRect" parent="MarginContainer/HBoxContainer/MarginContainer/VBoxContainer/HBoxContainer/WindowPanel/MarginContainer/HBoxContainer2/BarController/VBoxContainer3/MarginContainer" unique_id=2036310930]
+material = SubResource("ShaderMaterial_jj1xj")
 layout_mode = 2
-size_flags_vertical = 3
-theme_override_colors/font_color = Color(0.9490196, 0.9490196, 0.9490196, 0)
-theme_override_styles/background = SubResource("StyleBoxFlat_4bds6")
-theme_override_styles/fill = SubResource("StyleBoxFlat_3yp31")
-value = 22.03
-fill_mode = 3
+color = Color(0.5669666, 0.5669666, 0.5669666, 1)
 
-[node name="HSeparator" type="HSeparator" parent="MarginContainer/HBoxContainer/MarginContainer/VBoxContainer/HBoxContainer/WindowPanel/MarginContainer/HBoxContainer2/HBoxContainer/VBoxContainer3" unique_id=2053109729]
-visible = false
-modulate = Color(1, 1, 1, 0)
+[node name="RichTextLabel" type="RichTextLabel" parent="MarginContainer/HBoxContainer/MarginContainer/VBoxContainer/HBoxContainer/WindowPanel/MarginContainer/HBoxContainer2/BarController/VBoxContainer3/MarginContainer" unique_id=175776503]
 layout_mode = 2
-size_flags_vertical = 3
-size_flags_stretch_ratio = 0.04
+theme_override_fonts/normal_font = ExtResource("9_3yp31")
+theme_override_font_sizes/normal_font_size = 40
+text = "T
+O
+K
+E
+N"
+scroll_active = false
+horizontal_alignment = 1
+vertical_alignment = 1
 
 [node name="MarginContainer2" type="MarginContainer" parent="MarginContainer/HBoxContainer" unique_id=337682986]
 layout_mode = 2

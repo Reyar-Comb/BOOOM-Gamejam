@@ -21,6 +21,11 @@ public partial class VarButton : Control
 
 	public bool IsSelected => _selected == this;
 
+	// ========== Hover 回调（每次进入/离开触发一次）==========
+
+	public Action OnHoverEnter { get; set; }
+	public Action OnHoverLeave { get; set; }
+
 	// ========== 导出字段 ==========
 
 	[Export]
@@ -42,6 +47,10 @@ public partial class VarButton : Control
 		button = GetNode<Button>("Button");
 
 		button.Pressed += onPressed;
+
+		// Hover 回调
+		button.MouseEntered += () => OnHoverEnter?.Invoke();
+		button.MouseExited  += () => OnHoverLeave?.Invoke();
 
 		this.SizeFlagsVertical = (int)SizeFlags.ShrinkBegin;
 	}
@@ -105,6 +114,8 @@ public partial class VarButton : Control
 	{
 		Select();
 	}
+
+	
 
 	// ========== 工具方法 ==========
 

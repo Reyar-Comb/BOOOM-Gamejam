@@ -3,12 +3,12 @@
 importer="font_data_dynamic"
 type="FontFile"
 uid="uid://bo3cgu1o17h5i"
-path="res://.godot/imported/AGENCYR.TTF-2499853612e4e0e1467881b369897f8b.fontdata"
+path="res://.godot/imported/AGENCYR.TTF-6e2c590a94a440de8552d61c3bdac542.fontdata"
 
 [deps]
 
-source_file="res://assets/AGENCYR.TTF"
-dest_files=["res://.godot/imported/AGENCYR.TTF-2499853612e4e0e1467881b369897f8b.fontdata"]
+source_file="res://assets/Fonts/AGENCYR.TTF"
+dest_files=["res://.godot/imported/AGENCYR.TTF-6e2c590a94a440de8552d61c3bdac542.fontdata"]
 
 [params]
 

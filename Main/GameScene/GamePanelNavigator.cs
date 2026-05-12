@@ -65,34 +65,24 @@ public partial class GamePanelNavigator : PanelNavigator
 			onPressed: () =>
 			{
 				GD.Print($"Placing var at {LastClickedGrid}");
-				switch (CurrentVarType)
+				if (CurrentVarType == null)
 				{
-					case "Int":
-						BattleManager.Instance.RegisterVar(VarStats.VarType.Int, LastClickedGrid);
-						break;
-					case "Float":
-						BattleManager.Instance.RegisterVar(VarStats.VarType.Float, LastClickedGrid);
-						break;
-					case "Double":
-						BattleManager.Instance.RegisterVar(VarStats.VarType.Double, LastClickedGrid);
-						break;
-					case "LongDouble":
-						BattleManager.Instance.RegisterVar(VarStats.VarType.LongDouble, LastClickedGrid);
-						break;
-					case "Char":
-						BattleManager.Instance.RegisterVar(VarStats.VarType.Char, LastClickedGrid);
-						break;
-					case "Bool":
-						BattleManager.Instance.RegisterVar(VarStats.VarType.Bool, LastClickedGrid);
-						break;
-					case "Long":
-						BattleManager.Instance.RegisterVar(VarStats.VarType.Long, LastClickedGrid);
-						break;
-					default:
-						GD.PrintErr($"Unsupported var type: {CurrentVarType}");
-						break;
+					GD.PrintErr("No var type selected for placement!");
+					return;
 				}
+				BattleManager.Instance.RegisterVar(CurrentVarType.Value, LastClickedGrid);
 				GoToRoot();
+			},
+			onHoverEnter: () =>
+			{
+				if (CurrentVarType == null) return;
+				GD.Print($"Hovering");
+				BattleManager.Instance.RegisterVar(CurrentVarType.Value, LastClickedGrid, isHovering: true);
+			},
+			onHoverLeave: () =>
+			{
+				GD.Print($"Hover leave");
+				BattleManager.Instance.ClearCostRef();
 			}
 		);
 		var mvBtn = FindInPanel<VarButton>("VarMoveUnit", "VBoxContainer/PanelContainer2/MoveButton");
@@ -101,6 +91,15 @@ public partial class GamePanelNavigator : PanelNavigator
 			{
 				BattleManager.Instance.MoveVar(VarManager.GetVarByName(CurrentVarName), LastClickedGrid);
 				GoToRoot();
+			},
+			onHoverEnter: () =>
+			{
+				BattleManager.Instance.MoveVar(VarManager.GetVarByName(CurrentVarName), LastClickedGrid, isHovering: true);
+				//BattleManager.Instance.ExchangeToken(isHovering: true);
+			},
+			onHoverLeave: () =>
+			{
+				BattleManager.Instance.ClearCostRef();
 			}
 		);
 		var locationBtn = FindInPanel<VarButton>("VarStatusUnit", "VBoxContainer/ScrollContainer/VBoxContainer/OpLocationButton");
@@ -109,6 +108,14 @@ public partial class GamePanelNavigator : PanelNavigator
 			{
 				BattleManager.Instance.QueryVarLocation(VarManager.GetVarByName(CurrentVarName));
 				GoToRoot();
+			},
+			onHoverEnter: () =>
+			{
+				BattleManager.Instance.QueryVarLocation(VarManager.GetVarByName(CurrentVarName), isHovering: true);
+			},
+			onHoverLeave: () =>
+			{
+				BattleManager.Instance.ClearCostRef();
 			}
 		);
 		var healthBtn = FindInPanel<VarButton>("VarStatusUnit", "VBoxContainer/ScrollContainer/VBoxContainer/OpHealthButton");
@@ -117,6 +124,14 @@ public partial class GamePanelNavigator : PanelNavigator
 			{				
 				BattleManager.Instance.QueryVarHealth(VarManager.GetVarByName(CurrentVarName));
 				GoToRoot();
+			},
+			onHoverEnter: () =>
+			{
+				BattleManager.Instance.QueryVarHealth(VarManager.GetVarByName(CurrentVarName), isHovering: true);
+			},
+			onHoverLeave: () =>
+			{
+				BattleManager.Instance.ClearCostRef();
 			}
 		);
 	}
@@ -139,7 +154,7 @@ public partial class GamePanelNavigator : PanelNavigator
 		RegisterButton(addIntBtn, "",
 			onPressed: () =>
 			{
-				CurrentVarType = "Int";
+				CurrentVarType = VarStats.VarType.Int;
 				GD.Print($"Selected var type: {CurrentVarType}");
 			}
 		);
@@ -148,7 +163,7 @@ public partial class GamePanelNavigator : PanelNavigator
 		RegisterButton(addFloatBtn, "",
 			onPressed: () =>
 			{
-				CurrentVarType = "Float";
+				CurrentVarType = VarStats.VarType.Float;
 				GD.Print($"Selected var type: {CurrentVarType}");
 			}
 		);
@@ -157,7 +172,7 @@ public partial class GamePanelNavigator : PanelNavigator
 		RegisterButton(addDoubleBtn, "",
 			onPressed: () =>
 			{
-				CurrentVarType = "Double";
+				CurrentVarType = VarStats.VarType.Double;
 				GD.Print($"Selected var type: {CurrentVarType}");
 			}
 		);	
@@ -166,7 +181,7 @@ public partial class GamePanelNavigator : PanelNavigator
 		RegisterButton(addLongBtn, "",
 			onPressed: () =>
 			{
-				CurrentVarType = "Long";
+				CurrentVarType = VarStats.VarType.Long;
 				GD.Print($"Selected var type: {CurrentVarType}");
 			}
 		);
@@ -175,7 +190,7 @@ public partial class GamePanelNavigator : PanelNavigator
 		RegisterButton(addLongDoubleBtn, "",
 			onPressed: () =>
 			{
-				CurrentVarType = "LongDouble";
+				CurrentVarType = VarStats.VarType.LongDouble;
 				GD.Print($"Selected var type: {CurrentVarType}");
 			}
 		);
@@ -184,7 +199,7 @@ public partial class GamePanelNavigator : PanelNavigator
 		RegisterButton(addBoolBtn, "",
 			onPressed: () =>
 			{
-				CurrentVarType = "Bool";
+				CurrentVarType = VarStats.VarType.Bool;
 				GD.Print($"Selected var type: {CurrentVarType}");
 			}
 		);
@@ -193,7 +208,7 @@ public partial class GamePanelNavigator : PanelNavigator
 		RegisterButton(addCharBtn, "",
 			onPressed: () =>
 			{
-				CurrentVarType = "Char";
+				CurrentVarType = VarStats.VarType.Char;
 				GD.Print($"Selected var type: {CurrentVarType}");
 			}
 		);
@@ -208,7 +223,7 @@ public partial class GamePanelNavigator : PanelNavigator
 			onPressed: () =>
 			{
 				CurrentVarName = var.Stats.Name;
-				CurrentVarType = var.Stats.Type.ToString();
+				CurrentVarType = var.Stats.Type;
 				GD.Print($"Selected var: {CurrentVarName} of type {CurrentVarType}");
 			}
 		);

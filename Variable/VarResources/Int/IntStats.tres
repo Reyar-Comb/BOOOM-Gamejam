@@ -14,4 +14,5 @@ Defense = 10
 AttackRange = ExtResource("1_r7h74")
 DetectRange = ExtResource("2_oj35k")
 AttackDamage = 20
+TokenCost = 10
 metadata/_custom_type_script = "uid://d05ld37qbcgjs"

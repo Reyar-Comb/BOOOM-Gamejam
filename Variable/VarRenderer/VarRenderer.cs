@@ -220,6 +220,11 @@ public partial class VarRenderer : Control, IVarRenderer
         QueueRenderersRedraw();
     }
 
+    public void AddLogRipple(Vector2I cell, LogType logType)
+    {
+        _rippleRenderer.AddLogRipple(cell, logType);
+    }
+
     private void PruneDeadVars()
     {
         for (int index = _renderedVars.Count - 1; index >= 0; index--)

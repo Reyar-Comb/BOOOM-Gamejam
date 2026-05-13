@@ -8,6 +8,8 @@ public partial class ConsoleManager : Node
 
 	[Signal] 
 	public delegate void LogAddedEventHandler(String formattedLog);
+
+	public event Action<Log> LogCreated;
 	
 	public List<Log> Logs { get; private set; } = new List<Log>();
 
@@ -38,6 +40,7 @@ public partial class ConsoleManager : Node
 	{
 		Logs.Add(log);
 		GD.Print($"Added log: {log.ToString()}");
+		LogCreated?.Invoke(log);
 		EmitSignal(SignalName.LogAdded, log.ToString());
 	}
 

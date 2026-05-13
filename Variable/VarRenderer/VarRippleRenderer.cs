@@ -78,6 +78,39 @@ internal sealed partial class VarRippleRenderer : Control
         QueueRedraw();
     }
 
+    public void AddLogRipple(Vector2I origin, LogType logType)
+    {
+        if (!_config.RenderLogRipple)
+        {
+            return;
+        }
+
+        (Color color, Color outlineColor) = GetLogRippleColors(logType);
+        _ripples.Add(new Ripple
+        {
+            Origin = origin,
+            Duration = _config.LogRippleDuration,
+            Radius = _config.LogRippleRadius,
+            RingWidth = _config.LogRippleRingWidth,
+            OriginFlashPortion = _config.LogRippleOriginFlashPortion,
+            OutlineWidth = _config.LogRippleOutlineWidth,
+            Color = color,
+            OutlineColor = outlineColor,
+        });
+        QueueRedraw();
+    }
+
+    private (Color Color, Color OutlineColor) GetLogRippleColors(LogType logType)
+    {
+        return logType switch
+        {
+            LogType.Info => (_config.LogInfoRippleColor, _config.LogInfoRippleOutlineColor),
+            LogType.Warning => (_config.LogWarningRippleColor, _config.LogWarningRippleOutlineColor),
+            LogType.Error => (_config.LogErrorRippleColor, _config.LogErrorRippleOutlineColor),
+            _ => (_config.LogInfoRippleColor, _config.LogInfoRippleOutlineColor),
+        };
+    }
+
     public void UpdateRipples(double delta)
     {
         if (_ripples.Count == 0)

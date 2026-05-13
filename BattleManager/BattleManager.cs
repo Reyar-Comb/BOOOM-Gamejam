@@ -97,8 +97,20 @@ public partial class BattleManager : Node
 		VarRenderer.Initialize(_mapData);
 		TokenManager.Initialize(_gameData);
 		Log.Initialize(_colorData);
+		if (ConsoleManager != null)
+		{
+			ConsoleManager.LogCreated += OnLogCreated;
+		}
 
 		StartWave();
+	}
+
+	public override void _ExitTree()
+	{
+		if (ConsoleManager != null)
+		{
+			ConsoleManager.LogCreated -= OnLogCreated;
+		}
 	}
 
 	public override void _Process(double delta)
@@ -179,6 +191,16 @@ public partial class BattleManager : Node
 	{
 		TimeSpan timeSpan = TimeSpan.FromMilliseconds(GameTime);
 		return timeSpan.ToString(@"mm\:ss");
+	}
+
+	private void OnLogCreated(Log log)
+	{
+		if (log?.ReportedCell == null || VarRenderer == null)
+		{
+			return;
+		}
+
+		VarRenderer.AddLogRipple(log.ReportedCell.Value, log.Type);
 	}
 
 	public void StartWave()

@@ -7,6 +7,7 @@ public abstract class Log
 	public LogType Type { get; set; }
 	public string Actor { get; set; }
 	public string Message { get; set; }
+	public Vector2I? ReportedCell { get; protected set; }
 
 
     protected static Color InfoColor;
@@ -38,6 +39,16 @@ public abstract class Log
 		Time = DateTime.Now.ToString("HH:mm:ss.fff");
 		Type = type;
 		Actor = actor ?? "System";
+	}
+
+	protected void SetReportedWorldPosition(Vector2 worldPosition)
+	{
+		ReportedCell = Grid.WorldToGrid(worldPosition);
+	}
+
+	protected void SetReportedCell(Vector2I cell)
+	{
+		ReportedCell = cell;
 	}
 
 	protected abstract string FormatMessage();
@@ -74,7 +85,8 @@ public class CreateAck : Log
 {
 	public CreateAck(Var targetVar) : base(LogType.Info, "System")
 	{
-		Message = $"成功创建 {targetVar.Stats.Type} 于 {Grid.WorldToGrid(targetVar.Stats.Position)} ！";
+		SetReportedWorldPosition(targetVar.Stats.Position);
+		Message = $"成功创建 {targetVar.Stats.Type} 于 {ReportedCell} ！";
 	}
 
 	protected override string FormatMessage()
@@ -89,7 +101,8 @@ public class LocationAck : Log
 {
 	public LocationAck(Var targetVar) : base(LogType.Info, targetVar.Stats.Name)
 	{
-		Message = $"Current Location: {Grid.WorldToGrid(targetVar.Stats.Position)}";
+		SetReportedWorldPosition(targetVar.Stats.Position);
+		Message = $"Current Location: {ReportedCell}";
 	}
 
 	protected override string FormatMessage()
@@ -127,7 +140,8 @@ public class MoveAck : Log
 {
 	public MoveAck(Var targetVar, Vector2 newPosition) : base(LogType.Info, targetVar.Stats.Name)
 	{
-		Message = $"正在移动至 {Grid.WorldToGrid(newPosition)}";
+		SetReportedWorldPosition(newPosition);
+		Message = $"正在移动至 {ReportedCell}";
 	}
 
 	protected override string FormatMessage()
@@ -140,7 +154,8 @@ public class AttackedWarning : Log
 {
 	public AttackedWarning(Var targetVar, AttackInfo atkInfo) : base(LogType.Warning, targetVar.Stats.Name)
 	{
-		Message = $"受到异常变量干扰于 {Grid.WorldToGrid(targetVar.Stats.Position)}";
+		SetReportedWorldPosition(targetVar.Stats.Position);
+		Message = $"受到异常变量干扰于 {ReportedCell}";
 	}
 
 	protected override string FormatMessage()
@@ -153,7 +168,8 @@ public class DetectedWarning : Log
 {
 	public DetectedWarning(DetectInfo detectInfo) : base(LogType.Warning, detectInfo.Detector.Stats.Name)
 	{
-		Message = $"发现 {detectInfo.DetectedVar.Stats.Type} 类敌人于 {Grid.WorldToGrid(detectInfo.DetectedVar.Stats.Position)} 处！";
+		SetReportedWorldPosition(detectInfo.DetectedVar.Stats.Position);
+		Message = $"发现 {detectInfo.DetectedVar.Stats.Type} 类敌人于 {ReportedCell} 处！";
 	}
 
 	protected override string FormatMessage()
@@ -179,7 +195,8 @@ public class DeathError : Log
 {
 	public DeathError(Var targetVar) : base(LogType.Error, targetVar.Stats.Name)
 	{
-		Message = $"变量于 {Grid.WorldToGrid(targetVar.Stats.Position)} 失效！";
+		SetReportedWorldPosition(targetVar.Stats.Position);
+		Message = $"变量于 {ReportedCell} 失效！";
 	}
 
 	protected override string FormatMessage()
@@ -188,4 +205,3 @@ public class DeathError : Log
 	}
     
 }
-

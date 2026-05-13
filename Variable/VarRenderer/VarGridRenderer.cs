@@ -23,7 +23,14 @@ internal sealed partial class VarGridRenderer : Control
 
     public override void _Draw()
     {
-        if (!_config.RenderGrid || _config.Zoom <= VarRenderer.Epsilon || Grid.CellSize <= 0)
+        if (_config.Zoom <= VarRenderer.Epsilon || Grid.CellSize <= 0)
+        {
+            return;
+        }
+
+        DrawHoveredGridCell();
+
+        if (!_config.RenderGrid)
         {
             return;
         }
@@ -73,6 +80,19 @@ internal sealed partial class VarGridRenderer : Control
             Color lineColor = y == 0 ? _config.AxisGridColor : _config.GridColor;
             DrawLine(new Vector2(left, screenY), new Vector2(right, screenY), lineColor, 2.0f);
         }
+    }
+
+    private void DrawHoveredGridCell()
+    {
+        if (!_config.RenderHoveredGridCell || !_owner.HoveredGridCell.HasValue)
+        {
+            return;
+        }
+
+        Vector2 cellCenter = _owner.WorldToScreen(Grid.GridToWorld(_owner.HoveredGridCell.Value));
+        Vector2 cellSize = Vector2.One * Grid.CellSize * _config.Zoom;
+        Rect2 cellRect = new(cellCenter - cellSize / 2.0f, cellSize);
+        DrawRect(cellRect, _config.HoveredGridCellColor);
     }
 
     private float GetGridLineScreenX(int cellX)

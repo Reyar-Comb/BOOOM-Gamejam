@@ -1,6 +1,7 @@
 using Godot;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 public enum BattleState
 {
@@ -8,22 +9,23 @@ public enum BattleState
 	Paused,
 	Choice,
 	Replay,
-	End
+	End,
+	BeforeWaveEnd
 }
 
-public readonly struct BattleTickContext
-{
-	public long Tick { get; }
-	public double TickDelta { get; }
-	public BattleManager Manager { get; }
+// public readonly struct BattleTickContext
+// {
+// 	public long Tick { get; }
+// 	public double TickDelta { get; }
+// 	public BattleManager Manager { get; }
 
-	public BattleTickContext(long tick, double tickDelta, BattleManager manager)
-	{
-		Tick = tick;
-		TickDelta = tickDelta;
-		Manager = manager;
-	}
-}
+// 	public BattleTickContext(long tick, double tickDelta, BattleManager manager)
+// 	{
+// 		Tick = tick;
+// 		TickDelta = tickDelta;
+// 		Manager = manager;
+// 	}
+// }
 
 public partial class BattleManager : Node
 {
@@ -31,6 +33,10 @@ public partial class BattleManager : Node
 	[Export] public int TickRate = 20;
 
 	[Export] public float TickScale = 1f;
+
+	[Export] public double WaveFinishedDelay = 0.4;
+
+	[Export] public double SkillChoiceDelay = 0.6;
 
 	[Export] public VarManager VarManager { get; private set; } = null!;
 
@@ -48,13 +54,19 @@ public partial class BattleManager : Node
 
 	public double TickInterval => 1.0 / TickRate;
 
+	public ColorData ColorData => _colorData;
+	
 	private double _accumulator = 0.0;
 
 	private bool _isTicking = false;
 
+	private bool _isWaveTransitioning = false;
+
 	private MapData _mapData = null!;
 
 	private GameData _gameData = null!;
+
+	private ColorData _colorData = null!;
 
 	public long GameTime = 0;
 
@@ -77,12 +89,14 @@ public partial class BattleManager : Node
 		Instance = this;
 		VarManager.SetPhysicsProcess(false);
 
-		_mapData = new MapData(80, 60);
+		_mapData = new MapData(80, 46);
 		_mapData.CreateRegions(6);
 		_gameData = new GameData();
+		_colorData = new ColorData();
 		VarManager.Initialize(_mapData, _gameData);
 		VarRenderer.Initialize(_mapData);
 		TokenManager.Initialize(_gameData);
+		Log.Initialize(_colorData);
 
 		StartWave();
 	}
@@ -102,21 +116,45 @@ public partial class BattleManager : Node
 
 	private void Tick()
 	{
-		if (_isWaveFinished)
+		if (_isWaveFinished && !_isWaveTransitioning)
 		{
-			FinishWave();
-			StartWave();
-			_isWaveFinished = false;
+			_ = HandleWaveFinishedAsync();
+			return;
 		}
 
 		CurrentTick++;
 		_isTicking = true;
 
-		var context = new BattleTickContext(CurrentTick, TickInterval, this);
+		// var context = new BattleTickContext(CurrentTick, TickInterval, this);
 
 		VarManager.Tick(TickInterval);
 		TokenManager.Tick(TickInterval);
 		GameTime += (long)(TickInterval * 1000); // Convert to milliseconds
+	}
+
+	private async Task HandleWaveFinishedAsync()
+	{
+		_isWaveTransitioning = true;
+		_accumulator = 0.0;
+		State = BattleState.BeforeWaveEnd;
+
+		await FinishWave();
+		State = BattleState.Choice;
+		await ChooseUpgrades();
+
+		StartWave();
+		_isWaveFinished = false;
+		_isWaveTransitioning = false;
+	}
+
+	private async Task WaitSeconds(double seconds)
+	{
+		if (seconds <= 0.0)
+		{
+			return;
+		}
+
+		await ToSignal(GetTree().CreateTimer(seconds), SceneTreeTimer.SignalName.Timeout);
 	}
 
 	public void OnDie()
@@ -150,6 +188,7 @@ public partial class BattleManager : Node
 		_accumulator = 0.0;
 		_isTicking = true;
 		_isWaveFinished = false;
+		_isWaveTransitioning = false;
 		State = BattleState.Running;
 
 		ConsoleManager?.UnsubscribeAllVarEvents();
@@ -164,13 +203,19 @@ public partial class BattleManager : Node
 
 		SpawnEnemies(8);
 	}
-	private void FinishWave()
+	private async Task FinishWave()
+	{
+		await WaitSeconds(WaveFinishedDelay);
+	}
+	private async Task ChooseUpgrades()
 	{
 		List<Upgrade> choices = _gameData.GetRandomSkillChoices();
 		if (choices.Count == 0)
 		{
 			return;
 		}
+
+		await WaitSeconds(SkillChoiceDelay);
 
 		Upgrade upgrade = choices[Random.Shared.Next(choices.Count)];
 		upgrade.Apply(_gameData);
@@ -180,13 +225,13 @@ public partial class BattleManager : Node
 	{
 		if (type == VarStats.VarType.Dummy)
 		{
-			return Colors.Gray;
+			return _colorData.Get("RenderDummyVar");
 		}
 		if (team == VarStats.Team.Friendly)
 		{
-			return Colors.OrangeRed;
+			return _colorData.Get("RenderFriendlyVar");
 		}
-		return Colors.DeepSkyBlue;
+		return _colorData.Get("RenderHostileVar");
 	}
 	private VarManager.CountQueryType GetQueryType(VarStats.Team team)
 	{

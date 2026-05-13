@@ -4,3 +4,14 @@
 
 doc/
 .DS_Store
+booom.csproj.lscache
+booom.csproj.old
+booom.csproj.old.1
+booom.csproj.old.2
+booom.csproj.old.3
+booom.csproj.old.4
+booom.csproj.old.5
+
+Console/ConsoleView/ConsoleTest.cs
+Console/ConsoleView/ConsoleTest.cs.uid
+Console/ConsoleView/ConsoleTest.tscn

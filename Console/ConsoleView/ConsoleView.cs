@@ -151,8 +151,8 @@ public partial class ConsoleView : Control
 		var btnCreateVar = CreateButton("Create Var", "#0077cc", () => OnCreateTestVar());
 		row1.AddChild(btnCreateVar);
 
-		var btnQueryStatus = CreateButton("Query Status", "#008855", () => OnQueryStatus());
-		row1.AddChild(btnQueryStatus);
+
+
 
 		var btnMoveVar = CreateButton("Move Var", "#aa6600", () => OnMoveVar());
 		row1.AddChild(btnMoveVar);
@@ -302,23 +302,7 @@ public partial class ConsoleView : Control
 	/// <summary>
 	/// Queries the status of the most recently created test Var.
 	/// </summary>
-	private void OnQueryStatus()
-	{
-		if (ConsoleManager == null)
-		{
-			AddLog("[Error] ConsoleManager is not available.");
-			return;
-		}
 
-		if (_testVars.Count == 0)
-		{
-			AddLog("[Warning] No test vars available. Create a Var first.");
-			return;
-		}
-
-		Var target = _testVars[^1];
-		ConsoleManager.QueryVarStatus(target);
-	}
 
 	/// <summary>
 	/// Moves the most recently created test Var to a random position.

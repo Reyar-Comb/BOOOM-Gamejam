@@ -128,13 +128,13 @@ public partial class VarButton : Control
 	{
 		Color color = varType switch
 		{
-			VarStats.VarType.Int => Colors.LightPink,
-			VarStats.VarType.Float => Colors.LightBlue,
-			VarStats.VarType.Double => Colors.LightGreen,
-			VarStats.VarType.LongDouble => Colors.LightYellow,
-			VarStats.VarType.Char => Colors.LightCoral,
-			VarStats.VarType.Bool => Colors.LightCyan,
-			VarStats.VarType.Long => Colors.LightGoldenrod,
+			VarStats.VarType.Int => BattleManager.Instance.ColorData.Get("ButtonIntColor"),
+			VarStats.VarType.Float => BattleManager.Instance.ColorData.Get("ButtonFloatColor"),
+			VarStats.VarType.Double => BattleManager.Instance.ColorData.Get("ButtonDoubleColor"),
+			VarStats.VarType.LongDouble => BattleManager.Instance.ColorData.Get("ButtonLongDoubleColor"),
+			VarStats.VarType.Char => BattleManager.Instance.ColorData.Get("ButtonCharColor"),
+			VarStats.VarType.Bool => BattleManager.Instance.ColorData.Get("ButtonBoolColor"),
+			VarStats.VarType.Long => BattleManager.Instance.ColorData.Get("ButtonLongColor"),
 			_ => Colors.White
 		};
 		colorRect.Color = color;

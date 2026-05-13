@@ -1,9 +1,16 @@
-[gd_resource type="Resource" script_class="VarRendererConfig" format=3]
+[gd_resource type="Resource" script_class="VarRendererConfig" format=3 uid="uid://dxn8y41s7b4yq"]
 
-[ext_resource type="Script" path="res://Variable/VarRenderer/VarRendererConfig.cs" id="1_config"]
+[ext_resource type="Script" uid="uid://bixggai0cuh5h" path="res://Variable/VarRenderer/VarRendererConfig.cs" id="1_config"]
 
 [resource]
 script = ExtResource("1_config")
 DrawBackground = true
 BackgroundColor = Color(0.078431375, 0.09019608, 0.10980392, 0.69411767)
+RenderMapRegions = false
+RenderMapBridges = false
 RenderGrid = true
+DummyDeathRippleDuration = 1.6
+DummyDeathRippleRadius = 48.0
+DummyDeathRippleRingWidth = 10.0
+DummyDeathRippleOriginFlashPortion = 0.6
+Zoom = 0.25

@@ -99,11 +99,6 @@ public partial class ConsoleManager : Node
 		AddLog(new CreateAck(v));
 	}
 
-	public void QueryVarStatus(Var v)
-	{
-		if (v == null) return;
-		AddLog(new StatusAck(v));
-	}
 
 	public void MoveVar(Var v, Vector2 newPosition)
 	{

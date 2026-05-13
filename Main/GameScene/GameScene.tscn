@@ -11,9 +11,11 @@
 [ext_resource type="FontFile" uid="uid://cd6jbow8csp81" path="res://assets/Fonts/Hack-Italic.ttf" id="5_ds47p"]
 [ext_resource type="Script" uid="uid://de1oryn5icnbq" path="res://Variable/VarRenderer/VarRenderer.cs" id="6_2anr5"]
 [ext_resource type="Script" uid="uid://dakmgdxqi7wy" path="res://TokenManager/TokenManager.cs" id="6_2nynh"]
+[ext_resource type="Script" uid="uid://xsldadlcf7oy" path="res://Prefabs/TooltipWindow/TooltipManager.cs" id="7_0mgrt"]
 [ext_resource type="FontFile" uid="uid://bo3cgu1o17h5i" path="res://assets/Fonts/AGENCYR.TTF" id="7_4bds6"]
 [ext_resource type="PackedScene" uid="uid://dhd46rm8iamsn" path="res://Prefabs/WindowPanel/WindowPanel.tscn" id="8_816xn"]
 [ext_resource type="Script" uid="uid://1pprsysgn4ne" path="res://Main/GameScene/Nodes/GameTimeText.cs" id="8_hdewu"]
+[ext_resource type="PackedScene" uid="uid://b6s6qtvjgm3r6" path="res://Prefabs/TooltipWindow/TooltipWindow.tscn" id="8_jj1xj"]
 [ext_resource type="FontFile" uid="uid://0id83sf6l5jq" path="res://assets/Fonts/FZYTK.TTF" id="9_3yp31"]
 [ext_resource type="Script" uid="uid://dlk4od7rxupns" path="res://Main/GameScene/Nodes/BarController.cs" id="9_dkdgh"]
 [ext_resource type="Script" uid="uid://wjwo0jkmutf6" path="res://Main/GameScene/GamePanelNavigator.cs" id="10_8oyud"]
@@ -22,6 +24,10 @@
 [ext_resource type="PackedScene" uid="uid://c3p8415n1lwy1" path="res://Prefabs/VarButton/VarButton.tscn" id="11_8oyud"]
 [ext_resource type="Script" uid="uid://sa26p4j2xfk4" path="res://Utilities/PanelNavigator/PanelUnit.cs" id="11_b3sdv"]
 [ext_resource type="Shader" uid="uid://cq86ki37hsl8j" path="res://Shaders/BlinkingProgressBar.gdshader" id="11_y1mx5"]
+<<<<<<< HEAD
+=======
+[ext_resource type="Script" uid="uid://dmjp5qpxlfunm" path="res://Prefabs/TooltipWindow/TooltipTrigger.cs" id="17_xdr2y"]
+>>>>>>> 077785672cbc09789c8c794fb7bf02a61c815a06
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_y1mx5"]
 shader = ExtResource("11_y1mx5")
@@ -272,7 +278,7 @@ void fragment(){
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_4bds6"]
 shader = SubResource("Shader_hdewu")
 shader_parameter/blur_type = 0
-shader_parameter/blur_amount = 20
+shader_parameter/blur_amount = 12
 shader_parameter/blur_radius = 1.0
 shader_parameter/blur_direction = Vector2(1, 1)
 
@@ -284,7 +290,7 @@ corner_radius_bottom_left = 5
 shadow_offset = Vector2(10, 0)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_xdr2y"]
-bg_color = Color(0.44097927, 0.44097927, 0.44097915, 0)
+bg_color = Color(0, 0, 0, 0.49019608)
 border_width_left = 4
 border_width_top = 4
 border_width_right = 4
@@ -356,6 +362,11 @@ script = ExtResource("5_b3sdv")
 [node name="TokenManager" type="Node" parent="." unique_id=1838876679 node_paths=PackedStringArray("BarController")]
 script = ExtResource("6_2nynh")
 BarController = NodePath("../MarginContainer/HBoxContainer/MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/WindowPanel/MarginContainer/HBoxContainer2/BarController")
+
+[node name="TooltipManager" type="Node" parent="." unique_id=1944468533 node_paths=PackedStringArray("VarRenderer")]
+script = ExtResource("7_0mgrt")
+TooltipScene = ExtResource("8_jj1xj")
+VarRenderer = NodePath("../MarginContainer/HBoxContainer/MarginContainer2/VBoxContainer/WindowPanel2/MarginContainer/VarRenderer")
 
 [node name="MarginContainer" type="MarginContainer" parent="." unique_id=347560611]
 anchors_preset = 15
@@ -558,6 +569,12 @@ script = ExtResource("6_2anr5")
 BattleManager = NodePath("../../../../../../../BattleManager")
 metadata/_custom_type_script = "uid://de1oryn5icnbq"
 
+[node name="TooltipTrigger" type="Node" parent="MarginContainer/HBoxContainer/MarginContainer2/VBoxContainer/WindowPanel2/MarginContainer/VarRenderer" unique_id=768718970]
+script = ExtResource("17_xdr2y")
+TooltipId = "map"
+HideOnClick = false
+metadata/_custom_type_script = "uid://dmjp5qpxlfunm"
+
 [node name="WindowPanel" parent="MarginContainer/HBoxContainer/MarginContainer2/VBoxContainer" unique_id=387059429 instance=ExtResource("8_816xn")]
 material = SubResource("ShaderMaterial_4bds6")
 layout_mode = 2
@@ -702,6 +719,7 @@ theme_override_styles/panel = SubResource("StyleBoxFlat_8oyud")
 
 [node name="SelectVarButton" parent="MarginContainer/HBoxContainer/MarginContainer3/ChooseVar/VBoxContainer/MarginContainer2/PanelContainer/MarginContainer/PanelNavigator/VarUnit/VBoxContainer/PanelContainer" unique_id=1942279699 instance=ExtResource("11_8oyud")]
 layout_mode = 2
+BlinkMinAlpha = 1.0
 
 [node name="ColorRect" parent="MarginContainer/HBoxContainer/MarginContainer3/ChooseVar/VBoxContainer/MarginContainer2/PanelContainer/MarginContainer/PanelNavigator/VarUnit/VBoxContainer/PanelContainer/SelectVarButton" index="0" unique_id=1894200065]
 color = Color(1, 1, 1, 1)
@@ -955,6 +973,10 @@ color = Color(4.235506e-06, 0.63237935, 0.71052945, 1)
 [node name="RichTextLabel" parent="MarginContainer/HBoxContainer/MarginContainer3/ChooseVar/VBoxContainer/MarginContainer2/PanelContainer/MarginContainer/PanelNavigator/VarAddUnit/VBoxContainer/ScrollContainer/VBoxContainer/AddBoolButton" index="1" unique_id=1388884413]
 text = "[b]Bool[/b]
 "
+
+[node name="TooltipTrigger" parent="MarginContainer/HBoxContainer/MarginContainer3/ChooseVar/VBoxContainer/MarginContainer2/PanelContainer/MarginContainer/PanelNavigator/VarAddUnit/VBoxContainer/ScrollContainer/VBoxContainer/AddIntButton/Button" parent_id_path=PackedInt32Array(1029203935, 1223400032) index="0" unique_id=852389310]
+TooltipId = "int_description"
+HideOnClick = false
 
 [node name="AddCharButton" parent="MarginContainer/HBoxContainer/MarginContainer3/ChooseVar/VBoxContainer/MarginContainer2/PanelContainer/MarginContainer/PanelNavigator/VarAddUnit/VBoxContainer/ScrollContainer/VBoxContainer" unique_id=218567015 instance=ExtResource("11_8oyud")]
 layout_mode = 2

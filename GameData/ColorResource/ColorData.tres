@@ -1,0 +1,23 @@
+[gd_resource type="Resource" script_class="ColorDataResource" format=3 uid="uid://dfa2qpuguwh8"]
+
+[ext_resource type="Script" uid="uid://4f5bww7ysdur" path="res://GameData/ColorResource/ColorDataResource.cs" id="1_hp3oa"]
+
+[resource]
+script = ExtResource("1_hp3oa")
+Data = Dictionary[String, Color]({
+"ButtonBoolColor": Color(0, 1, 0, 1),
+"ButtonCharColor": Color(0, 1, 0, 1),
+"ButtonDoubleColor": Color(0, 1, 0, 1),
+"ButtonIntColor": Color(0, 1, 0, 1),
+"ButtonLongColor": Color(0, 1, 0, 1),
+"ButtonLongDoubleColor": Color(0, 1, 0, 1),
+"LogActorText": Color(0.4278021, 0.6092458, 1, 1),
+"LogErrorText": Color(1, 0, 0, 1),
+"LogInfoText": Color(0, 1, 0, 1),
+"LogTimeText": Color(1, 1, 1, 1),
+"LogWarningText": Color(0.78431374, 1, 0, 1),
+"RenderDummyVar": Color(0.74509805, 0.7411765, 0.99607843, 1),
+"RenderFriendlyVar": Color(1, 0.27058825, 0, 1),
+"RenderHostileVar": Color(0, 0.7490196, 1, 1)
+})
+metadata/_custom_type_script = "uid://4f5bww7ysdur"

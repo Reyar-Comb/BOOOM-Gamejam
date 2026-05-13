@@ -10,29 +10,29 @@ public abstract class Log
 	public Vector2I? ReportedCell { get; protected set; }
 
 
-    protected static Color InfoColor;
-    protected static Color WarningColor;
-    protected static Color ErrorColor;
-    protected static Color TimeColor;
-    protected static Color ActorColor;
+	protected static Color InfoColor;
+	protected static Color WarningColor;
+	protected static Color ErrorColor;
+	protected static Color TimeColor;
+	protected static Color ActorColor;
 
-    protected Color GetColorByType()
-    {
-        return Type switch
-        {
-            LogType.Info => InfoColor,
-            LogType.Warning => WarningColor,
-            LogType.Error => ErrorColor,
-            _ => Colors.White
-        };
-    }
+	protected Color GetColorByType()
+	{
+		return Type switch
+		{
+			LogType.Info => InfoColor,
+			LogType.Warning => WarningColor,
+			LogType.Error => ErrorColor,
+			_ => Colors.White
+		};
+	}
 
-    protected string _timeText => ColoredText($"[{BattleManager.Instance.GetTimeString()}]", TimeColor);
-    protected string _infoText = $"[b]{ColoredText("INFO", InfoColor)}[/b]";
-    protected string _warningText = $"[b]{ColoredText("WARNING", WarningColor)}[/b]";
-    protected string _errorText = $"[b]{ColoredText("ERROR", ErrorColor)}[/b]";
-    protected string _actorText => ColoredText(Actor, ActorColor);
-    protected string _messageText => ColoredText(Message, GetColorByType());
+	protected string _timeText => ColoredText($"[{BattleManager.Instance.GetTimeString()}]", TimeColor);
+	protected string _infoText = $"[b]{ColoredText("INFO", InfoColor)}[/b]";
+	protected string _warningText = $"[b]{ColoredText("WARNING", WarningColor)}[/b]";
+	protected string _errorText = $"[b]{ColoredText("ERROR", ErrorColor)}[/b]";
+	protected string _actorText => ColoredText(Actor, ActorColor);
+	protected string _messageText => ColoredText(Message, GetColorByType());
 
 	protected Log(LogType type, string actor)
 	{
@@ -58,20 +58,20 @@ public abstract class Log
 		return FormatMessage();
 	}
 
-    protected static string ColoredText(string text, Color color)
-    {
-        string hexColor = color.ToHtml();
-        return $"[color={hexColor}]{text}[/color]";
-    }
+	protected static string ColoredText(string text, Color color)
+	{
+		string hexColor = color.ToHtml();
+		return $"[color={hexColor}]{text}[/color]";
+	}
 
-    public static void Initialize(ColorData colorData)
-    {
-        Log.InfoColor = colorData.Get("LogInfoText");
-        Log.WarningColor = colorData.Get("LogWarningText");
-        Log.ErrorColor = colorData.Get("LogErrorText");
-        Log.TimeColor = colorData.Get("LogTimeText");
-        Log.ActorColor = colorData.Get("LogActorText");
-    }
+	public static void Initialize(ColorData colorData)
+	{
+		Log.InfoColor = colorData.Get("LogInfoText");
+		Log.WarningColor = colorData.Get("LogWarningText");
+		Log.ErrorColor = colorData.Get("LogErrorText");
+		Log.TimeColor = colorData.Get("LogTimeText");
+		Log.ActorColor = colorData.Get("LogActorText");
+	}
 }
 
 public enum LogType
@@ -115,20 +115,20 @@ public class HealthAck : Log
 {
 	public HealthAck(Var targetVar) : base(LogType.Info, targetVar.Stats.Name)
 	{
-        int currentHealth = targetVar.Stats.CurrentHealth;
-        int maxHealth = targetVar.Stats.MaxHealth;
-        if (currentHealth <= 0.3 * maxHealth)
-        {
-            Message = $"当前Health状态较差";
-        }
-        else if (currentHealth <= 0.7 * maxHealth)
-        {
-            Message = $"当前Health状态一般";
-        }
-        else
-        {
-            Message = $"当前Health状态良好";
-        }
+		int currentHealth = targetVar.Stats.CurrentHealth;
+		int maxHealth = targetVar.Stats.MaxHealth;
+		if (currentHealth <= 0.3 * maxHealth)
+		{
+			Message = $"当前Health状态较差";
+		}
+		else if (currentHealth <= 0.7 * maxHealth)
+		{
+			Message = $"当前Health状态一般";
+		}
+		else
+		{
+			Message = $"当前Health状态良好";
+		}
 	}
 
 	protected override string FormatMessage()
@@ -203,5 +203,5 @@ public class DeathError : Log
 	{
 		return $"{_errorText} {_timeText} {_actorText}: {_messageText}";
 	}
-    
+	
 }

@@ -657,7 +657,7 @@ shader_parameter/intensity = 1.0
 gradient = SubResource("Gradient_wwceq")
 
 [node name="Bg" type="Node2D" unique_id=61670994]
-modulate = Color(0.6255971, 0.6255971, 0.62559694, 1)
+modulate = Color(0.35656494, 0.3565649, 0.3565649, 1)
 
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=1126925073]
 z_index = -1

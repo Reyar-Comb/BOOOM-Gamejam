@@ -23,7 +23,7 @@ public partial class VarRenderer : Control, IVarRenderer
         }
     }
 
-    [Export] public BattleManager BattleManager { get; set; } = null!;
+    [Export] public BattleManager BattleManager { get; set; } = null;
 
     private readonly List<Var> _renderedVars = new();
     private readonly VarBackgroundRenderer _backgroundRenderer;

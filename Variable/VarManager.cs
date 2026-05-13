@@ -92,6 +92,7 @@ public partial class VarManager : Node
             EmitSignal(SignalName.VarListUpdated);
         }
         VarListPool.Return(varsToRemove);
+        UpdateDynamicRegionStates();
 
     }
     private void BroadcastTeam(VarStats.Team team, VarStats.VarType type, Vector2I fromCell)
@@ -138,6 +139,7 @@ public partial class VarManager : Node
             _gameData.SkillManager.OnVarCreated(new VarCreationInfo { Var = var });
         }
         EmitSignal(SignalName.VarListUpdated);
+        UpdateDynamicRegionStates();
     }
 
     public void ClearAllVars()
@@ -154,6 +156,7 @@ public partial class VarManager : Node
         _onDeathCallablesByVar.Clear();
         _onDamageReceivedCallablesByVar.Clear();
         EmitSignal(SignalName.VarListUpdated);
+        UpdateDynamicRegionStates();
     }
 
     private void RemoveFromTeamLists(Var var)
@@ -186,6 +189,33 @@ public partial class VarManager : Node
     private void OnVarDeath(Var var)
     {
         var.IsDead = true;
+        UpdateDynamicRegionStates();
+    }
+
+    private void UpdateDynamicRegionStates()
+    {
+        if (_mapData == null)
+        {
+            return;
+        }
+
+        _mapData.ResetDynamicRegionStates();
+        foreach (Var var in _hostileVars)
+        {
+            if (var == null || var.IsDead || var.Stats == null)
+            {
+                continue;
+            }
+
+            Vector2I cell = Grid.WorldToGrid(var.Stats.Position);
+            int regionId = _mapData.GetRegion(cell.X, cell.Y);
+            if (regionId <= 0 || regionId == MapData.EnemyBaseRegionId)
+            {
+                continue;
+            }
+
+            _mapData.SetRegionState(regionId, MapData.RegionState.Unoccupied);
+        }
     }
     private void ConnectOnDamageReceived(Var var)
     {

@@ -237,8 +237,13 @@ internal sealed partial class VarMapRenderer : Control
 
     private Color GetRegionColor(int regionId)
     {
-        Color color = regionId > 0 && _owner.MapData.GetRegionOccupied(regionId)
-            ? _config.OccupiedRegionColor
+        Color color = regionId > 0
+            ? _owner.MapData.GetRegionState(regionId) switch
+            {
+                MapData.RegionState.Occupied => _config.OccupiedRegionColor,
+                MapData.RegionState.EnemyBase => _config.EnemyBaseRegionColor,
+                _ => _config.UnoccupiedRegionColor
+            }
             : _config.UnoccupiedRegionColor;
         color.A = _config.RegionFillAlpha;
         return color;

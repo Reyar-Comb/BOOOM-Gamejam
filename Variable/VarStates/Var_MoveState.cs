@@ -117,21 +117,9 @@ public partial class Var_MoveState : STNode
             ToRegion = reachedRegion
         };
 
-        OccupyRegionIfFriendly(reachedRegion);
-
         _currentCell = reachedCell;
         _currentRegionId = reachedRegion;
         GameData.SkillManager.OnRegionEntered(info);
-    }
-
-    private void OccupyRegionIfFriendly(int regionId)
-    {
-        if (regionId <= 0 || Stats.VarTeam != VarStats.Team.Friendly)
-        {
-            return;
-        }
-
-        MapData.SetRegionOccupied(regionId, true);
     }
 
     private bool TryGetNextTargetPosition(out Vector2 nextPos)

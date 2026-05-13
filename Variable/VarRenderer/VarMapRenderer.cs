@@ -3,20 +3,6 @@ using System;
 
 internal sealed partial class VarMapRenderer : Control
 {
-    private static readonly Color[] RegionPalette =
-    [
-        new(0.90f, 0.28f, 0.24f),
-        new(0.18f, 0.62f, 0.87f),
-        new(0.28f, 0.72f, 0.42f),
-        new(0.95f, 0.68f, 0.22f),
-        new(0.58f, 0.42f, 0.86f),
-        new(0.19f, 0.75f, 0.68f),
-        new(0.91f, 0.40f, 0.65f),
-        new(0.62f, 0.72f, 0.22f),
-        new(0.45f, 0.56f, 0.96f),
-        new(0.86f, 0.47f, 0.18f),
-    ];
-
     private readonly VarRenderer _owner;
     private VarRendererConfig _config;
     private float _revealElapsed;
@@ -251,9 +237,9 @@ internal sealed partial class VarMapRenderer : Control
 
     private Color GetRegionColor(int regionId)
     {
-        Color color = regionId <= 0
-            ? _config.EmptyRegionColor
-            : RegionPalette[(regionId - 1) % RegionPalette.Length];
+        Color color = regionId > 0 && _owner.MapData.GetRegionOccupied(regionId)
+            ? _config.OccupiedRegionColor
+            : _config.UnoccupiedRegionColor;
         color.A = _config.RegionFillAlpha;
         return color;
     }

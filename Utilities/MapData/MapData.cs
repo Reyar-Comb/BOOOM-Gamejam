@@ -62,6 +62,7 @@ public class MapData
     // ID starts from 1, 0 means unassigned.
     private int[] _regionId;
     private bool[] _isBridge;
+    private bool[] _isRegionOccupied;
     private List<BridgeConnection> _bridges;
     private List<PriorityQueue<TileExpansion, float>> _nextTileDeciders;
     private readonly int _regionSeedTileDistance;
@@ -74,6 +75,7 @@ public class MapData
         Height = height;
         _regionId = new int[Width * Height];
         _isBridge = new bool[Width * Height];
+        _isRegionOccupied = Array.Empty<bool>();
         _bridges = new();
         _nextTileDeciders = new();
         _regionSeedTileDistance = regionSeedTileDistance;
@@ -108,6 +110,24 @@ public class MapData
     public bool IsBridge(int x, int y)
     {
         return IsValid(x, y) && _isBridge[x + y * Width];
+    }
+
+    public bool GetRegionOccupied(int regionId)
+    {
+        int regionIndex = regionId - 1;
+        return regionIndex >= 0 && regionIndex < _isRegionOccupied.Length && _isRegionOccupied[regionIndex];
+    }
+
+    public void SetRegionOccupied(int regionId, bool isOccupied)
+    {
+        int regionIndex = regionId - 1;
+        if (regionIndex < 0 || regionIndex >= _isRegionOccupied.Length)
+        {
+            GD.PushError("Region id must match an existing region.");
+            return;
+        }
+
+        _isRegionOccupied[regionIndex] = isOccupied;
     }
 
     public IReadOnlyList<BridgeConnection> GetBridges()
@@ -150,6 +170,7 @@ public class MapData
         {
             tiles.Clear();
         }
+        _isRegionOccupied = Array.Empty<bool>();
         foreach (PriorityQueue<TileExpansion, float> decider in _nextTileDeciders)
         {
             decider.Clear();
@@ -162,6 +183,7 @@ public class MapData
         regionCount = Math.Max(regionCount, 2);
         EnsureDeciderCount(regionCount);
         EnsureRegionTileListCount(regionCount);
+        InitializeRegionOccupation(regionCount);
 
         Vector2I[] regionSeedPositions = new Vector2I[regionCount];
         CreateSeed(regionSeedPositions, 1, new Vector2I(0, Height / 2));
@@ -173,6 +195,12 @@ public class MapData
         }
         Expand(randomness);
         CreateBridges();
+    }
+
+    private void InitializeRegionOccupation(int regionCount)
+    {
+        _isRegionOccupied = new bool[regionCount];
+        _isRegionOccupied[0] = true;
     }
 
     private void CreateSeed(Vector2I[] seedPositions, int currentRegionId, Vector2I seedPosition)

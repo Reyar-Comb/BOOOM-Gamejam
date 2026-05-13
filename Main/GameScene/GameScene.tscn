@@ -21,7 +21,7 @@
 [ext_resource type="Script" uid="uid://s741c5fm1sb5" path="res://Utilities/PanelNavigator/ButtonBinding.cs" id="11_2anr5"]
 [ext_resource type="PackedScene" uid="uid://c3p8415n1lwy1" path="res://Prefabs/VarButton/VarButton.tscn" id="11_8oyud"]
 [ext_resource type="Script" uid="uid://sa26p4j2xfk4" path="res://Utilities/PanelNavigator/PanelUnit.cs" id="11_b3sdv"]
-[ext_resource type="Shader" path="res://Shaders/BlinkingProgressBar.gdshader" id="11_y1mx5"]
+[ext_resource type="Shader" uid="uid://cq86ki37hsl8j" path="res://Shaders/BlinkingProgressBar.gdshader" id="11_y1mx5"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_y1mx5"]
 shader = ExtResource("11_y1mx5")
@@ -945,15 +945,15 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 theme_override_constants/separation = 12
 
-[node name="AddIntButton" parent="MarginContainer/HBoxContainer/MarginContainer3/ChooseVar/VBoxContainer/MarginContainer2/PanelContainer/MarginContainer/PanelNavigator/VarAddUnit/VBoxContainer/ScrollContainer/VBoxContainer" unique_id=1029203935 instance=ExtResource("11_8oyud")]
+[node name="AddBoolButton" parent="MarginContainer/HBoxContainer/MarginContainer3/ChooseVar/VBoxContainer/MarginContainer2/PanelContainer/MarginContainer/PanelNavigator/VarAddUnit/VBoxContainer/ScrollContainer/VBoxContainer" unique_id=2062394104 instance=ExtResource("11_8oyud")]
 layout_mode = 2
 size_flags_vertical = 1
 
-[node name="ColorRect" parent="MarginContainer/HBoxContainer/MarginContainer3/ChooseVar/VBoxContainer/MarginContainer2/PanelContainer/MarginContainer/PanelNavigator/VarAddUnit/VBoxContainer/ScrollContainer/VBoxContainer/AddIntButton" index="0" unique_id=1894200065]
-color = Color(1, 0.5921569, 0.50980395, 1)
+[node name="ColorRect" parent="MarginContainer/HBoxContainer/MarginContainer3/ChooseVar/VBoxContainer/MarginContainer2/PanelContainer/MarginContainer/PanelNavigator/VarAddUnit/VBoxContainer/ScrollContainer/VBoxContainer/AddBoolButton" index="0" unique_id=1894200065]
+color = Color(4.235506e-06, 0.63237935, 0.71052945, 1)
 
-[node name="RichTextLabel" parent="MarginContainer/HBoxContainer/MarginContainer3/ChooseVar/VBoxContainer/MarginContainer2/PanelContainer/MarginContainer/PanelNavigator/VarAddUnit/VBoxContainer/ScrollContainer/VBoxContainer/AddIntButton" index="1" unique_id=1388884413]
-text = "[b]Int[/b]
+[node name="RichTextLabel" parent="MarginContainer/HBoxContainer/MarginContainer3/ChooseVar/VBoxContainer/MarginContainer2/PanelContainer/MarginContainer/PanelNavigator/VarAddUnit/VBoxContainer/ScrollContainer/VBoxContainer/AddBoolButton" index="1" unique_id=1388884413]
+text = "[b]Bool[/b]
 "
 
 [node name="AddCharButton" parent="MarginContainer/HBoxContainer/MarginContainer3/ChooseVar/VBoxContainer/MarginContainer2/PanelContainer/MarginContainer/PanelNavigator/VarAddUnit/VBoxContainer/ScrollContainer/VBoxContainer" unique_id=218567015 instance=ExtResource("11_8oyud")]
@@ -961,10 +961,32 @@ layout_mode = 2
 size_flags_vertical = 1
 
 [node name="ColorRect" parent="MarginContainer/HBoxContainer/MarginContainer3/ChooseVar/VBoxContainer/MarginContainer2/PanelContainer/MarginContainer/PanelNavigator/VarAddUnit/VBoxContainer/ScrollContainer/VBoxContainer/AddCharButton" index="0" unique_id=1894200065]
-color = Color(1, 1, 0.53333336, 1)
+color = Color(0.10466347, 0.7271371, 0, 1)
 
 [node name="RichTextLabel" parent="MarginContainer/HBoxContainer/MarginContainer3/ChooseVar/VBoxContainer/MarginContainer2/PanelContainer/MarginContainer/PanelNavigator/VarAddUnit/VBoxContainer/ScrollContainer/VBoxContainer/AddCharButton" index="1" unique_id=1388884413]
 text = "[b]Char[/b]
+"
+
+[node name="AddIntButton" parent="MarginContainer/HBoxContainer/MarginContainer3/ChooseVar/VBoxContainer/MarginContainer2/PanelContainer/MarginContainer/PanelNavigator/VarAddUnit/VBoxContainer/ScrollContainer/VBoxContainer" unique_id=1029203935 instance=ExtResource("11_8oyud")]
+layout_mode = 2
+size_flags_vertical = 1
+
+[node name="ColorRect" parent="MarginContainer/HBoxContainer/MarginContainer3/ChooseVar/VBoxContainer/MarginContainer2/PanelContainer/MarginContainer/PanelNavigator/VarAddUnit/VBoxContainer/ScrollContainer/VBoxContainer/AddIntButton" index="0" unique_id=1894200065]
+color = Color(0.28915638, 0.70495987, 7.70092e-07, 1)
+
+[node name="RichTextLabel" parent="MarginContainer/HBoxContainer/MarginContainer3/ChooseVar/VBoxContainer/MarginContainer2/PanelContainer/MarginContainer/PanelNavigator/VarAddUnit/VBoxContainer/ScrollContainer/VBoxContainer/AddIntButton" index="1" unique_id=1388884413]
+text = "[b]Int[/b]
+"
+
+[node name="AddLongButton" parent="MarginContainer/HBoxContainer/MarginContainer3/ChooseVar/VBoxContainer/MarginContainer2/PanelContainer/MarginContainer/PanelNavigator/VarAddUnit/VBoxContainer/ScrollContainer/VBoxContainer" unique_id=338267082 instance=ExtResource("11_8oyud")]
+layout_mode = 2
+size_flags_vertical = 1
+
+[node name="ColorRect" parent="MarginContainer/HBoxContainer/MarginContainer3/ChooseVar/VBoxContainer/MarginContainer2/PanelContainer/MarginContainer/PanelNavigator/VarAddUnit/VBoxContainer/ScrollContainer/VBoxContainer/AddLongButton" index="0" unique_id=1894200065]
+color = Color(0, 0.63381994, 0.19650835, 1)
+
+[node name="RichTextLabel" parent="MarginContainer/HBoxContainer/MarginContainer3/ChooseVar/VBoxContainer/MarginContainer2/PanelContainer/MarginContainer/PanelNavigator/VarAddUnit/VBoxContainer/ScrollContainer/VBoxContainer/AddLongButton" index="1" unique_id=1388884413]
+text = "[b]Long[/b]
 "
 
 [node name="AddFloatButton" parent="MarginContainer/HBoxContainer/MarginContainer3/ChooseVar/VBoxContainer/MarginContainer2/PanelContainer/MarginContainer/PanelNavigator/VarAddUnit/VBoxContainer/ScrollContainer/VBoxContainer" unique_id=1232173103 instance=ExtResource("11_8oyud")]
@@ -972,7 +994,7 @@ layout_mode = 2
 size_flags_vertical = 1
 
 [node name="ColorRect" parent="MarginContainer/HBoxContainer/MarginContainer3/ChooseVar/VBoxContainer/MarginContainer2/PanelContainer/MarginContainer/PanelNavigator/VarAddUnit/VBoxContainer/ScrollContainer/VBoxContainer/AddFloatButton" index="0" unique_id=1894200065]
-color = Color(1, 1, 0.53333336, 1)
+color = Color(0.8599184, 0.78269506, 0, 1)
 
 [node name="RichTextLabel" parent="MarginContainer/HBoxContainer/MarginContainer3/ChooseVar/VBoxContainer/MarginContainer2/PanelContainer/MarginContainer/PanelNavigator/VarAddUnit/VBoxContainer/ScrollContainer/VBoxContainer/AddFloatButton" index="1" unique_id=1388884413]
 text = "[b]Float[/b]
@@ -983,7 +1005,7 @@ layout_mode = 2
 size_flags_vertical = 1
 
 [node name="ColorRect" parent="MarginContainer/HBoxContainer/MarginContainer3/ChooseVar/VBoxContainer/MarginContainer2/PanelContainer/MarginContainer/PanelNavigator/VarAddUnit/VBoxContainer/ScrollContainer/VBoxContainer/AddDoubleButton" index="0" unique_id=1894200065]
-color = Color(1, 1, 0.53333336, 1)
+color = Color(0.7704461, 0.6268252, 1.1551381e-06, 1)
 
 [node name="RichTextLabel" parent="MarginContainer/HBoxContainer/MarginContainer3/ChooseVar/VBoxContainer/MarginContainer2/PanelContainer/MarginContainer/PanelNavigator/VarAddUnit/VBoxContainer/ScrollContainer/VBoxContainer/AddDoubleButton" index="1" unique_id=1388884413]
 text = "[b]Double[/b]
@@ -994,32 +1016,10 @@ layout_mode = 2
 size_flags_vertical = 1
 
 [node name="ColorRect" parent="MarginContainer/HBoxContainer/MarginContainer3/ChooseVar/VBoxContainer/MarginContainer2/PanelContainer/MarginContainer/PanelNavigator/VarAddUnit/VBoxContainer/ScrollContainer/VBoxContainer/AddLongDoubleButton" index="0" unique_id=1894200065]
-color = Color(1, 1, 0.53333336, 1)
+color = Color(0.8792085, 0.55359316, 0, 1)
 
 [node name="RichTextLabel" parent="MarginContainer/HBoxContainer/MarginContainer3/ChooseVar/VBoxContainer/MarginContainer2/PanelContainer/MarginContainer/PanelNavigator/VarAddUnit/VBoxContainer/ScrollContainer/VBoxContainer/AddLongDoubleButton" index="1" unique_id=1388884413]
 text = "[b]Long Double[/b]
-"
-
-[node name="AddLongButton" parent="MarginContainer/HBoxContainer/MarginContainer3/ChooseVar/VBoxContainer/MarginContainer2/PanelContainer/MarginContainer/PanelNavigator/VarAddUnit/VBoxContainer/ScrollContainer/VBoxContainer" unique_id=338267082 instance=ExtResource("11_8oyud")]
-layout_mode = 2
-size_flags_vertical = 1
-
-[node name="ColorRect" parent="MarginContainer/HBoxContainer/MarginContainer3/ChooseVar/VBoxContainer/MarginContainer2/PanelContainer/MarginContainer/PanelNavigator/VarAddUnit/VBoxContainer/ScrollContainer/VBoxContainer/AddLongButton" index="0" unique_id=1894200065]
-color = Color(1, 1, 0.53333336, 1)
-
-[node name="RichTextLabel" parent="MarginContainer/HBoxContainer/MarginContainer3/ChooseVar/VBoxContainer/MarginContainer2/PanelContainer/MarginContainer/PanelNavigator/VarAddUnit/VBoxContainer/ScrollContainer/VBoxContainer/AddLongButton" index="1" unique_id=1388884413]
-text = "[b]Long[/b]
-"
-
-[node name="AddBoolButton" parent="MarginContainer/HBoxContainer/MarginContainer3/ChooseVar/VBoxContainer/MarginContainer2/PanelContainer/MarginContainer/PanelNavigator/VarAddUnit/VBoxContainer/ScrollContainer/VBoxContainer" unique_id=2062394104 instance=ExtResource("11_8oyud")]
-layout_mode = 2
-size_flags_vertical = 1
-
-[node name="ColorRect" parent="MarginContainer/HBoxContainer/MarginContainer3/ChooseVar/VBoxContainer/MarginContainer2/PanelContainer/MarginContainer/PanelNavigator/VarAddUnit/VBoxContainer/ScrollContainer/VBoxContainer/AddBoolButton" index="0" unique_id=1894200065]
-color = Color(1, 1, 0.53333336, 1)
-
-[node name="RichTextLabel" parent="MarginContainer/HBoxContainer/MarginContainer3/ChooseVar/VBoxContainer/MarginContainer2/PanelContainer/MarginContainer/PanelNavigator/VarAddUnit/VBoxContainer/ScrollContainer/VBoxContainer/AddBoolButton" index="1" unique_id=1388884413]
-text = "[b]Bool[/b]
 "
 
 [node name="PanelContainer" type="PanelContainer" parent="MarginContainer/HBoxContainer/MarginContainer3/ChooseVar/VBoxContainer/MarginContainer2/PanelContainer/MarginContainer/PanelNavigator/VarAddUnit/VBoxContainer/ScrollContainer/VBoxContainer" unique_id=1711041455]
@@ -1145,13 +1145,13 @@ disabled = true
 [editable path="MarginContainer/HBoxContainer/MarginContainer3/ChooseVar/VBoxContainer/MarginContainer2/PanelContainer/MarginContainer/PanelNavigator/VarStatusUnit/VBoxContainer/PanelContainer/SelectedVarButton"]
 [editable path="MarginContainer/HBoxContainer/MarginContainer3/ChooseVar/VBoxContainer/MarginContainer2/PanelContainer/MarginContainer/PanelNavigator/VarCommandUnit/VBoxContainer/ScrollContainer/VBoxContainer/OpMoveButton"]
 [editable path="MarginContainer/HBoxContainer/MarginContainer3/ChooseVar/VBoxContainer/MarginContainer2/PanelContainer/MarginContainer/PanelNavigator/VarCommandUnit/VBoxContainer/PanelContainer/SelectedVarButton"]
-[editable path="MarginContainer/HBoxContainer/MarginContainer3/ChooseVar/VBoxContainer/MarginContainer2/PanelContainer/MarginContainer/PanelNavigator/VarAddUnit/VBoxContainer/ScrollContainer/VBoxContainer/AddIntButton"]
+[editable path="MarginContainer/HBoxContainer/MarginContainer3/ChooseVar/VBoxContainer/MarginContainer2/PanelContainer/MarginContainer/PanelNavigator/VarAddUnit/VBoxContainer/ScrollContainer/VBoxContainer/AddBoolButton"]
 [editable path="MarginContainer/HBoxContainer/MarginContainer3/ChooseVar/VBoxContainer/MarginContainer2/PanelContainer/MarginContainer/PanelNavigator/VarAddUnit/VBoxContainer/ScrollContainer/VBoxContainer/AddCharButton"]
+[editable path="MarginContainer/HBoxContainer/MarginContainer3/ChooseVar/VBoxContainer/MarginContainer2/PanelContainer/MarginContainer/PanelNavigator/VarAddUnit/VBoxContainer/ScrollContainer/VBoxContainer/AddIntButton"]
+[editable path="MarginContainer/HBoxContainer/MarginContainer3/ChooseVar/VBoxContainer/MarginContainer2/PanelContainer/MarginContainer/PanelNavigator/VarAddUnit/VBoxContainer/ScrollContainer/VBoxContainer/AddLongButton"]
 [editable path="MarginContainer/HBoxContainer/MarginContainer3/ChooseVar/VBoxContainer/MarginContainer2/PanelContainer/MarginContainer/PanelNavigator/VarAddUnit/VBoxContainer/ScrollContainer/VBoxContainer/AddFloatButton"]
 [editable path="MarginContainer/HBoxContainer/MarginContainer3/ChooseVar/VBoxContainer/MarginContainer2/PanelContainer/MarginContainer/PanelNavigator/VarAddUnit/VBoxContainer/ScrollContainer/VBoxContainer/AddDoubleButton"]
 [editable path="MarginContainer/HBoxContainer/MarginContainer3/ChooseVar/VBoxContainer/MarginContainer2/PanelContainer/MarginContainer/PanelNavigator/VarAddUnit/VBoxContainer/ScrollContainer/VBoxContainer/AddLongDoubleButton"]
-[editable path="MarginContainer/HBoxContainer/MarginContainer3/ChooseVar/VBoxContainer/MarginContainer2/PanelContainer/MarginContainer/PanelNavigator/VarAddUnit/VBoxContainer/ScrollContainer/VBoxContainer/AddLongButton"]
-[editable path="MarginContainer/HBoxContainer/MarginContainer3/ChooseVar/VBoxContainer/MarginContainer2/PanelContainer/MarginContainer/PanelNavigator/VarAddUnit/VBoxContainer/ScrollContainer/VBoxContainer/AddBoolButton"]
 [editable path="MarginContainer/HBoxContainer/MarginContainer3/ChooseVar/VBoxContainer/MarginContainer2/PanelContainer/MarginContainer/PanelNavigator/VarAddUnit/VBoxContainer/PanelContainer/PlaceButton"]
 [editable path="MarginContainer/HBoxContainer/MarginContainer3/ChooseVar/VBoxContainer/MarginContainer2/PanelContainer/MarginContainer/PanelNavigator/VarMoveUnit/VBoxContainer/PanelContainer2/MoveButton"]
 [editable path="MarginContainer/HBoxContainer/MarginContainer3/ChooseVar/VBoxContainer/MarginContainer2/PanelContainer/MarginContainer/PanelNavigator/VarMoveUnit/VBoxContainer/PanelContainer/SelectedVarButton"]

@@ -8,11 +8,11 @@
 script = ExtResource("1_4gayb")
 MaxHealth = 100
 AttackSpeedMult = 1.0
-AttackFrameInterval = 50
+AttackFrameInterval = 30
 MoveSpeed = 50.0
 Defense = 5
 AttackRange = ExtResource("1_r7h74")
 DetectRange = ExtResource("2_oj35k")
 AttackDamage = 20
-TokenCost = 10
+TokenCost = 15
 metadata/_custom_type_script = "uid://d05ld37qbcgjs"

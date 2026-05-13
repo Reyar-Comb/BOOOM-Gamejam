@@ -1,6 +1,7 @@
 using Godot;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 [GlobalClass]
 public partial class VarRenderer : Control, IVarRenderer
@@ -34,7 +35,7 @@ public partial class VarRenderer : Control, IVarRenderer
     private MapData _mapData = null!;
     private Vector2I? _hoveredGridCell;
     private bool _isPanning = false;
-
+    private bool _isInitialized = false;
     public event Action<Vector2I?> HoveredGridCellUpdated;
 
     public Vector2I? HoveredGridCell => _hoveredGridCell;
@@ -92,13 +93,29 @@ public partial class VarRenderer : Control, IVarRenderer
         }
     }
 
-    public void Initialize(MapData mapData)
+    public async void Initialize(MapData mapData)
     {
         _mapData = mapData;
         _mapRenderer.RestartReveal();
+
+        await ToSignal(GetTree(), SceneTree.SignalName.ProcessFrame);
+        FitMapToView();
+        QueueRenderersRedraw();
+    }
+
+    private void FitMapToView()
+    {
+        if (_mapData == null)
+        {
+            ViewCenterWorld = Vector2.Zero;
+            Zoom = 1.0f;
+            return;
+        }
+
+        ViewCenterWorld = GetMapWorldRect().GetCenter();
+        Zoom = GetMapFitZoom();
         ClampZoomToMapBounds();
         ClampViewCenterToMapBounds();
-        QueueRenderersRedraw();
     }
 
     public void AddVar(Var var)
@@ -194,14 +211,12 @@ public partial class VarRenderer : Control, IVarRenderer
         _mapRenderer.UpdateReveal(delta);
         _rippleRenderer.UpdateRipples(delta);
         QueueRenderersRedraw();
+        // GD.Print(Zoom);
     }
 
     public void ResetView()
     {
-        ViewCenterWorld = _mapData == null ? Vector2.Zero : GetMapWorldRect().GetCenter();
-        Zoom = 1.0f;
-        ClampZoomToMapBounds();
-        ClampViewCenterToMapBounds();
+        FitMapToView();
         QueueRenderersRedraw();
     }
 
@@ -306,6 +321,7 @@ public partial class VarRenderer : Control, IVarRenderer
 
         _hoveredGridCell = gridCell;
         HoveredGridCellUpdated?.Invoke(_hoveredGridCell);
+        _gridRenderer.QueueRedraw();
 
         Vector2I signalCell = _hoveredGridCell ?? Vector2I.Zero;
         EmitSignal(SignalName.HoveredGridCellChanged, signalCell, _hoveredGridCell.HasValue);
@@ -351,15 +367,25 @@ public partial class VarRenderer : Control, IVarRenderer
             return config.MinZoom;
         }
 
+        float mapFitZoom = GetMapFitZoom();
+        return Math.Min(mapFitZoom, config.MaxZoom);
+    }
+
+    private float GetMapFitZoom()
+    {
+        if (_mapData == null || Size == Vector2.Zero || Grid.CellSize <= 0)
+        {
+            return ActiveConfig.Zoom;
+        }
+
         float mapWorldWidth = _mapData.Width * Grid.CellSize;
         float mapWorldHeight = _mapData.Height * Grid.CellSize;
         if (mapWorldWidth <= Epsilon || mapWorldHeight <= Epsilon)
         {
-            return config.MinZoom;
+            return ActiveConfig.Zoom;
         }
 
-        float mapFitZoom = Mathf.Max(Size.X / mapWorldWidth, Size.Y / mapWorldHeight);
-        return Mathf.Min(Mathf.Max(config.MinZoom, mapFitZoom), config.MaxZoom);
+        return Mathf.Min(Size.X / mapWorldWidth, Size.Y / mapWorldHeight);
     }
 
     private void ClampViewCenterToMapBounds()

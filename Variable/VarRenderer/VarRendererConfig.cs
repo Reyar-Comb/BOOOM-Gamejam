@@ -23,6 +23,8 @@ public partial class VarRendererConfig : Resource
     [Export] public bool RenderGrid { get; set; } = false;
     [Export] public Color GridColor { get; set; } = new(1.0f, 1.0f, 1.0f, 0.08f);
     [Export] public Color AxisGridColor { get; set; } = new(1.0f, 1.0f, 1.0f, 0.22f);
+    [Export] public bool RenderHoveredGridCell { get; set; } = true;
+    [Export] public Color HoveredGridCellColor { get; set; } = new(1.0f, 1.0f, 1.0f, 0.12f);
     [Export] public bool RenderClickRipple { get; set; } = true;
     [Export] public Color ClickRippleColor { get; set; } = new(0.64f, 0.88f, 1.0f, 0.38f);
     [Export] public Color ClickRippleOutlineColor { get; set; } = new(0.92f, 0.98f, 1.0f, 0.82f);

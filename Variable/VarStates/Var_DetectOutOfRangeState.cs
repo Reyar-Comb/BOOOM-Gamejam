@@ -53,22 +53,20 @@ public partial class Var_DetectOutOfRangeState : STNode
             return;
         }
 
-        // Vector2I selfCell = Grid.WorldToGrid(Stats.Position);
-        // Vector2I targetCell = Grid.WorldToGrid(chaseTarget.Stats.Position);
-        // var chasePath = Pathfinder.Run(selfCell, targetCell);
-        // if (chasePath == null || chasePath.Count == 0)
-        // {
-        //     CurrentAttackTarget = null;
-        //     RequestTransition("Idle");
-        //     return;
-        // }
+        Vector2I selfCell = Grid.WorldToGrid(Stats.Position);
+        Vector2I targetCell = Grid.WorldToGrid(chaseTarget.Stats.Position);
+        int region = MapData.GetRegion(selfCell.X, selfCell.Y);
+        var chasePath = Pathfinder.Run(selfCell, targetCell, region);
+        if (chasePath == null || chasePath.Count == 0)
+        {
+            CurrentAttackTarget = null;
+            RequestTransition("Idle");
+            return;
+        }
 
-        // Self.SetPath(chasePath);
-
-        // Delegate pathfinding task to the DetectInDetectRangeState
-        // Set IsWalkng = true in advance to avoid 1-frame delay in movement if transit to Idle
+        Self.SetPath(chasePath);
         IsWalking = true;
-        EmitSignal(Var.SignalName.OnOutOfDetect, chaseTarget);
+        Self.EmitSignal(Var.SignalName.OnOutOfDetect, chaseTarget);
         RequestTransition("Move");
         return;
     }
@@ -93,10 +91,17 @@ public partial class Var_DetectOutOfRangeState : STNode
             DetectRange = Stats.DetectRange
         };
 
-        IEnumerable<Vector2I> attackCells = GameData.SkillManager.OnAttackRangeQuery(
-            queryInfo,
-            Stats.AttackRange.EnumerateTargetCells(selfCell, Stats.Direction));
-
+        IEnumerable<Vector2I> attackCells;
+        if (Stats.VarTeam == VarStats.Team.Friendly)
+        {
+            attackCells = GameData.SkillManager.OnAttackRangeQuery(
+                queryInfo,
+                Stats.AttackRange.EnumerateTargetCells(selfCell, Stats.Direction));
+        }
+        else
+        {
+            attackCells = Stats.AttackRange.EnumerateTargetCells(selfCell, Stats.Direction);
+        }
         foreach (Vector2I attackCell in attackCells)
         {
             if (MapData.GetRegion(attackCell.X, attackCell.Y) != MapData.GetRegion(selfCell.X, selfCell.Y))

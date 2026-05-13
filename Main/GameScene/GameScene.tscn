@@ -24,10 +24,7 @@
 [ext_resource type="PackedScene" uid="uid://c3p8415n1lwy1" path="res://Prefabs/VarButton/VarButton.tscn" id="11_8oyud"]
 [ext_resource type="Script" uid="uid://sa26p4j2xfk4" path="res://Utilities/PanelNavigator/PanelUnit.cs" id="11_b3sdv"]
 [ext_resource type="Shader" uid="uid://cq86ki37hsl8j" path="res://Shaders/BlinkingProgressBar.gdshader" id="11_y1mx5"]
-<<<<<<< HEAD
-=======
 [ext_resource type="Script" uid="uid://dmjp5qpxlfunm" path="res://Prefabs/TooltipWindow/TooltipTrigger.cs" id="17_xdr2y"]
->>>>>>> 077785672cbc09789c8c794fb7bf02a61c815a06
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_y1mx5"]
 shader = ExtResource("11_y1mx5")

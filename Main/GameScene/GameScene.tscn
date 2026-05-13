@@ -971,10 +971,6 @@ color = Color(4.235506e-06, 0.63237935, 0.71052945, 1)
 text = "[b]Bool[/b]
 "
 
-[node name="TooltipTrigger" parent="MarginContainer/HBoxContainer/MarginContainer3/ChooseVar/VBoxContainer/MarginContainer2/PanelContainer/MarginContainer/PanelNavigator/VarAddUnit/VBoxContainer/ScrollContainer/VBoxContainer/AddIntButton/Button" parent_id_path=PackedInt32Array(1029203935, 1223400032) index="0" unique_id=852389310]
-TooltipId = "int_description"
-HideOnClick = false
-
 [node name="AddCharButton" parent="MarginContainer/HBoxContainer/MarginContainer3/ChooseVar/VBoxContainer/MarginContainer2/PanelContainer/MarginContainer/PanelNavigator/VarAddUnit/VBoxContainer/ScrollContainer/VBoxContainer" unique_id=218567015 instance=ExtResource("11_8oyud")]
 layout_mode = 2
 size_flags_vertical = 1

@@ -339,7 +339,7 @@ shader = ExtResource("1_w2nl1")
 shader_parameter/dot_color = Color(0.6846361, 0.99999994, 0.58618927, 1)
 shader_parameter/speed = 2.58800012293
 shader_parameter/pause_duration = 0.8530000405175
-shader_parameter/dot_size = 0.20500000938823998
+shader_parameter/dot_size = 0.20500000938824
 shader_parameter/trail_length = 0.12
 shader_parameter/intensity = 1.0
 
@@ -381,7 +381,7 @@ shader = ExtResource("1_w2nl1")
 shader_parameter/dot_color = Color(0.23482376, 0.5387409, 7.70092e-07, 1)
 shader_parameter/speed = 3.3310001582225
 shader_parameter/pause_duration = 1.3710000651225
-shader_parameter/dot_size = 0.22900001052823998
+shader_parameter/dot_size = 0.22900001052824
 shader_parameter/trail_length = 0.10000000475
 shader_parameter/intensity = 1.0
 
@@ -436,7 +436,7 @@ gradient = SubResource("Gradient_pb3ei")
 shader = ExtResource("1_w2nl1")
 shader_parameter/dot_color = Color(0.3924946, 0.67788833, 0, 1)
 shader_parameter/speed = 2.802000133095
-shader_parameter/pause_duration = 1.7070000810825001
+shader_parameter/pause_duration = 1.7070000810825
 shader_parameter/dot_size = 0.12500000558823998
 shader_parameter/trail_length = 0.1870000088825
 shader_parameter/intensity = 1.0
@@ -463,7 +463,7 @@ gradient = SubResource("Gradient_h8bqw")
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_k1es2"]
 shader = ExtResource("1_w2nl1")
 shader_parameter/dot_color = Color(0.014323278, 0.8442097, 1.92523e-06, 1)
-shader_parameter/speed = 1.7070000810825001
+shader_parameter/speed = 1.7070000810825
 shader_parameter/pause_duration = 0.8530000405175
 shader_parameter/dot_size = 0.08000000345074
 shader_parameter/trail_length = 0.12
@@ -562,7 +562,7 @@ gradient = SubResource("Gradient_umqsf")
 shader = ExtResource("1_w2nl1")
 shader_parameter/dot_color = Color(0.21619767, 0.68689173, 0, 1)
 shader_parameter/speed = 2.5910001230725
-shader_parameter/pause_duration = 1.3160000625100001
+shader_parameter/pause_duration = 1.31600006251
 shader_parameter/dot_size = 0.06600000278574
 shader_parameter/trail_length = 0.1750000083125
 shader_parameter/intensity = 1.0
@@ -575,7 +575,7 @@ gradient = SubResource("Gradient_xprup")
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_hvv2c"]
 shader = ExtResource("1_w2nl1")
 shader_parameter/dot_color = Color(0.2846662, 0.7623777, 1.540184e-06, 1)
-shader_parameter/speed = 1.4940000709649999
+shader_parameter/speed = 1.494000070965
 shader_parameter/pause_duration = 1.7590000835525
 shader_parameter/dot_size = 0.07400000316574
 shader_parameter/trail_length = 0.18800000893
@@ -591,7 +591,7 @@ shader = ExtResource("1_w2nl1")
 shader_parameter/dot_color = Color(0.32921696, 0.75328314, 1.1551381e-06, 1)
 shader_parameter/speed = 2.84400013509
 shader_parameter/pause_duration = 0.810000038475
-shader_parameter/dot_size = 0.13500000606323997
+shader_parameter/dot_size = 0.13500000606323995
 shader_parameter/trail_length = 0.1230000058425
 shader_parameter/intensity = 1.0
 
@@ -604,7 +604,7 @@ gradient = SubResource("Gradient_cyyne")
 shader = ExtResource("1_w2nl1")
 shader_parameter/dot_color = Color(0.29790893, 0.69000226, 0.05373212, 1)
 shader_parameter/speed = 1.7890000849774998
-shader_parameter/pause_duration = 1.2870000611324999
+shader_parameter/pause_duration = 1.2870000611325
 shader_parameter/dot_size = 0.08500000368824
 shader_parameter/trail_length = 0.0800000038
 shader_parameter/intensity = 1.0
@@ -657,6 +657,7 @@ shader_parameter/intensity = 1.0
 gradient = SubResource("Gradient_wwceq")
 
 [node name="Bg" type="Node2D" unique_id=61670994]
+modulate = Color(0.6255971, 0.6255971, 0.62559694, 1)
 
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=1126925073]
 z_index = -1

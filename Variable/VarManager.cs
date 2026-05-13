@@ -31,7 +31,10 @@ public partial class VarManager : Node
         }
     }
     public readonly List<Var> Vars = new();
+    private readonly List<Var> _friendlyVars = new();
+    private readonly List<Var> _hostileVars = new();
     private readonly Dictionary<Var, Callable> _onDeathCallablesByVar = new();
+    private readonly Dictionary<Var, Callable> _onDamageReceivedCallablesByVar = new();
     private ReadOnlyCollection<Var> ReadOnlyVars => field ??= Vars.AsReadOnly();
     private Blackboard _sharedBlackboard = new();
 
@@ -57,6 +60,16 @@ public partial class VarManager : Node
             .Build();
         _sharedBlackboard.Set("Pathfinder", pathfinder);
     }
+    private void ConnectSignals(Var var)
+    {
+        ConnectOnDeath(var);
+        ConnectOnDamageReceived(var);
+    }
+    private void DisconnectSignals(Var var)
+    {
+        DisconnectOnDeath(var);
+        DisconnectOnDamageReceived(var);
+    }
     public void Tick(double delta)
     {
         List<Var> varsToRemove = VarListPool.Get();
@@ -72,13 +85,32 @@ public partial class VarManager : Node
         foreach (var var in varsToRemove)
         {
             GD.Print($"Removing var {var.Stats.Name} of type {var.Stats.Type} from VarManager.");
-            DisconnectOnDeath(var);
+            DisconnectSignals(var);
+            RemoveFromTeamLists(var);
             var.Cleanup();
             Vars.Remove(var);
             EmitSignal(SignalName.VarListUpdated);
         }
         VarListPool.Return(varsToRemove);
-        
+
+    }
+    private void BroadcastTeam(VarStats.Team team, VarStats.VarType type, Vector2I fromCell)
+    {
+        List<Var> targetList = team switch
+        {
+            VarStats.Team.Friendly => _friendlyVars,
+            VarStats.Team.Hostile => _hostileVars,
+            _ => Vars
+        };
+        foreach (var var in targetList)
+        {
+            if (var == null || var.IsDead || var.Stats == null)
+            {
+                continue;
+            }
+            // GD.Print($"Broadcasting to var {var.Stats.Name} of type {var.Stats.Type} at cell {Grid.WorldToGrid(var.Stats.Position)}");
+            var.OnBroadcastReceived(type, fromCell);
+        }
     }
     public override void _Process(double delta)
     {
@@ -90,8 +122,15 @@ public partial class VarManager : Node
     public void AddVar(Var var, bool applyGameData = true)
     {
         Vars.Add(var);
-        ConnectOnDeath(var);
-
+        if (var.Stats.VarTeam == VarStats.Team.Friendly)
+        {
+            _friendlyVars.Add(var);
+        }
+        else if (var.Stats.VarTeam == VarStats.Team.Hostile)
+        {
+            _hostileVars.Add(var);
+        }
+        ConnectSignals(var);
         var.Initialize(_sharedBlackboard);
         if (applyGameData)
         {
@@ -105,13 +144,22 @@ public partial class VarManager : Node
     {
         foreach (Var var in Vars)
         {
-            DisconnectOnDeath(var);
+            DisconnectSignals(var);
             var.Cleanup();
         }
 
         Vars.Clear();
+        _friendlyVars.Clear();
+        _hostileVars.Clear();
         _onDeathCallablesByVar.Clear();
+        _onDamageReceivedCallablesByVar.Clear();
         EmitSignal(SignalName.VarListUpdated);
+    }
+
+    private void RemoveFromTeamLists(Var var)
+    {
+        _friendlyVars.Remove(var);
+        _hostileVars.Remove(var);
     }
 
     private void ConnectOnDeath(Var var)
@@ -135,10 +183,36 @@ public partial class VarManager : Node
 
         _onDeathCallablesByVar.Remove(var);
     }
-
     private void OnVarDeath(Var var)
     {
         var.IsDead = true;
+    }
+    private void ConnectOnDamageReceived(Var var)
+    {
+        Callable onDamageReceivedCallable = Callable.From((AttackInfo attackInfo) => OnVarDamageReceived(attackInfo));
+        _onDamageReceivedCallablesByVar[var] = onDamageReceivedCallable;
+        var.Connect(Var.SignalName.OnDamageReceived, onDamageReceivedCallable);
+    }
+    private void DisconnectOnDamageReceived(Var var)
+    {
+        if (!_onDamageReceivedCallablesByVar.TryGetValue(var, out Callable onDamageReceivedCallable))
+        {
+            return;
+        }
+
+        if (var.IsConnected(Var.SignalName.OnDamageReceived, onDamageReceivedCallable))
+        {
+            var.Disconnect(Var.SignalName.OnDamageReceived, onDamageReceivedCallable);
+        }
+
+        _onDamageReceivedCallablesByVar.Remove(var);
+    }
+    private void OnVarDamageReceived(AttackInfo attackInfo)
+    {
+        VarStats.Team team = attackInfo.Target.Stats.VarTeam;
+        VarStats.VarType type = attackInfo.Target.Stats.Type;
+        Vector2I fromCell = Grid.WorldToGrid(attackInfo.Target.Stats.Position);
+        BroadcastTeam(team, type, fromCell);
     }
 
     public enum CountQueryType

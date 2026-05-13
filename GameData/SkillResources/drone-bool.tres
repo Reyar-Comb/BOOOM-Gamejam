@@ -5,4 +5,9 @@
 [resource]
 script = ExtResource("1")
 Name = "drone-bool"
+Description = "Bool vars gain tokens when they detect new enemies, but cost more tokens to create."
 Rarity = 2
+Values = Dictionary[String, int]({
+"TokenGainPerNewEnemyDetected": 3,
+"BoolCreationCostIncrease": 5
+})

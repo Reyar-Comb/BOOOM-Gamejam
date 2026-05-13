@@ -2,7 +2,7 @@ using Godot;
 using System;
 using System.Collections.Generic;
 
-public class AttackInfo
+public partial class AttackInfo : RefCounted
 {
     public Var Source { get; init; }
     public Var Target { get; init; }

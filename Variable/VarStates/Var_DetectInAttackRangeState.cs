@@ -56,6 +56,11 @@ public partial class Var_DetectInAttackRange : STNode
         }
 
         _blackboard.Set("EnemiesByCell", enemiesByCell.AsReadOnly());
+        if (Stats.Type == VarStats.VarType.Bool)
+        {
+            CurrentAttackTarget = null;
+            return;
+        }
 
         Vector2I selfCell = Grid.WorldToGrid(Stats.Position);
         AttackRangeQueryInfo queryInfo = new()

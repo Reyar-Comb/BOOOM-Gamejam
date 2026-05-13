@@ -33,7 +33,8 @@ public partial class Var : RefCounted, ICleanable
     [Signal]
     public delegate void OnOutOfDetectEventHandler(Var target);
 
-
+    [Signal]
+    public delegate void OnDamageReceivedEventHandler(AttackInfo attackInfo);
     public void Initialize(Blackboard parentBlackboard)
     {
         if (_isInitialized) return;
@@ -154,7 +155,7 @@ public partial class Var : RefCounted, ICleanable
         // }
         // finalDamage = (int)(finalDamage * directionFactor);
         finalDamage = Math.Max(0, finalDamage - atkInfo.Defense);
-        
+        EmitSignal(SignalName.OnDamageReceived, atkInfo);
         if (!_historyAttackers.Contains(atkInfo.Source))
         {
             _historyAttackers.Add(atkInfo.Source);
@@ -164,12 +165,24 @@ public partial class Var : RefCounted, ICleanable
         Stats.CurrentHealth -= finalDamage;
         if (IsDead) return;
 
-        if (_blackboard.Get<Var>("CurrentAttackTarget") == null)
+        if (_blackboard.Get<Var>("CurrentAttackTarget") == null && Stats.Type != VarStats.VarType.Bool && Stats.Type != VarStats.VarType.Dummy)
         {
             MoveTo(atkInfo.Source.Stats.Position);
         }
     }
+    public void OnBroadcastReceived(VarStats.VarType fromType, Vector2I fromCell)
+    {
+        if (_blackboard == null || IsDead)
+        {
+            return;
+        }
 
+        if (fromType == VarStats.VarType.Dummy)
+        {
+            _blackboard.Set("IsDummyAttacked", true);
+            _blackboard.Set("DummyCell", fromCell);
+        }
+    }
     public void BeginAttacking(Var target)
     {
         if (target == null || target.IsDead)
@@ -262,6 +275,8 @@ public partial class Var : RefCounted, ICleanable
         _blackboard.Set("CurrentAttackTarget", (Var)null);
         _blackboard.Set("Self", this);
         _blackboard.Set("IsAttacked", false);
+        _blackboard.Set("IsDummyAttacked", false);
+        _blackboard.Set("DummyCell", Vector2I.Zero);
 
         _stateTree.Initialize(_blackboard);
     }

@@ -24,8 +24,17 @@ public partial class Var_IdleState : STNode
         get => _blackboard.Get<List<Vector2I>>("CurrentPath");
     }
 
+    private Var Self => _blackboard.Get<Var>("Self");
     protected override void OnPhysicsUpdate(double delta)
     {
+        bool isDummyAttacked = _blackboard.Get<bool>("IsDummyAttacked");
+        if (isDummyAttacked && (CurrentPath == null || CurrentPath.Count == 0))
+        {
+            Vector2I dummyCell = _blackboard.Get<Vector2I>("DummyCell");
+            Self.MoveTo(Grid.GridToWorld(dummyCell));
+            return;
+        }
+
         if (!HasPendingMove || CurrentPath == null || CurrentPath.Count == 0)
         {
             return;

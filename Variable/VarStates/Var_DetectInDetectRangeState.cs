@@ -92,6 +92,12 @@ public partial class Var_DetectInDetectRangeState : STNode
 
         _detectionOrder.RemoveAll(id => !foundIds.Contains(id));
 
+        if (Stats.Type == VarStats.VarType.Bool)
+        {
+            CurrentAttackTarget = null;
+            return;
+        }
+
         var currentTarget = CurrentAttackTarget;
         if (currentTarget != null)
         {

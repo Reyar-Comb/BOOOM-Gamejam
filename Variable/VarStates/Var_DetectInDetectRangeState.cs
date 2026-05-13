@@ -86,7 +86,10 @@ public partial class Var_DetectInDetectRangeState : STNode
                 Detector = Self,
                 DetectedVar = enemy
             };
-            GameData.SkillManager.OnDetected(info);
+            if (Self.Stats.VarTeam == VarStats.Team.Friendly)
+            {
+                GameData.SkillManager.OnDetected(info);
+            }
             Self.EmitSignal(Var.SignalName.OnDetected, info);
         }
 

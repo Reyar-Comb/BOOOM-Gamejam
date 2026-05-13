@@ -1,7 +1,9 @@
+using System.Collections.Generic;
+
 public class DroneBoolRuntime : ISkillRuntime
 {
     private readonly SkillResource _resource;
-
+    private HashSet<Var> _detectedVars = new HashSet<Var>();
     public DroneBoolRuntime(SkillResource resource)
     {
         _resource = resource;
@@ -13,7 +15,11 @@ public class DroneBoolRuntime : ISkillRuntime
         {
             return;
         }
-
+        if (_detectedVars.Contains(info.Detector))
+        {
+            return;
+        }
+        _detectedVars.Add(info.Detector);
         BattleManager.Instance.TokenManager.AddToken(TokenGainPerNewEnemyDetected);
     }
 

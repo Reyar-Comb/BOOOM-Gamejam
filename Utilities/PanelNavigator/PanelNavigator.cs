@@ -164,8 +164,11 @@ public partial class PanelNavigator : Control
 			&& mb.ButtonIndex == MouseButton.Left
 			&& _cachedHoveredCell.X != 114514)
 		{
-			LastClickedGrid = _cachedHoveredCell;
-			GD.Print($"Clicked grid: {LastClickedGrid}");
+			if (VarRenderer.GetGlobalRect().HasPoint(VarRenderer.GetGlobalMousePosition()))
+			{
+				LastClickedGrid = _cachedHoveredCell;
+				GD.Print($"Clicked grid: {LastClickedGrid}");
+			}
 		}
 	}
 

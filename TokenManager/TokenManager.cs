@@ -21,6 +21,20 @@ public partial class TokenManager : Node
 		BarController.ApplyTokenCost((float)rest / _gameData.NumericData.Get("MaxToken"));
 	}
 
+	public void AddToken(int amount)
+	{
+		if (amount <= 0)
+		{
+			return;
+		}
+
+		int maxToken = _gameData.NumericData.Get("MaxToken");
+		int token = Math.Min(_gameData.NumericData.Get("Token") + amount, maxToken);
+		_gameData.NumericData.Set("Token", token);
+		BarController.ApplyTokenCost((float)token / maxToken);
+		GD.Print($"Added {amount} tokens. Current token: {token}");
+	}
+
 	public float GetTokenCostRefPercent(TokenOperationInfo info)
 	{
 		if (info.TokenCost > 0)
@@ -124,10 +138,10 @@ public partial class TokenManager : Node
 		TokenOperationInfo info = new()
 		{
 			Type = TokenOperationInfo.OperationType.CreateVar,
+			VarType = var.Stats.Type,
 			TokenCost = var.Stats.TokenCost,
 			ShowOnly = true
 		};
-		_gameData.SkillManager.OnTokenOperation(info);
 		BarController.ShowTokenCostRef(GetTokenCostRefPercent(info));
 	}
 
@@ -136,10 +150,10 @@ public partial class TokenManager : Node
 		TokenOperationInfo info = new()
 		{
 			Type = TokenOperationInfo.OperationType.CreateVar,
+			VarType = var.Stats.Type,
 			TokenCost = var.Stats.TokenCost,
 			ShowOnly = false
 		};
-		_gameData.SkillManager.OnTokenOperation(info);
 		ApplyTokenCost(info);
 	}
 
@@ -152,7 +166,6 @@ public partial class TokenManager : Node
 			TokenCost = cost,
 			ShowOnly = true
 		};
-		_gameData.SkillManager.OnTokenOperation(info);
 		BarController.ShowTokenCostRef(GetTokenCostRefPercent(info));
 	}
 
@@ -165,7 +178,6 @@ public partial class TokenManager : Node
 			TokenCost = cost,
 			ShowOnly = false
 		};
-		_gameData.SkillManager.OnTokenOperation(info);
 		ApplyTokenCost(info);
 	}
 
@@ -178,7 +190,6 @@ public partial class TokenManager : Node
 			TokenCost = cost,
 			ShowOnly = true
 		};
-		_gameData.SkillManager.OnTokenOperation(info);
 		BarController.ShowTokenCostRef(GetTokenCostRefPercent(info));
 	}
 
@@ -191,7 +202,6 @@ public partial class TokenManager : Node
 			TokenCost = cost,
 			ShowOnly = false
 		};
-		_gameData.SkillManager.OnTokenOperation(info);
 		ApplyTokenCost(info);
 	}
 
@@ -204,7 +214,6 @@ public partial class TokenManager : Node
 			TokenCost = cost,
 			ShowOnly = true
 		};
-		_gameData.SkillManager.OnTokenOperation(info);
 		BarController.ShowTokenCostRef(GetTokenCostRefPercent(info));
 	}
 
@@ -217,7 +226,6 @@ public partial class TokenManager : Node
 			TokenCost = cost,
 			ShowOnly = false
 		};
-		_gameData.SkillManager.OnTokenOperation(info);
 		ApplyTokenCost(info);
 	}
 }

@@ -10,5 +10,5 @@ public class DroneBool : Skill
             data.SkillManager.AddRuntime(GetSkillRuntime());
         }
     }
-    public override ISkillRuntime GetSkillRuntime() => new DroneBoolRuntime();
+    public override ISkillRuntime GetSkillRuntime() => new DroneBoolRuntime(Resource);
 }

@@ -8,6 +8,13 @@ internal sealed partial class VarRippleRenderer : Control
     {
         public Vector2I Origin { get; init; }
         public double Elapsed { get; set; }
+        public float Duration { get; init; }
+        public float Radius { get; init; }
+        public float RingWidth { get; init; }
+        public float OriginFlashPortion { get; init; }
+        public float OutlineWidth { get; init; }
+        public Color Color { get; init; }
+        public Color OutlineColor { get; init; }
     }
 
     private readonly VarRenderer _owner;
@@ -36,7 +43,38 @@ internal sealed partial class VarRippleRenderer : Control
             return;
         }
 
-        _ripples.Add(new Ripple { Origin = origin });
+        _ripples.Add(new Ripple
+        {
+            Origin = origin,
+            Duration = _config.ClickRippleDuration,
+            Radius = _config.ClickRippleRadius,
+            RingWidth = _config.ClickRippleRingWidth,
+            OriginFlashPortion = _config.ClickRippleOriginFlashPortion,
+            OutlineWidth = _config.ClickRippleOutlineWidth,
+            Color = _config.ClickRippleColor,
+            OutlineColor = _config.ClickRippleOutlineColor,
+        });
+        QueueRedraw();
+    }
+
+    public void AddDummyDeathRipple(Vector2I origin)
+    {
+        if (!_config.RenderDummyDeathRipple)
+        {
+            return;
+        }
+
+        _ripples.Add(new Ripple
+        {
+            Origin = origin,
+            Duration = _config.DummyDeathRippleDuration,
+            Radius = _config.DummyDeathRippleRadius,
+            RingWidth = _config.DummyDeathRippleRingWidth,
+            OriginFlashPortion = _config.DummyDeathRippleOriginFlashPortion,
+            OutlineWidth = _config.DummyDeathRippleOutlineWidth,
+            Color = _config.DummyDeathRippleColor,
+            OutlineColor = _config.DummyDeathRippleOutlineColor,
+        });
         QueueRedraw();
     }
 
@@ -51,7 +89,7 @@ internal sealed partial class VarRippleRenderer : Control
         {
             Ripple ripple = _ripples[index];
             ripple.Elapsed += delta;
-            if (ripple.Elapsed >= _config.ClickRippleDuration)
+            if (ripple.Elapsed >= Mathf.Max(ripple.Duration, VarRenderer.Epsilon))
             {
                 _ripples.RemoveAt(index);
             }
@@ -62,8 +100,7 @@ internal sealed partial class VarRippleRenderer : Control
 
     public override void _Draw()
     {
-        if (!_config.RenderClickRipple
-            || _ripples.Count == 0
+        if (_ripples.Count == 0
             || _config.Zoom <= VarRenderer.Epsilon
             || Grid.CellSize <= 0)
         {
@@ -78,13 +115,13 @@ internal sealed partial class VarRippleRenderer : Control
 
     private void DrawRipple(Ripple ripple)
     {
-        float duration = Mathf.Max(_config.ClickRippleDuration, VarRenderer.Epsilon);
+        float duration = Mathf.Max(ripple.Duration, VarRenderer.Epsilon);
         float progress = Mathf.Clamp((float)(ripple.Elapsed / duration), 0.0f, 1.0f);
-        float radius = progress * _config.ClickRippleRadius;
-        float ringWidth = Mathf.Max(_config.ClickRippleRingWidth, 0.25f);
+        float radius = progress * ripple.Radius;
+        float ringWidth = Mathf.Max(ripple.RingWidth, 0.25f);
         int maxCellDistance = Mathf.CeilToInt(radius + ringWidth + 1.0f);
 
-        DrawCell(ripple.Origin, GetOriginFlashAlpha(progress));
+        DrawCell(ripple, ripple.Origin, GetOriginFlashAlpha(ripple, progress));
 
         for (int y = ripple.Origin.Y - maxCellDistance; y <= ripple.Origin.Y + maxCellDistance; y++)
         {
@@ -105,18 +142,18 @@ internal sealed partial class VarRippleRenderer : Control
 
                 float ringAlpha = 1.0f - distanceFromRing / ringWidth;
                 ringAlpha *= 1.0f - progress;
-                DrawCell(cell, ringAlpha);
+                DrawCell(ripple, cell, ringAlpha);
             }
         }
     }
 
-    private float GetOriginFlashAlpha(float progress)
+    private float GetOriginFlashAlpha(Ripple ripple, float progress)
     {
-        float flashDuration = Mathf.Max(_config.ClickRippleOriginFlashPortion, VarRenderer.Epsilon);
+        float flashDuration = Mathf.Max(ripple.OriginFlashPortion, VarRenderer.Epsilon);
         return Mathf.Clamp(1.0f - progress / flashDuration, 0.0f, 1.0f);
     }
 
-    private void DrawCell(Vector2I cell, float alphaMultiplier)
+    private void DrawCell(Ripple ripple, Vector2I cell, float alphaMultiplier)
     {
         if (alphaMultiplier <= 0.0f || !_owner.IsCellInsideMap(cell))
         {
@@ -127,12 +164,12 @@ internal sealed partial class VarRippleRenderer : Control
         Vector2 cellSize = Vector2.One * Grid.CellSize * _config.Zoom;
         Rect2 cellRect = new(cellCenter - cellSize / 2.0f, cellSize);
 
-        Color fillColor = _config.ClickRippleColor;
+        Color fillColor = ripple.Color;
         fillColor.A *= alphaMultiplier;
         DrawRect(cellRect, fillColor);
 
-        Color outlineColor = _config.ClickRippleOutlineColor;
+        Color outlineColor = ripple.OutlineColor;
         outlineColor.A *= alphaMultiplier;
-        DrawRect(cellRect, outlineColor, false, Mathf.Max(1.0f, _config.ClickRippleOutlineWidth * _config.Zoom));
+        DrawRect(cellRect, outlineColor, false, Mathf.Max(1.0f, ripple.OutlineWidth * _config.Zoom));
     }
 }

@@ -33,6 +33,14 @@ public partial class VarRendererConfig : Resource
     [Export] public float ClickRippleRingWidth { get; set; } = 0.55f;
     [Export] public float ClickRippleOriginFlashPortion { get; set; } = 0.24f;
     [Export] public float ClickRippleOutlineWidth { get; set; } = 2.0f;
+    [Export] public bool RenderDummyDeathRipple { get; set; } = true;
+    [Export] public Color DummyDeathRippleColor { get; set; } = new(0.82f, 0.82f, 1.0f, 0.44f);
+    [Export] public Color DummyDeathRippleOutlineColor { get; set; } = new(0.98f, 0.98f, 1.0f, 0.88f);
+    [Export] public float DummyDeathRippleDuration { get; set; } = 0.8f;
+    [Export] public float DummyDeathRippleRadius { get; set; } = 8.0f;
+    [Export] public float DummyDeathRippleRingWidth { get; set; } = 1.2f;
+    [Export] public float DummyDeathRippleOriginFlashPortion { get; set; } = 0.3f;
+    [Export] public float DummyDeathRippleOutlineWidth { get; set; } = 3.0f;
     [Export] public bool RenderVarBody { get; set; } = true;
     [Export] public bool RenderAttackRange { get; set; } = false;
     [Export] public bool RenderDetectRange { get; set; } = false;

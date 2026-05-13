@@ -36,6 +36,9 @@ public partial class Var_MoveState : STNode
 
     protected override void OnEnter()
     {
+        _blackboard.Set(
+            "EnemyRandomMoveTimeRemaining",
+            _blackboard.Get<float>("EnemyRandomMoveInterval"));
         UpdateCurrentRegion();
     }
 
@@ -71,6 +74,8 @@ public partial class Var_MoveState : STNode
     private void FinishMovement()
     {
         IsWalking = false;
+        CurrentPath?.Clear();
+        CurrentPathIndex = 0;
         RequestTransition("Idle");
     }
 

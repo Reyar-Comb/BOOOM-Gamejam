@@ -24,10 +24,10 @@ public partial class Var : RefCounted, ICleanable
     private MapData MapData => _blackboard.Get<MapData>("MapData");
     private GameData GameData => _blackboard.Get<GameData>("GameData");
 
-    [Signal] 
+    [Signal]
     public delegate void OnDetectedEventHandler(DetectInfo detectInfo);
-    
-    [Signal] 
+
+    [Signal]
     public delegate void OnAttackedEventHandler(int damage, Var source);
 
     [Signal]
@@ -123,7 +123,7 @@ public partial class Var : RefCounted, ICleanable
         Vector2I selfCell = Grid.WorldToGrid(Stats.Position);
         Vector2I targetCell = Grid.WorldToGrid(worldTarget);
         if (selfCell == targetCell) return;
-        
+
         var path = pathfinder.Run(selfCell, targetCell, MapData.GetRegion(selfCell.X, selfCell.Y));
         SetPath(path);
     }
@@ -161,7 +161,7 @@ public partial class Var : RefCounted, ICleanable
             _historyAttackers.Add(atkInfo.Source);
             EmitSignal(SignalName.OnAttacked, finalDamage, atkInfo.Source);
         }
-        
+
         Stats.CurrentHealth -= finalDamage;
         if (IsDead) return;
 
@@ -229,7 +229,7 @@ public partial class Var : RefCounted, ICleanable
         {
             return;
         }
-        
+
         _currentAttackers.Remove(attacker);
     }
 
@@ -277,6 +277,8 @@ public partial class Var : RefCounted, ICleanable
         _blackboard.Set("IsAttacked", false);
         _blackboard.Set("IsDummyAttacked", false);
         _blackboard.Set("DummyCell", Vector2I.Zero);
+        _blackboard.Set("EnemyRandomMoveInterval", 2.0f);
+        _blackboard.Set("EnemyRandomMoveTimeRemaining", 2.0f);
 
         _stateTree.Initialize(_blackboard);
     }

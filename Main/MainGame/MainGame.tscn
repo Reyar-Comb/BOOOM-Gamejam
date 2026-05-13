@@ -3,11 +3,24 @@
 [ext_resource type="Shader" uid="uid://cmtfcbu6k5nsn" path="res://Shaders/CardScene.gdshader" id="1_byatl"]
 [ext_resource type="PackedScene" uid="uid://d0xq4j2ohsk2q" path="res://Main/GameScene/GameScene.tscn" id="1_k72b0"]
 [ext_resource type="Script" uid="uid://dxmg6qq286ydp" path="res://Main/MainGame/SubView/sub_viewport_container.gd" id="2_i30qx"]
+[ext_resource type="Shader" uid="uid://0nm2jqery7f5" path="res://Shaders/ScanningLine.gdshader" id="4_i30qx"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_byatl"]
 shader = ExtResource("1_byatl")
 shader_parameter/mouse_pos = Vector2(0, 0)
 shader_parameter/fov = 0.010000000475
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_iyuwi"]
+shader = ExtResource("4_i30qx")
+shader_parameter/speed = 0.26000001072006
+shader_parameter/interval_time = 4.974000236265
+shader_parameter/trail_length = 0.36800001585006
+shader_parameter/line_brightness = 1.7230000818425
+shader_parameter/dot_color = Color(0, 0.9, 0.4, 1)
+shader_parameter/dot_density = 128.3870056233825
+shader_parameter/dot_size = 0.41300001798756
+shader_parameter/base_alpha = 0.0
+shader_parameter/global_alpha = 0.502000023845
 
 [node name="MainGame" type="Node2D" unique_id=67133812]
 
@@ -31,3 +44,14 @@ size = Vector2i(1920, 1080)
 render_target_update_mode = 4
 
 [node name="GameScene" parent="CanvasLayer/SubViewportContainer/SubViewport" unique_id=1582491454 instance=ExtResource("1_k72b0")]
+
+[node name="ScanningLine" type="ColorRect" parent="CanvasLayer" unique_id=416830409]
+z_index = 10
+material = SubResource("ShaderMaterial_iyuwi")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3

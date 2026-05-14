@@ -14,6 +14,7 @@ public partial class ConsoleManager : Node
 	public List<Log> Logs { get; private set; } = new List<Log>();
 
 	private readonly Dictionary<Var, List<Callable>> _logSources = new Dictionary<Var, List<Callable>>();
+	private readonly Dictionary<Var, Var> _lastFriendlyAttackersByEnemy = new Dictionary<Var, Var>();
 
 
 	public override void _Ready()
@@ -51,6 +52,29 @@ public partial class ConsoleManager : Node
 
 		var callables = new List<Callable>();
 
+		if (v.Stats.VarTeam == VarStats.Team.Hostile)
+		{
+			var onEnemyDamageReceivedCallable = Callable.From((AttackInfo attackInfo) => {
+				if (attackInfo.Source?.Stats?.VarTeam == VarStats.Team.Friendly)
+				{
+					_lastFriendlyAttackersByEnemy[v] = attackInfo.Source;
+				}
+			});
+			v.Connect(Var.SignalName.OnDamageReceived, onEnemyDamageReceivedCallable);
+			callables.Add(onEnemyDamageReceivedCallable);
+
+			var onEnemyDeathCallable = Callable.From(() => {
+				_lastFriendlyAttackersByEnemy.TryGetValue(v, out Var attacker);
+				AddLog(new EnemyRepairedInfo(v, attacker));
+				_lastFriendlyAttackersByEnemy.Remove(v);
+			});
+			v.Stats.Connect(VarStats.SignalName.OnDeath, onEnemyDeathCallable);
+			callables.Add(onEnemyDeathCallable);
+
+			_logSources[v] = callables;
+			return;
+		}
+
 		var onDetectedCallable = Callable.From((DetectInfo detectInfo) => {
 			AddLog(new DetectedWarning(detectInfo));
 		});
@@ -78,9 +102,18 @@ public partial class ConsoleManager : Node
 		if (!_logSources.ContainsKey(v)) return;
 
 		var callables = _logSources[v];
-		v.Disconnect(Var.SignalName.OnDetected, callables[0]);
-		v.Disconnect(Var.SignalName.OnAttacked, callables[1]);
-		v.Stats?.Disconnect(VarStats.SignalName.OnDeath, callables[2]);
+		if (v.Stats?.VarTeam == VarStats.Team.Hostile)
+		{
+			v.Disconnect(Var.SignalName.OnDamageReceived, callables[0]);
+			v.Stats.Disconnect(VarStats.SignalName.OnDeath, callables[1]);
+			_lastFriendlyAttackersByEnemy.Remove(v);
+		}
+		else
+		{
+			v.Disconnect(Var.SignalName.OnDetected, callables[0]);
+			v.Disconnect(Var.SignalName.OnAttacked, callables[1]);
+			v.Stats?.Disconnect(VarStats.SignalName.OnDeath, callables[2]);
+		}
 
 
 		_logSources.Remove(v);
@@ -99,7 +132,10 @@ public partial class ConsoleManager : Node
 	{
 		if (v == null) return;
 		SubscribeVarEvents(v);
-		AddLog(new CreateAck(v));
+		if (v.Stats.VarTeam != VarStats.Team.Hostile)
+		{
+			AddLog(new CreateAck(v));
+		}
 	}
 
 

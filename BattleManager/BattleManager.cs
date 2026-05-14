@@ -48,7 +48,11 @@ public partial class BattleManager : Node
 
 	[Export] public TokenManager TokenManager { get; private set; } = null!;
 
+	[Export] public InitialSkills InitialSkills { get; private set; } = null!;
+
 	public long CurrentTick { get; private set; } = 0;
+
+	public int CurrentWave { get; private set; } = 0;
 
 	public BattleState State { get; private set; } = BattleState.Running;
 
@@ -75,6 +79,9 @@ public partial class BattleManager : Node
 	private RandomNumberGenerator _rg = new();
 
 	private bool _isWaveFinished = false;
+
+	private WaveConfigProvider _waveConfigProvider = new();
+
 	private VarStats.VarType[] _spawnableTypes = [
 		VarStats.VarType.Int,
 		VarStats.VarType.Float,
@@ -84,15 +91,17 @@ public partial class BattleManager : Node
 		VarStats.VarType.Double,
 		VarStats.VarType.LongDouble
 	];
+
 	public override void _Ready()
 	{
 		Instance = this;
 		VarManager.SetPhysicsProcess(false);
 
+		_waveConfigProvider.Load();
 		_mapData = new MapData(80, 46);
-		_mapData.CreateRegions(6);
 		_gameData = new GameData();
 		_colorData = new ColorData();
+		InitialSkills ??= ResourceLoader.Load<InitialSkills>("res://GameData/InitialSkills.tres");
 		VarManager.Initialize(_mapData, _gameData);
 		VarRenderer.Initialize(_mapData);
 		TokenManager.Initialize(_gameData);
@@ -205,6 +214,8 @@ public partial class BattleManager : Node
 
 	public void StartWave()
 	{
+		CurrentWave++;
+		WaveConfig waveConfig = _waveConfigProvider.GetConfig(CurrentWave);
 		CurrentTick = 0;
 		// GameTime = 0;
 		_accumulator = 0.0;
@@ -216,6 +227,12 @@ public partial class BattleManager : Node
 		ConsoleManager?.UnsubscribeAllVarEvents();
 		VarManager?.ClearAllVars();
 		VarRenderer?.ClearVars();
+		_mapData.CreateRegions(waveConfig.RegionCount);
+
+		if (CurrentWave == 1)
+		{
+			AddInitialSkills();
+		}
 
 		_gameData.Reset();
 		_gameData.SkillManager.ApplyOwnedSkills(_gameData);
@@ -223,25 +240,41 @@ public partial class BattleManager : Node
 
 		TokenManager?.Reset();
 
-		SpawnEnemies(8);
+		GD.Print($"Wave {CurrentWave} started.");
+		SpawnEnemies(waveConfig);
 	}
+
+	private void AddInitialSkills()
+	{
+		if (InitialSkills == null)
+		{
+			return;
+		}
+
+		foreach (Skill skill in InitialSkills.CreateSkills())
+		{
+			_gameData.SkillManager.OwnedSkills.Add(skill);
+			GD.Print($"Added initial skill: {skill.Name}");
+		}
+	}
+
 	private async Task FinishWave()
 	{
 		await WaitSeconds(WaveFinishedDelay);
 	}
 	private async Task ChooseUpgrades()
 	{
-		List<Upgrade> choices = _gameData.GetRandomSkillChoices();
-		if (choices.Count == 0)
-		{
-			return;
-		}
+		// List<Upgrade> choices = _gameData.GetRandomSkillChoices();
+		// if (choices.Count == 0)
+		// {
+		// 	return;
+		// }
 
 		await WaitSeconds(SkillChoiceDelay);
 
-		Upgrade upgrade = choices[Random.Shared.Next(choices.Count)];
-		upgrade.Apply(_gameData);
-		GD.Print($"Wave finished. Applied upgrade: {upgrade.Name}");
+		// Upgrade upgrade = choices[Random.Shared.Next(choices.Count)];
+		// upgrade.Apply(_gameData);
+		// GD.Print($"Wave finished. Applied upgrade: {upgrade.Name}");
 	}
 	private Color GetRenderColor(VarStats.VarType type, VarStats.Team team)
 	{
@@ -298,10 +331,7 @@ public partial class BattleManager : Node
 		Color color = GetRenderColor(type, team);
 		VarRenderer.AddVar(var, color);
 
-		if (team == VarStats.Team.Friendly)
-		{
-			ConsoleManager.RegisterVar(var);
-		}
+		ConsoleManager?.RegisterVar(var);
 		GD.Print($"Registered var of type {type} at position {position}");
 		return var;
 	}
@@ -317,22 +347,27 @@ public partial class BattleManager : Node
 		enemy.Stats.OnDeath += () => OnEnemyDie(enemy);
 		return enemy;
 	}
-	private int GetRandomSpawnRegionId()
+	private int GetRandomSpawnRegionId(WaveConfig config)
 	{
 		float p = (float)_rg.Randf();
-		if (p < 0.5f) return 2;
-		return _rg.RandiRange(3, 6);
+		if (p < config.EnemyBaseSpawnProbability || config.RegionCount <= 2)
+		{
+			return MapData.EnemyBaseRegionId;
+		}
+
+		return _rg.RandiRange(3, config.RegionCount);
 	}
-	public void SpawnEnemies(int count)
+
+	private void SpawnEnemies(WaveConfig config)
 	{
-		count = Math.Max(count, 1);
+		int count = Math.Max(config.EnemyCount, 1);
 		for (int i = 0; i < count - 1; i++)
 		{
-			VarStats.VarType type = _spawnableTypes[_rg.RandiRange(0, _spawnableTypes.Length - 1)];
-			Vector2I position = _mapData.GetRandomPositionInRegion(GetRandomSpawnRegionId());
+			VarStats.VarType type = config.GetRandomEnemyType(_rg, _spawnableTypes);
+			Vector2I position = _mapData.GetRandomPositionInRegion(GetRandomSpawnRegionId(config));
 			RegisterVar(type, position, VarStats.Team.Hostile);
 		}
-		SpawnEnemy(VarStats.VarType.Dummy, _mapData.GetRandomPositionInRegion(2));
+		SpawnEnemy(VarStats.VarType.Dummy, _mapData.GetRandomPositionInRegion(MapData.EnemyBaseRegionId));
 	}
 	public void MoveVar(Var var, Vector2I newPosition, bool isHovering = false)
 	{

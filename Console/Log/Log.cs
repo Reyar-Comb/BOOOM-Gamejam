@@ -205,3 +205,17 @@ public class DeathError : Log
 	}
 	
 }
+
+public class EnemyRepairedInfo : Log
+{
+	public EnemyRepairedInfo(Var targetVar, Var repairerVar) : base(LogType.Info, repairerVar?.Stats?.Name ?? "System")
+	{
+		SetReportedWorldPosition(targetVar.Stats.Position);
+		Message = $"已修复异常变量于 {ReportedCell}，正在待命中";
+	}
+
+	protected override string FormatMessage()
+	{
+		return $"{_infoText} {_timeText} {_actorText}: {_messageText}";
+	}
+}

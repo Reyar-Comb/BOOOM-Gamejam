@@ -8,7 +8,7 @@ public partial class TokenManager : Node
 
 	public void ApplyTokenCost(TokenOperationInfo info)
 	{
-		_gameData.SkillManager.OnTokenOperation(info);
+		ApplyTokenOperationModifiers(info);
 		int cost = info.TokenCost;
 		if (_gameData.NumericData.Get("Token") <= cost)
 		{
@@ -37,10 +37,7 @@ public partial class TokenManager : Node
 
 	public float GetTokenCostRefPercent(TokenOperationInfo info)
 	{
-		if (info.TokenCost > 0)
-		{
-			_gameData.SkillManager.OnTokenOperation(info);
-		}
+		ApplyTokenOperationModifiers(info);
 		int rest = _gameData.NumericData.Get("Token") - info.TokenCost;
 		if (rest < 0) rest = 0;
 		return (float)rest / _gameData.NumericData.Get("MaxToken");
@@ -53,6 +50,24 @@ public partial class TokenManager : Node
 		int rest = _gameData.NumericData.Get("Patience") - patienceCost;
 		if (rest < 0) rest = 0;
 		return (float)rest / _gameData.NumericData.Get("MaxPatience");
+	}
+
+	private void ApplyTokenOperationModifiers(TokenOperationInfo info)
+	{
+		_gameData.SkillManager.OnTokenOperation(info);
+		info.TokenCost = Math.Max(0, info.TokenCost - GetTokenCostReduction(info.Type));
+	}
+
+	private int GetTokenCostReduction(TokenOperationInfo.OperationType operationType)
+	{
+		return operationType switch
+		{
+			TokenOperationInfo.OperationType.CreateVar => _gameData.NumericData.Get("CreateTokenCostReduction"),
+			TokenOperationInfo.OperationType.MoveVar => _gameData.NumericData.Get("CommandTokenCostReduction"),
+			TokenOperationInfo.OperationType.QueryVarLocation => _gameData.NumericData.Get("CommandTokenCostReduction"),
+			TokenOperationInfo.OperationType.QueryVarHealth => _gameData.NumericData.Get("CommandTokenCostReduction"),
+			_ => 0
+		};
 	}
 
 	public void Initialize(GameData gameData)
@@ -104,9 +119,9 @@ public partial class TokenManager : Node
 	public void ExchangeToken()
 	{
 		int token = _gameData.NumericData.Get("Token");
-		int tokenEx = _gameData.NumericData.Get("TokenExchangeAmount");
+		int tokenEx = _gameData.NumericData.Get("TokenExchangeAmount") + _gameData.NumericData.Get("TokenRequestGainBonus");
 		int patience = _gameData.NumericData.Get("Patience");
-		int patienceEx = _gameData.NumericData.Get("PatienceExchangeAmount");
+		int patienceEx = Math.Max(0, _gameData.NumericData.Get("PatienceExchangeAmount") - _gameData.NumericData.Get("TokenRequestPatienceCostReduction"));
 		if (patience - patienceEx <= 0)
 		{
 			BattleManager.Instance.OnDie();
@@ -121,15 +136,10 @@ public partial class TokenManager : Node
 
 	public void OnHoverExchangeToken()
 	{
-		int tokenEx = _gameData.NumericData.Get("TokenExchangeAmount");
-		int patienceEx = _gameData.NumericData.Get("PatienceExchangeAmount");
-		TokenOperationInfo info = new()
-		{
-			Type = TokenOperationInfo.OperationType.CreateVar,
-			TokenCost = -tokenEx,
-			ShowOnly = true
-		};
-		BarController.ShowTokenCostRef(GetTokenCostRefPercent(info));
+		int tokenEx = _gameData.NumericData.Get("TokenExchangeAmount") + _gameData.NumericData.Get("TokenRequestGainBonus");
+		int patienceEx = Math.Max(0, _gameData.NumericData.Get("PatienceExchangeAmount") - _gameData.NumericData.Get("TokenRequestPatienceCostReduction"));
+		int token = Math.Min(_gameData.NumericData.Get("Token") + tokenEx, _gameData.NumericData.Get("MaxToken"));
+		BarController.ShowTokenCostRef((float)token / _gameData.NumericData.Get("MaxToken"));
 		BarController.ShowPatienceCostRef(GetPatienceCostRefPercent(patienceEx));
 	}
 

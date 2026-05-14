@@ -16,7 +16,8 @@ public partial class VarRendererConfig : Resource
     [Export] public float MapFillRevealCellDelay { get; set; } = 0.001f;
     [Export] public float MapFillRevealCellDuration { get; set; } = 0.16f;
     [Export] public Color OccupiedRegionColor { get; set; } = new(0.28f, 0.72f, 0.42f);
-    [Export] public Color UnoccupiedRegionColor { get; set; } = new(0.16f, 0.17f, 0.18f);
+    [Export] public Color UnoccupiedRegionColor { get; set; } = new(0.95f, 0.78f, 0.18f);
+    [Export] public Color EnemyBaseRegionColor { get; set; } = new(0.9f, 0.16f, 0.12f);
     [Export] public float RegionFillAlpha { get; set; } = 0.82f;
     [Export] public Color BridgeColor { get; set; } = new(1.0f, 0.97f, 0.82f);
     [Export] public float BridgeLineWidth { get; set; } = 8.0f;

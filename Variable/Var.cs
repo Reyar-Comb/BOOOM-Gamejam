@@ -15,7 +15,8 @@ public partial class Var : RefCounted, ICleanable
     private Callable _onDeathCallable;
     private bool _hasOnDeathCallable = false;
     private bool _isCleanedUp = false;
-
+    private Vector2I _currentCell = Vector2I.Left;
+    private int _currentRegionId = -1;
     private readonly HashSet<Var> _currentAttackers = new();
     private readonly HashSet<Var> _historyAttackers = new();
     // Record whose _attackers hashset this Var is currently in.
@@ -114,7 +115,6 @@ public partial class Var : RefCounted, ICleanable
         _blackboard.Set("HasPendingMove", true);
     }
 
-
     public void MoveTo(Vector2 worldTarget)
     {
         var pathfinder = _blackboard.Get<Pathfinder>("Pathfinder");
@@ -134,6 +134,36 @@ public partial class Var : RefCounted, ICleanable
     public void FrameUpdate(double delta)
     {
         _stateTree.FrameUpdate(delta);
+    }
+    public void NotifyRegionEntryIfNeeded(Vector2I reachedCell)
+    {
+        if (MapData == null || GameData == null)
+        {
+            _currentCell = reachedCell;
+            return;
+        }
+
+        int reachedRegion = MapData.GetRegion(reachedCell.X, reachedCell.Y);
+        if (reachedRegion == _currentRegionId)
+        {
+            _currentCell = reachedCell;
+            return;
+        }
+
+        RegionEnteredInfo info = new()
+        {
+            Var = this,
+            MapData = MapData,
+            FromCell = _currentCell,
+            ToCell = reachedCell,
+            FromRegion = _currentRegionId,
+            ToRegion = reachedRegion
+        };
+
+        _currentCell = reachedCell;
+        _currentRegionId = reachedRegion;
+        GameData.SkillManager.OnRegionEntered(info);
+        // GD.Print($"Var {Stats.Name} entered region {reachedRegion} at cell {reachedCell}");
     }
     public void ReceiveDamage(AttackInfo atkInfo)
     {

@@ -8,7 +8,7 @@ public partial class Var_MoveState : STNode
 {
     public override string Name => "Move";
     private int _currentRegionId = -1;
-    private Vector2I _currentCell;
+    private Vector2I _currentCell = Vector2I.Left;
 
     private bool IsWalking
     {
@@ -62,7 +62,7 @@ public partial class Var_MoveState : STNode
         if (Stats.Position.DistanceSquaredTo(nextPos) > stepLength * stepLength) return;
 
         Stats.Position = nextPos;
-        NotifyRegionEntryIfNeeded(CurrentPath[CurrentPathIndex]);
+        Self.NotifyRegionEntryIfNeeded(CurrentPath[CurrentPathIndex]);
         CurrentPathIndex++;
         if (CurrentPathIndex >= CurrentPath.Count)
         {
@@ -90,48 +90,6 @@ public partial class Var_MoveState : STNode
 
         _currentCell = Grid.WorldToGrid(Stats.Position);
         _currentRegionId = MapData.GetRegion(_currentCell.X, _currentCell.Y);
-    }
-
-    private void NotifyRegionEntryIfNeeded(Vector2I reachedCell)
-    {
-        if (MapData == null || GameData == null || Self == null)
-        {
-            _currentCell = reachedCell;
-            return;
-        }
-
-        int reachedRegion = MapData.GetRegion(reachedCell.X, reachedCell.Y);
-        if (reachedRegion == _currentRegionId)
-        {
-            _currentCell = reachedCell;
-            return;
-        }
-
-        RegionEnteredInfo info = new()
-        {
-            Var = Self,
-            MapData = MapData,
-            FromCell = _currentCell,
-            ToCell = reachedCell,
-            FromRegion = _currentRegionId,
-            ToRegion = reachedRegion
-        };
-
-        OccupyRegionIfFriendly(reachedRegion);
-
-        _currentCell = reachedCell;
-        _currentRegionId = reachedRegion;
-        GameData.SkillManager.OnRegionEntered(info);
-    }
-
-    private void OccupyRegionIfFriendly(int regionId)
-    {
-        if (regionId <= 0 || Stats.VarTeam != VarStats.Team.Friendly)
-        {
-            return;
-        }
-
-        MapData.SetRegionOccupied(regionId, true);
     }
 
     private bool TryGetNextTargetPosition(out Vector2 nextPos)

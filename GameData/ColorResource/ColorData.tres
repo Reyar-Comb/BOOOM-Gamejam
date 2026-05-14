@@ -8,6 +8,7 @@ Data = Dictionary[String, Color]({
 "ButtonBoolColor": Color(0, 1, 0, 1),
 "ButtonCharColor": Color(0, 1, 0, 1),
 "ButtonDoubleColor": Color(0, 1, 0, 1),
+"ButtonFloatColor": Color(1, 0, 0, 1),
 "ButtonIntColor": Color(0, 1, 0, 1),
 "ButtonLongColor": Color(0, 1, 0, 1),
 "ButtonLongDoubleColor": Color(0, 1, 0, 1),

@@ -23,7 +23,7 @@
 [ext_resource type="Script" uid="uid://s741c5fm1sb5" path="res://Utilities/PanelNavigator/ButtonBinding.cs" id="11_2anr5"]
 [ext_resource type="PackedScene" uid="uid://c3p8415n1lwy1" path="res://Prefabs/VarButton/VarButton.tscn" id="11_8oyud"]
 [ext_resource type="Script" uid="uid://sa26p4j2xfk4" path="res://Utilities/PanelNavigator/PanelUnit.cs" id="11_b3sdv"]
-[ext_resource type="Shader" uid="uid://cq86ki37hsl8j" path="res://Shaders/BlinkingProgressBar.gdshader" id="11_y1mx5"]
+[ext_resource type="Shader" path="res://Shaders/BlinkingProgressBar.gdshader" id="11_y1mx5"]
 [ext_resource type="Script" uid="uid://dmjp5qpxlfunm" path="res://Prefabs/TooltipWindow/TooltipTrigger.cs" id="17_xdr2y"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_y1mx5"]
@@ -343,15 +343,6 @@ scale = Vector2(1.05, 1.05)
 
 [node name="ConsoleManager" type="Node" parent="." unique_id=51194342]
 script = ExtResource("2_jaa4w")
-
-[node name="BattleManager" type="Node" parent="." unique_id=1363842359 node_paths=PackedStringArray("VarManager", "ConsoleManager", "PanelNavigator", "VarRenderer", "TokenManager")]
-script = ExtResource("4_8oyud")
-TickScale = 5.0
-VarManager = NodePath("../VarManager")
-ConsoleManager = NodePath("../ConsoleManager")
-PanelNavigator = NodePath("../MarginContainer/HBoxContainer/MarginContainer3/ChooseVar/VBoxContainer/MarginContainer2/PanelContainer/MarginContainer/PanelNavigator")
-VarRenderer = NodePath("../MarginContainer/HBoxContainer/MarginContainer2/VBoxContainer/WindowPanel2/MarginContainer/VarRenderer")
-TokenManager = NodePath("../TokenManager")
 
 [node name="VarManager" type="Node" parent="." unique_id=1602613892]
 script = ExtResource("5_b3sdv")
@@ -971,10 +962,6 @@ color = Color(4.235506e-06, 0.63237935, 0.71052945, 1)
 text = "[b]Bool[/b]
 "
 
-[node name="TooltipTrigger" parent="MarginContainer/HBoxContainer/MarginContainer3/ChooseVar/VBoxContainer/MarginContainer2/PanelContainer/MarginContainer/PanelNavigator/VarAddUnit/VBoxContainer/ScrollContainer/VBoxContainer/AddIntButton/Button" parent_id_path=PackedInt32Array(1029203935, 1223400032) index="0" unique_id=852389310]
-TooltipId = "int_description"
-HideOnClick = false
-
 [node name="AddCharButton" parent="MarginContainer/HBoxContainer/MarginContainer3/ChooseVar/VBoxContainer/MarginContainer2/PanelContainer/MarginContainer/PanelNavigator/VarAddUnit/VBoxContainer/ScrollContainer/VBoxContainer" unique_id=218567015 instance=ExtResource("11_8oyud")]
 layout_mode = 2
 size_flags_vertical = 1
@@ -1152,6 +1139,15 @@ theme_override_colors/default_color = Color(1, 1, 1, 1)
 
 [node name="Button" parent="MarginContainer/HBoxContainer/MarginContainer3/ChooseVar/VBoxContainer/MarginContainer2/PanelContainer/MarginContainer/PanelNavigator/VarMoveUnit/VBoxContainer/PanelContainer/SelectedVarButton" index="2" unique_id=1223400032]
 disabled = true
+
+[node name="BattleManager" type="Node" parent="." unique_id=1363842359 node_paths=PackedStringArray("VarManager", "ConsoleManager", "PanelNavigator", "VarRenderer", "TokenManager")]
+script = ExtResource("4_8oyud")
+TickScale = 5.0
+VarManager = NodePath("../VarManager")
+ConsoleManager = NodePath("../ConsoleManager")
+PanelNavigator = NodePath("../MarginContainer/HBoxContainer/MarginContainer3/ChooseVar/VBoxContainer/MarginContainer2/PanelContainer/MarginContainer/PanelNavigator")
+VarRenderer = NodePath("../MarginContainer/HBoxContainer/MarginContainer2/VBoxContainer/WindowPanel2/MarginContainer/VarRenderer")
+TokenManager = NodePath("../TokenManager")
 
 [editable path="MarginContainer/HBoxContainer/MarginContainer2/VBoxContainer/WindowPanel2"]
 [editable path="MarginContainer/HBoxContainer/MarginContainer2/VBoxContainer/WindowPanel"]

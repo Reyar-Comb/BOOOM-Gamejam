@@ -14,7 +14,11 @@ public class CrowdOfCharRuntime : ISkillRuntime
 
     public void OnBeforeAttack(AttackInfo info)
     {
+        if (info == null || info.Attackers == null || info.Attackers.Count == 0 || info.Target == null || info.Target.IsDead)
+        {
+            return;
+        }
         int charAttackerCount = info.Attackers.Count(a => a.Stats.Type == VarStats.VarType.Char);
-        info.Damage += (int)(charAttackerCount * _resource.GetValue("DamageBonusPerCharAttacker"));
+        info.Damage += charAttackerCount * _resource.GetValue("DamageBonusPerCharAttacker");
     }
 }

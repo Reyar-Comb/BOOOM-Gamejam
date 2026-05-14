@@ -1,0 +1,6 @@
+[gd_resource type="Resource" script_class="InitialSkills" format=3 uid="uid://dbx84xdycadyu"]
+
+[ext_resource type="Script" uid="uid://dcvdqvoo3i3j" path="res://GameData/InitialSkills.cs" id="1"]
+
+[resource]
+script = ExtResource("1")

@@ -48,6 +48,8 @@ public partial class BattleManager : Node
 
 	[Export] public TokenManager TokenManager { get; private set; } = null!;
 
+	[Export] public InitialSkills InitialSkills { get; private set; } = null!;
+
 	public long CurrentTick { get; private set; } = 0;
 
 	public int CurrentWave { get; private set; } = 0;
@@ -99,6 +101,7 @@ public partial class BattleManager : Node
 		_mapData = new MapData(80, 46);
 		_gameData = new GameData();
 		_colorData = new ColorData();
+		InitialSkills ??= ResourceLoader.Load<InitialSkills>("res://GameData/InitialSkills.tres");
 		VarManager.Initialize(_mapData, _gameData);
 		VarRenderer.Initialize(_mapData);
 		TokenManager.Initialize(_gameData);
@@ -226,6 +229,11 @@ public partial class BattleManager : Node
 		VarRenderer?.ClearVars();
 		_mapData.CreateRegions(waveConfig.RegionCount);
 
+		if (CurrentWave == 1)
+		{
+			AddInitialSkills();
+		}
+
 		_gameData.Reset();
 		_gameData.SkillManager.ApplyOwnedSkills(_gameData);
 		_gameData.SkillManager.OnWaveStarted();
@@ -235,23 +243,38 @@ public partial class BattleManager : Node
 		GD.Print($"Wave {CurrentWave} started.");
 		SpawnEnemies(waveConfig);
 	}
+
+	private void AddInitialSkills()
+	{
+		if (InitialSkills == null)
+		{
+			return;
+		}
+
+		foreach (Skill skill in InitialSkills.CreateSkills())
+		{
+			_gameData.SkillManager.OwnedSkills.Add(skill);
+			GD.Print($"Added initial skill: {skill.Name}");
+		}
+	}
+
 	private async Task FinishWave()
 	{
 		await WaitSeconds(WaveFinishedDelay);
 	}
 	private async Task ChooseUpgrades()
 	{
-		List<Upgrade> choices = _gameData.GetRandomSkillChoices();
-		if (choices.Count == 0)
-		{
-			return;
-		}
+		// List<Upgrade> choices = _gameData.GetRandomSkillChoices();
+		// if (choices.Count == 0)
+		// {
+		// 	return;
+		// }
 
 		await WaitSeconds(SkillChoiceDelay);
 
-		Upgrade upgrade = choices[Random.Shared.Next(choices.Count)];
-		upgrade.Apply(_gameData);
-		GD.Print($"Wave finished. Applied upgrade: {upgrade.Name}");
+		// Upgrade upgrade = choices[Random.Shared.Next(choices.Count)];
+		// upgrade.Apply(_gameData);
+		// GD.Print($"Wave finished. Applied upgrade: {upgrade.Name}");
 	}
 	private Color GetRenderColor(VarStats.VarType type, VarStats.Team team)
 	{

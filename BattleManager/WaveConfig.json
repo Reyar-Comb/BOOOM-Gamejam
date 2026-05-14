@@ -1,47 +1,47 @@
 [
   {
-    "wave": 1,
-    "enemyTypeProbabilities": {
-      "Int": 0.25,
-      "Float": 0.2,
-      "Bool": 0.15,
-      "Char": 0.15,
-      "Long": 0.1,
-      "Double": 0.1,
-      "LongDouble": 0.05
-    },
-    "regionCount": 6,
-    "enemyCount": 8,
-    "enemyBaseSpawnProbability": 0.5
+	"wave": 1,
+	"enemyTypeProbabilities": {
+	  "Int": 0.25,
+	  "Float": 0.2,
+	  "Bool": 0.15,
+	  "Char": 0.15,
+	  "Long": 0.1,
+	  "Double": 0.1,
+	  "LongDouble": 0.05
+	},
+	"regionCount": 6,
+	"enemyCount": 8,
+	"enemyBaseSpawnProbability": 0.5
   },
   {
-    "wave": 2,
-    "enemyTypeProbabilities": {
-      "Int": 0.2,
-      "Float": 0.2,
-      "Bool": 0.15,
-      "Char": 0.15,
-      "Long": 0.12,
-      "Double": 0.12,
-      "LongDouble": 0.06
-    },
-    "regionCount": 6,
-    "enemyCount": 10,
-    "enemyBaseSpawnProbability": 0.45
+	"wave": 2,
+	"enemyTypeProbabilities": {
+	  "Int": 0.2,
+	  "Float": 0.2,
+	  "Bool": 0.15,
+	  "Char": 0.15,
+	  "Long": 0.12,
+	  "Double": 0.12,
+	  "LongDouble": 0.06
+	},
+	"regionCount": 6,
+	"enemyCount": 10,
+	"enemyBaseSpawnProbability": 0.45
   },
   {
-    "wave": 3,
-    "enemyTypeProbabilities": {
-      "Int": 0.16,
-      "Float": 0.18,
-      "Bool": 0.14,
-      "Char": 0.14,
-      "Long": 0.14,
-      "Double": 0.14,
-      "LongDouble": 0.1
-    },
-    "regionCount": 7,
-    "enemyCount": 12,
-    "enemyBaseSpawnProbability": 0.4
+	"wave": 3,
+	"enemyTypeProbabilities": {
+	  "Int": 0.16,
+	  "Float": 0.18,
+	  "Bool": 0.14,
+	  "Char": 0.14,
+	  "Long": 0.14,
+	  "Double": 0.14,
+	  "LongDouble": 0.1
+	},
+	"regionCount": 7,
+	"enemyCount": 12,
+	"enemyBaseSpawnProbability": 0.4
   }
 ]

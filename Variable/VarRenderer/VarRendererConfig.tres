@@ -12,4 +12,5 @@ DummyDeathRippleDuration = 1.6
 DummyDeathRippleRadius = 48.0
 DummyDeathRippleRingWidth = 10.0
 DummyDeathRippleOriginFlashPortion = 0.6
+RenderVarBody = false
 Zoom = 0.25

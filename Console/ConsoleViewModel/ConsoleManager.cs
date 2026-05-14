@@ -102,21 +102,34 @@ public partial class ConsoleManager : Node
 		if (!_logSources.ContainsKey(v)) return;
 
 		var callables = _logSources[v];
-		if (v.Stats?.VarTeam == VarStats.Team.Hostile)
+		if (callables.Count == 2)
 		{
-			v.Disconnect(Var.SignalName.OnDamageReceived, callables[0]);
-			v.Stats.Disconnect(VarStats.SignalName.OnDeath, callables[1]);
+			DisconnectIfConnected(v, Var.SignalName.OnDamageReceived, callables[0]);
+			DisconnectIfConnected(v.Stats, VarStats.SignalName.OnDeath, callables[1]);
 			_lastFriendlyAttackersByEnemy.Remove(v);
 		}
-		else
+		else if (callables.Count >= 3)
 		{
-			v.Disconnect(Var.SignalName.OnDetected, callables[0]);
-			v.Disconnect(Var.SignalName.OnAttacked, callables[1]);
-			v.Stats?.Disconnect(VarStats.SignalName.OnDeath, callables[2]);
+			DisconnectIfConnected(v, Var.SignalName.OnDetected, callables[0]);
+			DisconnectIfConnected(v, Var.SignalName.OnAttacked, callables[1]);
+			DisconnectIfConnected(v.Stats, VarStats.SignalName.OnDeath, callables[2]);
 		}
 
 
 		_logSources.Remove(v);
+	}
+
+	private static void DisconnectIfConnected(GodotObject source, StringName signalName, Callable callable)
+	{
+		if (source == null)
+		{
+			return;
+		}
+
+		if (source.IsConnected(signalName, callable))
+		{
+			source.Disconnect(signalName, callable);
+		}
 	}
 
 	public void UnsubscribeAllVarEvents()

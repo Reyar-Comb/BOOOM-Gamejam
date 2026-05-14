@@ -29,6 +29,8 @@ public enum BattleState
 
 public partial class BattleManager : Node
 {
+	private const int VarUnlockChoiceWaveLimit = 2;
+
 	public static BattleManager Instance { get; private set; } = null!;
 	[Export] public int TickRate = 20;
 
@@ -48,6 +50,8 @@ public partial class BattleManager : Node
 
 	[Export] public TokenManager TokenManager { get; private set; } = null!;
 
+	[Export] public ChoicePanel ChoicePanel { get; private set; } = null!;
+
 	[Export] public InitialSkills InitialSkills { get; private set; } = null!;
 
 	public long CurrentTick { get; private set; } = 0;
@@ -59,7 +63,7 @@ public partial class BattleManager : Node
 	public double TickInterval => 1.0 / TickRate;
 
 	public ColorData ColorData => _colorData;
-	
+
 	private double _accumulator = 0.0;
 
 	private bool _isTicking = false;
@@ -101,7 +105,7 @@ public partial class BattleManager : Node
 		_mapData = new MapData(80, 46);
 		_gameData = new GameData();
 		_colorData = new ColorData();
-		InitialSkills ??= ResourceLoader.Load<InitialSkills>("res://GameData/InitialSkills.tres");
+
 		VarManager.Initialize(_mapData, _gameData);
 		VarRenderer.Initialize(_mapData);
 		TokenManager.Initialize(_gameData);
@@ -277,18 +281,33 @@ public partial class BattleManager : Node
 	}
 	private async Task ChooseUpgrades()
 	{
-		// List<Upgrade> choices = _gameData.GetRandomSkillChoices();
-		// if (choices.Count == 0)
-		// {
-		// 	return;
-		// }
-
 		await WaitSeconds(SkillChoiceDelay);
 
-		// Upgrade upgrade = choices[Random.Shared.Next(choices.Count)];
-		// upgrade.Apply(_gameData);
-		// GD.Print($"Wave finished. Applied upgrade: {upgrade.Name}");
+		List<Upgrade> choices = CurrentWave <= VarUnlockChoiceWaveLimit
+			? _gameData.GetRandomUpgradeChoices()
+			: _gameData.GetRandomSkillChoices();
+		// List<Upgrade> choices = _gameData.GetRandomSkillChoices();
+		if (choices.Count == 0)
+		{
+			return;
+		}
+
+		if (ChoicePanel == null)
+		{
+			GD.PushError("Cannot present upgrade choices because BattleManager.ChoicePanel is not assigned.");
+			return;
+		}
+
+		Upgrade upgrade = await ChoicePanel.ChooseUpgradeAsync(choices);
+		if (upgrade == null)
+		{
+			return;
+		}
+
+		upgrade.Apply(_gameData);
+		GD.Print($"Wave finished. Applied upgrade: {upgrade.Name}");
 	}
+
 	private Color GetRenderColor(VarStats.VarType type, VarStats.Team team)
 	{
 		if (type == VarStats.VarType.Dummy)

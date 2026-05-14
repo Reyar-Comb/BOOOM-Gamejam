@@ -25,6 +25,8 @@
 [ext_resource type="Script" uid="uid://sa26p4j2xfk4" path="res://Utilities/PanelNavigator/PanelUnit.cs" id="11_b3sdv"]
 [ext_resource type="Shader" path="res://Shaders/BlinkingProgressBar.gdshader" id="11_y1mx5"]
 [ext_resource type="Script" uid="uid://dmjp5qpxlfunm" path="res://Prefabs/TooltipWindow/TooltipTrigger.cs" id="17_xdr2y"]
+[ext_resource type="Resource" uid="uid://dbx84xdycadyu" path="res://GameData/InitialSkills.tres" id="26_27xwp"]
+[ext_resource type="PackedScene" uid="uid://ckubueh7x4v6i" path="res://Main/ChoicePanel/ChoicePanel.tscn" id="27_mwq4y"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_y1mx5"]
 shader = ExtResource("11_y1mx5")
@@ -1140,7 +1142,14 @@ theme_override_colors/default_color = Color(1, 1, 1, 1)
 [node name="Button" parent="MarginContainer/HBoxContainer/MarginContainer3/ChooseVar/VBoxContainer/MarginContainer2/PanelContainer/MarginContainer/PanelNavigator/VarMoveUnit/VBoxContainer/PanelContainer/SelectedVarButton" index="2" unique_id=1223400032]
 disabled = true
 
-[node name="BattleManager" type="Node" parent="." unique_id=1363842359 node_paths=PackedStringArray("VarManager", "ConsoleManager", "PanelNavigator", "VarRenderer", "TokenManager")]
+[node name="ChoicePanelLayer" type="CanvasLayer" parent="." unique_id=686820624]
+
+[node name="ChoicePanel" parent="ChoicePanelLayer" unique_id=1654918493 instance=ExtResource("27_mwq4y")]
+custom_minimum_size = Vector2(1920, 1080)
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="BattleManager" type="Node" parent="." unique_id=1363842359 node_paths=PackedStringArray("VarManager", "ConsoleManager", "PanelNavigator", "VarRenderer", "TokenManager", "ChoicePanel")]
 script = ExtResource("4_8oyud")
 TickScale = 5.0
 VarManager = NodePath("../VarManager")
@@ -1148,6 +1157,8 @@ ConsoleManager = NodePath("../ConsoleManager")
 PanelNavigator = NodePath("../MarginContainer/HBoxContainer/MarginContainer3/ChooseVar/VBoxContainer/MarginContainer2/PanelContainer/MarginContainer/PanelNavigator")
 VarRenderer = NodePath("../MarginContainer/HBoxContainer/MarginContainer2/VBoxContainer/WindowPanel2/MarginContainer/VarRenderer")
 TokenManager = NodePath("../TokenManager")
+ChoicePanel = NodePath("../ChoicePanelLayer/ChoicePanel")
+InitialSkills = ExtResource("26_27xwp")
 
 [editable path="MarginContainer/HBoxContainer/MarginContainer2/VBoxContainer/WindowPanel2"]
 [editable path="MarginContainer/HBoxContainer/MarginContainer2/VBoxContainer/WindowPanel"]

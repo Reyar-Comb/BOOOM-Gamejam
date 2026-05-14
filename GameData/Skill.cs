@@ -7,7 +7,8 @@ public abstract class Skill
     {
         Common,
         Uncommon,
-        Rare
+        Rare,
+        Special
     }
     public string Name => Resource.Name;
     public string Description => Resource.Description;

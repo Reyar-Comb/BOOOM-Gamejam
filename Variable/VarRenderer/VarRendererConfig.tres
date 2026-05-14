@@ -1,6 +1,14 @@
 [gd_resource type="Resource" script_class="VarRendererConfig" format=3 uid="uid://dxn8y41s7b4yq"]
 
 [ext_resource type="Script" uid="uid://bixggai0cuh5h" path="res://Variable/VarRenderer/VarRendererConfig.cs" id="1_config"]
+[ext_resource type="Texture2D" uid="uid://b1u8ykxj7dahv" path="res://assets/Image/Int.png" id="1_ll8lk"]
+[ext_resource type="Texture2D" uid="uid://t3i1rlks361f" path="res://assets/Image/Flt.png" id="2_jypup"]
+[ext_resource type="Texture2D" uid="uid://k7736bb45xeu" path="res://assets/Image/Lon.png" id="3_m7mll"]
+[ext_resource type="Texture2D" uid="uid://cen2a4fqqo7tn" path="res://assets/Image/Dob.png" id="4_gbcn3"]
+[ext_resource type="Texture2D" uid="uid://5iw3dr4fr7ep" path="res://assets/Image/LDb.png" id="5_8knqp"]
+[ext_resource type="Texture2D" uid="uid://bgybudbjc6gam" path="res://assets/Image/Car.png" id="6_u1mue"]
+[ext_resource type="Texture2D" uid="uid://ba68ufg50fw58" path="res://assets/Image/Bol.png" id="7_s5w62"]
+[ext_resource type="Texture2D" uid="uid://cghvmps1xx3we" path="res://assets/Image/Bug.png" id="8_61l1n"]
 
 [resource]
 script = ExtResource("1_config")
@@ -13,3 +21,17 @@ DummyDeathRippleRadius = 48.0
 DummyDeathRippleRingWidth = 10.0
 DummyDeathRippleOriginFlashPortion = 0.6
 Zoom = 0.25
+VarTypeTextures = Dictionary[int, Texture2D]({
+0: ExtResource("1_ll8lk"),
+1: ExtResource("2_jypup"),
+2: ExtResource("3_m7mll"),
+3: ExtResource("4_gbcn3"),
+4: ExtResource("5_8knqp"),
+5: ExtResource("6_u1mue"),
+6: ExtResource("7_s5w62"),
+7: ExtResource("8_61l1n")
+})
+VarPieceBorderColor = Color(0, 1, 0, 1)
+VarPieceBorderWidth = 4.0
+FriendlyPieceColor = Color(0, 0, 1, 0.42352942)
+EnemyPieceColor = Color(1, 0, 0, 0.42352942)

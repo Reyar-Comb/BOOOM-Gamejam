@@ -32,6 +32,7 @@ public partial class VarRenderer : Control, IVarRenderer
     private readonly VarRippleRenderer _rippleRenderer;
     private readonly VarRenderStateTracker _renderStateTracker;
     private readonly VarLayerRenderer _varLayerRenderer;
+    private readonly VarPieceRenderer _varPieceRenderer;
     private MapData _mapData = null!;
     private Vector2I? _hoveredGridCell;
     private bool _isPanning = false;
@@ -52,6 +53,7 @@ public partial class VarRenderer : Control, IVarRenderer
         _rippleRenderer = new VarRippleRenderer(this, _config);
         _renderStateTracker = new VarRenderStateTracker(this, _config);
         _varLayerRenderer = new VarLayerRenderer(this, _renderStateTracker, _config);
+        _varPieceRenderer = new VarPieceRenderer(this, _config);
     }
 
     public override void _Ready()
@@ -72,7 +74,7 @@ public partial class VarRenderer : Control, IVarRenderer
         AddChild(_gridRenderer);
         AddChild(_rippleRenderer);
         AddChild(_varLayerRenderer);
-
+        AddChild(_varPieceRenderer);
         MouseExited += OnMouseExited;
         QueueRenderersRedraw();
     }
@@ -225,6 +227,16 @@ public partial class VarRenderer : Control, IVarRenderer
         _rippleRenderer.AddLogRipple(cell, logType);
     }
 
+    public void AddOrUpdatePiece(Var var, Vector2 origin)
+    {
+        _varPieceRenderer.AddOrUpdatePiece(var, origin);
+    }
+
+    public void RemovePiece(Var var)
+    {
+        _varPieceRenderer.RemovePiece(var);
+    }
+
     private void PruneDeadVars()
     {
         for (int index = _renderedVars.Count - 1; index >= 0; index--)
@@ -236,6 +248,7 @@ public partial class VarRenderer : Control, IVarRenderer
                 _renderedVars.RemoveAt(index);
                 _renderStateTracker.Remove(renderedVar);
                 _varLayerRenderer.RemoveStyle(renderedVar);
+                RemovePiece(renderedVar);
             }
         }
     }
@@ -457,6 +470,7 @@ public partial class VarRenderer : Control, IVarRenderer
         _rippleRenderer.InjectConfig(config);
         _renderStateTracker.InjectConfig(config);
         _varLayerRenderer.InjectConfig(config);
+        _varPieceRenderer.InjectConfig(config);
         QueueRenderersRedraw();
     }
 
@@ -468,6 +482,7 @@ public partial class VarRenderer : Control, IVarRenderer
         _gridRenderer?.QueueRedraw();
         _rippleRenderer?.QueueRedraw();
         _varLayerRenderer?.QueueRedraw();
+        _varPieceRenderer?.QueueRedraw();
     }
 
     private static VarRendererConfig CreateWritableConfig(VarRendererConfig source)

@@ -216,6 +216,25 @@ public partial class BattleManager : Node
 		}
 
 		VarRenderer.AddLogRipple(log.ReportedCell.Value, log.Type);
+
+		Var actor = VarManager.GetVarByName(log.Actor);
+		Var objective = VarManager.GetVarByName(log.Objective);
+		if (log is LocationAck || log is MoveCompletedAck)
+		{
+			VarRenderer.AddOrUpdatePiece(actor, actor.Stats.Position);
+		} 
+		else if (log is DetectedWarning || log is AttackedWarning || log is CreateAck)
+		{
+			VarRenderer.AddOrUpdatePiece(objective, objective.Stats.Position);
+		}
+		else if (log is EnemyRepairedInfo)
+		{
+			VarRenderer.RemovePiece(objective);
+		}
+		else if (log is DeathError)
+		{
+			VarRenderer.RemovePiece(actor);
+		}
 	}
 
 	private WaveConfig AdvanceWave()
@@ -422,6 +441,7 @@ public partial class BattleManager : Node
 			return;
 		}
 		TokenManager.MoveVar(var);
+		var.MarkMoveAsCommand();
 		var.MoveTo(Grid.GridToWorld(newPosition));
 		ConsoleManager.MoveVar(var, Grid.GridToWorld(newPosition));
 	}
@@ -435,6 +455,11 @@ public partial class BattleManager : Node
 		}
 		TokenManager.QueryVarLocation(var);
 		ConsoleManager.QueryLocation(var);
+	}
+
+	public void OnVarMoveCompleted(Var var)
+	{
+		ConsoleManager.OnVarMoveCompleted(var);
 	}
 
 	public void QueryVarHealth(Var var, bool isHovering = false)

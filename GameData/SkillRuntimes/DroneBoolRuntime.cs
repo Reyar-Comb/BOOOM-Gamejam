@@ -15,11 +15,11 @@ public class DroneBoolRuntime : ISkillRuntime
         {
             return;
         }
-        if (_detectedVars.Contains(info.Detector))
+        if (_detectedVars.Contains(info.DetectedVar))
         {
             return;
         }
-        _detectedVars.Add(info.Detector);
+        _detectedVars.Add(info.DetectedVar);
         BattleManager.Instance.TokenManager.AddToken(TokenGainPerNewEnemyDetected);
     }
 

@@ -34,6 +34,7 @@ public partial class GamePanelNavigator : PanelNavigator
 	[Export]
 	private VBoxContainer _varListContainer;
 	private GameData _gameData = null!;
+	private MapData _mapData = null!;
 	public override Vector2I LastClickedGrid { get; 
 		set
 		{
@@ -59,6 +60,10 @@ public partial class GamePanelNavigator : PanelNavigator
 		{
 			_gameData.SkillManager.CreationAvailabilityChanged += RedrawAddButton;
 		}
+	}
+	public void SetMapData(MapData mapData)
+	{
+		_mapData = mapData;
 	}
 	public override void _Ready()
 	{
@@ -97,6 +102,12 @@ public partial class GamePanelNavigator : PanelNavigator
 				if (CurrentVarType == null)
 				{
 					GD.PrintErr("No var type selected for placement!");
+					return;
+				}
+				if (!_mapData.IsRegionOccupied(_mapData.GetRegion(LastClickedGrid.X, LastClickedGrid.Y)))
+				{
+					// GD.PrintErr($"Cannot place var at {LastClickedGrid} because the region is not occupied!");
+					BattleManager.Instance.ConsoleManager?.AddLog(new CreateBlockedError(LastClickedGrid));
 					return;
 				}
 				BattleManager.Instance.RegisterVar(CurrentVarType.Value, LastClickedGrid);

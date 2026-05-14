@@ -111,6 +111,7 @@ public partial class BattleManager : Node
 			ConsoleManager.LogCreated += OnLogCreated;
 		}
 		PanelNavigator.SetGameData(_gameData);
+		PanelNavigator.SetMapData(_mapData);
 
 		StartWave();
 	}

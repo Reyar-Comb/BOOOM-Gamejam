@@ -110,6 +110,8 @@ public partial class BattleManager : Node
 		{
 			ConsoleManager.LogCreated += OnLogCreated;
 		}
+		PanelNavigator.SetGameData(_gameData);
+		PanelNavigator.SetMapData(_mapData);
 
 		StartWave();
 	}
@@ -212,7 +214,7 @@ public partial class BattleManager : Node
 		VarRenderer.AddLogRipple(log.ReportedCell.Value, log.Type);
 	}
 
-	public void StartWave()
+	private WaveConfig AdvanceWave()
 	{
 		CurrentWave++;
 		WaveConfig waveConfig = _waveConfigProvider.GetConfig(CurrentWave);
@@ -222,11 +224,23 @@ public partial class BattleManager : Node
 		_isTicking = true;
 		_isWaveFinished = false;
 		_isWaveTransitioning = false;
-		State = BattleState.Running;
 
+		return waveConfig;
+	}
+	private void Refresh()
+	{
 		ConsoleManager?.UnsubscribeAllVarEvents();
 		VarManager?.ClearAllVars();
 		VarRenderer?.ClearVars();
+		_gameData.Reset();
+		TokenManager?.Reset();
+	}
+	public void StartWave()
+	{
+		WaveConfig waveConfig = AdvanceWave();
+		State = BattleState.Running;
+
+		Refresh();
 		_mapData.CreateRegions(waveConfig.RegionCount);
 
 		if (CurrentWave == 1)
@@ -234,14 +248,13 @@ public partial class BattleManager : Node
 			AddInitialSkills();
 		}
 
-		_gameData.Reset();
 		_gameData.SkillManager.ApplyOwnedSkills(_gameData);
 		_gameData.SkillManager.OnWaveStarted();
 
-		TokenManager?.Reset();
-
 		GD.Print($"Wave {CurrentWave} started.");
 		SpawnEnemies(waveConfig);
+
+		PanelNavigator.RedrawAddButton();
 	}
 
 	private void AddInitialSkills()
@@ -299,6 +312,19 @@ public partial class BattleManager : Node
 		Vector2I position,
 		VarStats.Team team = VarStats.Team.Friendly, bool isHovering = false)
 	{
+		// if (team == VarStats.Team.Friendly && !_gameData.IsVarTypeUnlocked(type))
+		// {
+		// 	GD.Print($"Cannot register locked var type: {type}");
+		// 	return null;
+		// }
+
+		// if (team == VarStats.Team.Friendly && !_gameData.SkillManager.CanCreateVar(type))
+		// {
+		// 	GD.Print($"Cannot register var type disabled by skills: {type}");
+		// 	TokenManager.ClearCostRef();
+		// 	return null;
+		// }
+
 		Var var = new();
 
 		if (!_varStatsTemplates.TryGetValue(type, out var template))

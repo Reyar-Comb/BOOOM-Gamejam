@@ -33,7 +33,8 @@ public partial class GamePanelNavigator : PanelNavigator
 
 	[Export]
 	private VBoxContainer _varListContainer;
-
+	private GameData _gameData = null!;
+	private MapData _mapData = null!;
 	public override Vector2I LastClickedGrid { get; 
 		set
 		{
@@ -45,6 +46,25 @@ public partial class GamePanelNavigator : PanelNavigator
 		}
 	} = Vector2I.Zero;
 
+	private Dictionary<VarStats.VarType, VarButton> _addButtonsByVarType = new Dictionary<VarStats.VarType, VarButton>();
+	public void SetGameData(GameData gameData)
+	{
+		if (_gameData?.SkillManager != null)
+		{
+			_gameData.SkillManager.CreationAvailabilityChanged -= RedrawAddButton;
+		}
+
+		_gameData = gameData;
+
+		if (_gameData?.SkillManager != null)
+		{
+			_gameData.SkillManager.CreationAvailabilityChanged += RedrawAddButton;
+		}
+	}
+	public void SetMapData(MapData mapData)
+	{
+		_mapData = mapData;
+	}
 	public override void _Ready()
 	{
 		base._Ready();
@@ -82,6 +102,12 @@ public partial class GamePanelNavigator : PanelNavigator
 				if (CurrentVarType == null)
 				{
 					GD.PrintErr("No var type selected for placement!");
+					return;
+				}
+				if (!_mapData.IsRegionOccupied(_mapData.GetRegion(LastClickedGrid.X, LastClickedGrid.Y)))
+				{
+					// GD.PrintErr($"Cannot place var at {LastClickedGrid} because the region is not occupied!");
+					BattleManager.Instance.ConsoleManager?.AddLog(new CreateBlockedError(LastClickedGrid));
 					return;
 				}
 				BattleManager.Instance.RegisterVar(CurrentVarType.Value, LastClickedGrid);
@@ -165,6 +191,33 @@ public partial class GamePanelNavigator : PanelNavigator
 			CallDeferred("InstantiateVarButton", varButton, var);
 		}
 	}
+
+	// public override void _ExitTree()
+	// {
+	// 	if (_gameData?.SkillManager != null)
+	// 	{
+	// 		_gameData.SkillManager.CreationAvailabilityChanged -= RedrawAddButton;
+	// 	}
+	// }
+	public void RedrawAddButton()
+	{
+		foreach (var kvp in _addButtonsByVarType)
+		{
+			kvp.Value.Visible = _gameData.UnlockedVarTypes.Contains(kvp.Key)
+				&& _gameData.SkillManager.CanCreateVar(kvp.Key);
+		}
+
+		if (CurrentVarType.HasValue && _addButtonsByVarType.TryGetValue(CurrentVarType.Value, out VarButton currentButton) && !currentButton.Visible)
+		{
+			CurrentVarType = null;
+		}
+
+		QueueRedraw();
+		foreach (var kvp in _addButtonsByVarType)
+		{
+			GD.Print(kvp.Value.Name + " visibility: " + kvp.Value.Visible);
+		}
+	}
 	public void InitAddButton()
 	{
 		var addIntBtn = FindInPanel<VarButton>("VarAddUnit", "VBoxContainer/ScrollContainer/VBoxContainer/AddIntButton");
@@ -229,6 +282,14 @@ public partial class GamePanelNavigator : PanelNavigator
 				GD.Print($"Selected var type: {CurrentVarType}");
 			}
 		);
+
+		_addButtonsByVarType[VarStats.VarType.Int] = addIntBtn;
+		_addButtonsByVarType[VarStats.VarType.Float] = addFloatBtn;
+		_addButtonsByVarType[VarStats.VarType.Double] = addDoubleBtn;
+		_addButtonsByVarType[VarStats.VarType.Long] = addLongBtn;
+		_addButtonsByVarType[VarStats.VarType.LongDouble] = addLongDoubleBtn;
+		_addButtonsByVarType[VarStats.VarType.Bool] = addBoolBtn;
+		_addButtonsByVarType[VarStats.VarType.Char] = addCharBtn;
 	}
 
 	private void InstantiateVarButton(VarButton varButton, Var var)

@@ -243,7 +243,13 @@ internal sealed partial class VarMapRenderer : Control
             invalidColor.A = _config.RegionFillAlpha;
             return invalidColor;
         }
-
+        if (regionId == 1)
+        {
+            Color playerBaseColor = _config.OccupiedRegionColor;
+            playerBaseColor.A = _config.RegionFillAlpha;
+            return playerBaseColor;
+        }
+        
         Color color = _owner.MapData.IsRegionExplored(regionId)
             ? _owner.MapData.GetRegionState(regionId) switch
             {

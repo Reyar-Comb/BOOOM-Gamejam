@@ -96,6 +96,20 @@ public class CreateAck : Log
 
 }
 
+public class CreateBlockedError : Log
+{
+	public CreateBlockedError(Vector2I cell) : base(LogType.Error, "System")
+	{
+		SetReportedCell(cell);
+		Message = $"无法在 {ReportedCell} 处创建变量：此 Class 内存在异常变量";
+	}
+
+	protected override string FormatMessage()
+	{
+		return $"{_errorText} {_timeText} {_actorText}: {_messageText}";
+	}
+}
+
 
 public class LocationAck : Log
 {

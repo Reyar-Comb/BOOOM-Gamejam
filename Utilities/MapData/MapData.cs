@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 public class MapData
 {
+    public const int PlayerBaseRegionId = 1;
     public const int EnemyBaseRegionId = 2;
 
     public enum RegionState
@@ -153,7 +154,12 @@ public class MapData
             return;
         }
 
-        _regionStates[regionIndex] = regionId == EnemyBaseRegionId ? RegionState.EnemyBase : state;
+        _regionStates[regionIndex] = regionId switch
+        {
+            PlayerBaseRegionId => RegionState.Occupied,
+            EnemyBaseRegionId => RegionState.EnemyBase,
+            _ => state
+        };
     }
 
     public bool IsRegionExplored(int regionId)
@@ -181,9 +187,11 @@ public class MapData
         for (int i = 0; i < _regionStates.Length; i++)
         {
             int regionId = i + 1;
-            _regionStates[i] = regionId == EnemyBaseRegionId
-                ? RegionState.EnemyBase
-                : RegionState.Occupied;
+            _regionStates[i] = regionId switch
+            {
+                EnemyBaseRegionId => RegionState.EnemyBase,
+                _ => RegionState.Occupied
+            };
         }
     }
 

@@ -5,6 +5,8 @@ using System.Linq;
 
 public class SkillManager
 {
+    public event Action CreationAvailabilityChanged;
+
     public List<Skill> OwnedSkills { get; private set; } = new List<Skill>();
     private List<ISkillRuntime> _activeSkillRuntimes = new List<ISkillRuntime>();
     public void AddRuntime(ISkillRuntime runtime)
@@ -31,6 +33,8 @@ public class SkillManager
         {
             runtime.OnWaveStarted();
         }
+
+        CreationAvailabilityChanged?.Invoke();
     }
 
     public bool CanCreateVar(VarStats.VarType type)
@@ -56,9 +60,16 @@ public class SkillManager
 
     public void OnVarCreated(VarCreationInfo info)
     {
+        Dictionary<VarStats.VarType, bool> previousAvailability = GetCreationAvailabilitySnapshot();
+
         foreach (var runtime in _activeSkillRuntimes)
         {
             runtime.OnVarCreated(info);
+        }
+
+        if (HasCreationAvailabilityChanged(previousAvailability))
+        {
+            CreationAvailabilityChanged?.Invoke();
         }
     }
 
@@ -95,5 +106,29 @@ public class SkillManager
         {
             runtime.OnTokenOperation(info);
         }
+    }
+
+    private Dictionary<VarStats.VarType, bool> GetCreationAvailabilitySnapshot()
+    {
+        Dictionary<VarStats.VarType, bool> snapshot = new();
+        foreach (VarStats.VarType type in Enum.GetValues<VarStats.VarType>())
+        {
+            snapshot[type] = CanCreateVar(type);
+        }
+
+        return snapshot;
+    }
+
+    private bool HasCreationAvailabilityChanged(Dictionary<VarStats.VarType, bool> previousAvailability)
+    {
+        foreach (VarStats.VarType type in Enum.GetValues<VarStats.VarType>())
+        {
+            if (!previousAvailability.TryGetValue(type, out bool previous) || previous != CanCreateVar(type))
+            {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

@@ -308,10 +308,7 @@ public partial class BattleManager : Node
 		Color color = GetRenderColor(type, team);
 		VarRenderer.AddVar(var, color);
 
-		if (team == VarStats.Team.Friendly)
-		{
-			ConsoleManager.RegisterVar(var);
-		}
+		ConsoleManager?.RegisterVar(var);
 		GD.Print($"Registered var of type {type} at position {position}");
 		return var;
 	}

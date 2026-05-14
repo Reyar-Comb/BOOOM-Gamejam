@@ -144,6 +144,11 @@ public partial class Var : RefCounted, ICleanable
         }
 
         int reachedRegion = MapData.GetRegion(reachedCell.X, reachedCell.Y);
+        if (reachedRegion > 0 && Stats?.VarTeam == VarStats.Team.Friendly)
+        {
+            MapData.SetRegionExplored(reachedRegion, true);
+        }
+
         if (reachedRegion == _currentRegionId)
         {
             _currentCell = reachedCell;

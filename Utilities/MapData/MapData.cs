@@ -72,6 +72,7 @@ public class MapData
     private int[] _regionId;
     private bool[] _isBridge;
     private RegionState[] _regionStates;
+    private bool[] _regionExplored;
     private List<BridgeConnection> _bridges;
     private List<PriorityQueue<TileExpansion, float>> _nextTileDeciders;
     private readonly int _regionSeedTileDistance;
@@ -85,6 +86,7 @@ public class MapData
         _regionId = new int[Width * Height];
         _isBridge = new bool[Width * Height];
         _regionStates = Array.Empty<RegionState>();
+        _regionExplored = Array.Empty<bool>();
         _bridges = new();
         _nextTileDeciders = new();
         _regionSeedTileDistance = regionSeedTileDistance;
@@ -154,6 +156,26 @@ public class MapData
         _regionStates[regionIndex] = regionId == EnemyBaseRegionId ? RegionState.EnemyBase : state;
     }
 
+    public bool IsRegionExplored(int regionId)
+    {
+        int regionIndex = regionId - 1;
+        return regionIndex >= 0
+            && regionIndex < _regionExplored.Length
+            && _regionExplored[regionIndex];
+    }
+
+    public void SetRegionExplored(int regionId, bool isExplored)
+    {
+        int regionIndex = regionId - 1;
+        if (regionIndex < 0 || regionIndex >= _regionExplored.Length)
+        {
+            GD.PushError("Region id must match an existing region.");
+            return;
+        }
+
+        _regionExplored[regionIndex] = isExplored;
+    }
+
     public void ResetDynamicRegionStates()
     {
         for (int i = 0; i < _regionStates.Length; i++)
@@ -206,6 +228,7 @@ public class MapData
             tiles.Clear();
         }
         _regionStates = Array.Empty<RegionState>();
+        _regionExplored = Array.Empty<bool>();
         foreach (PriorityQueue<TileExpansion, float> decider in _nextTileDeciders)
         {
             decider.Clear();
@@ -235,6 +258,7 @@ public class MapData
     private void InitializeRegionStates(int regionCount)
     {
         _regionStates = new RegionState[regionCount];
+        _regionExplored = new bool[regionCount];
         ResetDynamicRegionStates();
     }
 

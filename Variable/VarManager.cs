@@ -140,6 +140,7 @@ public partial class VarManager : Node
         }
         EmitSignal(SignalName.VarListUpdated);
         UpdateDynamicRegionStates();
+        var.NotifyRegionEntryIfNeeded(Grid.WorldToGrid(var.Stats.Position));
     }
 
     public void ClearAllVars()

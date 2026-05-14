@@ -18,7 +18,7 @@ public class FriendOfClassesRuntime : ISkillRuntime
 
     public void OnRegionEntered(RegionEnteredInfo info)
     {
-        if (info == null || info.ToRegion == 0)
+        if (info == null || info.ToRegion == 0 || info.Var.Stats.VarTeam == VarStats.Team.Hostile)
         {
             return;
         }

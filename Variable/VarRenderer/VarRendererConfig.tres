@@ -7,7 +7,6 @@ script = ExtResource("1_config")
 DrawBackground = true
 BackgroundColor = Color(0.078431375, 0.09019608, 0.10980392, 0.69411767)
 RenderMapBridges = false
-UnexploredRegionColor = Color(0, 0, 0, 1)
 RenderGrid = true
 DummyDeathRippleDuration = 1.6
 DummyDeathRippleRadius = 48.0

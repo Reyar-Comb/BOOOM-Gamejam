@@ -190,6 +190,7 @@ public partial class VarManager : Node
     private void OnVarDeath(Var var)
     {
         var.IsDead = true;
+        BattleManager.Instance.TokenManager.AddToken(_gameData.NumericData.Get("DeathTokenRefund"));
         UpdateDynamicRegionStates();
     }
 

@@ -78,6 +78,12 @@ public partial class ConsoleManager : Node
 		var onDetectedCallable = Callable.From((DetectInfo detectInfo) => {
 			AddLog(new DetectedWarning(detectInfo));
 		});
+		var onMoveCompletedCallable = Callable.From(() => {
+			AddLog(new MoveCompletedAck(v));
+		});
+		v.Connect(Var.SignalName.MoveCompleted, onMoveCompletedCallable);
+		callables.Add(onMoveCompletedCallable);
+
 		v.Connect(Var.SignalName.OnDetected, onDetectedCallable);
 		callables.Add(onDetectedCallable);
 
@@ -113,6 +119,9 @@ public partial class ConsoleManager : Node
 			DisconnectIfConnected(v, Var.SignalName.OnDetected, callables[0]);
 			DisconnectIfConnected(v, Var.SignalName.OnAttacked, callables[1]);
 			DisconnectIfConnected(v.Stats, VarStats.SignalName.OnDeath, callables[2]);
+		} else if (callables.Count >= 4)
+		{
+			DisconnectIfConnected(v, Var.SignalName.MoveCompleted, callables[3]);
 		}
 
 
@@ -156,6 +165,13 @@ public partial class ConsoleManager : Node
 	{
 		if (v == null) return;
 		AddLog(new MoveAck(v, newPosition));
+	}
+
+	public void OnVarMoveCompleted(Var v)
+	{
+		GD.Print($"Var {v.Stats.Name} move completed at position {v.Stats.Position}");
+		if (v == null) return;
+		AddLog(new MoveCompletedAck(v));
 	}
 
 	public void QueryLocation(Var v)

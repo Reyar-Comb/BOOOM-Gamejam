@@ -169,13 +169,14 @@ public partial class BattleManager : Node
 		_isWaveTransitioning = true;
 		_accumulator = 0.0;
 		State = BattleState.BeforeWaveEnd;
-
+		_ = AudioManager.Instance.FilterBGM();
 		await FinishWave();
 		State = BattleState.Choice;
 		await ChooseUpgrades();
 
 		VarRenderer.RestartReveal();
 		StartWave();
+		_ = AudioManager.Instance.UnfilterBGM();
 		_isWaveFinished = false;
 		_isWaveTransitioning = false;
 	}
@@ -517,7 +518,7 @@ public partial class BattleManager : Node
 
 	// TEST METHODS
 
-	public override void _Input(InputEvent @event)
+	public override async void _Input(InputEvent @event)
 	{
 		if (@event is InputEventKey keyEvent)
 		{
@@ -526,6 +527,14 @@ public partial class BattleManager : Node
 				if (keyEvent.Keycode == Key.Escape)
 				{
 					TogglePause();
+					if (State == BattleState.Paused)
+					{
+						await AudioManager.Instance.FilterBGM();
+					}
+					else
+					{
+						await AudioManager.Instance.UnfilterBGM();
+					}
 					return;
 				}
 				if (keyEvent.Keycode == Key.O)

@@ -15,9 +15,14 @@ run/main_scene="uid://c8wjvuv5krl63"
 config/features=PackedStringArray("4.6", "C#", "Mobile")
 config/icon="res://icon.svg"
 
+[audio]
+
+buses/default_bus_layout="uid://xdrtyl70dgvu"
+
 [autoload]
 
 ConsoleManager="*uid://bocfjfs3ip7pw"
+AudioManager="*uid://cfq5i8kq1603k"
 
 [display]
 

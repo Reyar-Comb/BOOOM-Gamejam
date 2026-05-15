@@ -342,7 +342,6 @@ public partial class BattleManager : Node
 
 		if (isSkillFull)
 		{
-			await WaitSeconds(SkillChoiceDelay);
 			Skill skillToDelete = await DeletePanel.ChooseSkillToDeleteAsync(skillsToRemove);
 			if (skillToDelete != null)
 			{

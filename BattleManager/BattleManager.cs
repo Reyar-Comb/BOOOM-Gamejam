@@ -54,6 +54,8 @@ public partial class BattleManager : Node
 
 	[Export] public InitialSkills InitialSkills { get; private set; } = null!;
 
+	[Export] public SkillCardList SkillCardList { get; private set; } = null!;
+
 	public long CurrentTick { get; private set; } = 0;
 
 	public int CurrentWave { get; private set; } = 0;
@@ -117,6 +119,7 @@ public partial class BattleManager : Node
 		PanelNavigator.SetGameData(_gameData);
 		PanelNavigator.SetMapData(_mapData);
 		InitAlertBorder();
+		InitSkillCards();
 		StartWave();
 	}
 
@@ -280,6 +283,7 @@ public partial class BattleManager : Node
 		SpawnEnemies(waveConfig);
 
 		PanelNavigator.RedrawAddButton();
+		SkillCardList.RefreshCards();
 	}
 
 	private void AddInitialSkills()
@@ -529,5 +533,10 @@ public partial class BattleManager : Node
 	{
 		AlertBorder alertBorder = GetTree().Root.GetNode<AlertBorder>("MainGame/CanvasLayer/AlertBorder");
 		alertBorder.GameData = _gameData;
+	}
+
+	public void InitSkillCards()
+	{
+		SkillCardList.SkillManager = _gameData.SkillManager;
 	}
 }

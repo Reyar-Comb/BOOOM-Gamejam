@@ -4,7 +4,7 @@
 [ext_resource type="PackedScene" uid="uid://d0xq4j2ohsk2q" path="res://Main/GameScene/GameScene.tscn" id="1_k72b0"]
 [ext_resource type="Script" uid="uid://dxmg6qq286ydp" path="res://Main/MainGame/SubView/sub_viewport_container.gd" id="2_i30qx"]
 [ext_resource type="Shader" uid="uid://0nm2jqery7f5" path="res://Shaders/ScanningLine.gdshader" id="4_i30qx"]
-[ext_resource type="Shader" path="res://Shaders/AlertBorder.gdshader" id="5_57a1t"]
+[ext_resource type="Shader" uid="uid://bnphvjwxdwlee" path="res://Shaders/AlertBorder.gdshader" id="5_57a1t"]
 [ext_resource type="Script" uid="uid://dciy3eckmbbh3" path="res://Main/AlertBorder/AlertBorder.cs" id="5_iyuwi"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_byatl"]
@@ -59,6 +59,22 @@ size = Vector2i(1920, 1080)
 render_target_update_mode = 4
 
 [node name="GameScene" parent="CanvasLayer/SubViewportContainer/SubViewport" unique_id=1582491454 instance=ExtResource("1_k72b0")]
+
+[node name="TextureRect" parent="CanvasLayer/SubViewportContainer/SubViewport/GameScene/MarginContainer/HBoxContainer/MarginContainer/VBoxContainer/HBoxContainer/WindowPanel2/MarginContainer/SkillCardList/PanelContainer2" parent_id_path=PackedInt32Array(1582491454, 138927992) index="0" unique_id=2144941164]
+visible = true
+texture = null
+
+[node name="TextureRect" parent="CanvasLayer/SubViewportContainer/SubViewport/GameScene/MarginContainer/HBoxContainer/MarginContainer/VBoxContainer/HBoxContainer/WindowPanel2/MarginContainer/SkillCardList/PanelContainer3" parent_id_path=PackedInt32Array(1582491454, 1885087743) index="0" unique_id=1429424023]
+visible = true
+texture = null
+
+[node name="TextureRect" parent="CanvasLayer/SubViewportContainer/SubViewport/GameScene/MarginContainer/HBoxContainer/MarginContainer/VBoxContainer/HBoxContainer/WindowPanel2/MarginContainer/SkillCardList/PanelContainer4" parent_id_path=PackedInt32Array(1582491454, 1206621646) index="0" unique_id=2058977891]
+visible = true
+texture = null
+
+[node name="TextureRect" parent="CanvasLayer/SubViewportContainer/SubViewport/GameScene/MarginContainer/HBoxContainer/MarginContainer/VBoxContainer/HBoxContainer/WindowPanel2/MarginContainer/SkillCardList/PanelContainer5" parent_id_path=PackedInt32Array(1582491454, 224103402) index="0" unique_id=1030748277]
+visible = true
+texture = null
 
 [node name="ScanningLine" type="ColorRect" parent="CanvasLayer" unique_id=416830409]
 z_index = 10

@@ -444,7 +444,7 @@ theme_override_constants/margin_bottom = 40
 layout_mode = 2
 theme_override_constants/separation = 45
 script = ExtResource("11_7ulp6")
-SkillCardIcons = [NodePath("PanelContainer/TextureRect"), NodePath("PanelContainer2/TextureRect"), NodePath("PanelContainer4/TextureRect"), NodePath("PanelContainer5/TextureRect")]
+SkillCardIcons = [NodePath("PanelContainer/TextureRect"), NodePath("PanelContainer2/TextureRect"), NodePath("PanelContainer3/TextureRect"), NodePath("PanelContainer4/TextureRect"), NodePath("PanelContainer5/TextureRect")]
 SkillCardTooltipTriggers = [NodePath("PanelContainer/TooltipTrigger"), NodePath("PanelContainer2/TooltipTrigger"), NodePath("PanelContainer3/TooltipTrigger"), NodePath("PanelContainer4/TooltipTrigger"), NodePath("PanelContainer5/TooltipTrigger")]
 
 [node name="PanelContainer" type="PanelContainer" parent="MarginContainer/HBoxContainer/MarginContainer/VBoxContainer/HBoxContainer/WindowPanel2/MarginContainer/SkillCardList" unique_id=1113591155]

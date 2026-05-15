@@ -278,37 +278,35 @@ horizontal_alignment = 1
 vertical_alignment = 1
 autowrap_mode = 3
 
-[node name="OptionalUnitChoiceWrap" type="CenterContainer" parent="SafeArea/CardCenter/Cards" unique_id=1573417987]
-custom_minimum_size = Vector2(270, 520)
-layout_mode = 2
-
-[node name="UnitChoiceCard" type="PanelContainer" parent="SafeArea/CardCenter/Cards/OptionalUnitChoiceWrap" unique_id=2035222066]
+[node name="UnitChoiceCard" type="PanelContainer" parent="SafeArea/CardCenter/Cards" unique_id=2035222066]
 custom_minimum_size = Vector2(270, 390)
 layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
 theme_override_styles/panel = ExtResource("3_l7tuc")
 
-[node name="MarginContainer" type="MarginContainer" parent="SafeArea/CardCenter/Cards/OptionalUnitChoiceWrap/UnitChoiceCard" unique_id=829678466]
+[node name="MarginContainer" type="MarginContainer" parent="SafeArea/CardCenter/Cards/UnitChoiceCard" unique_id=829678466]
 layout_mode = 2
 theme_override_constants/margin_left = 24
 theme_override_constants/margin_top = 24
 theme_override_constants/margin_right = 24
 theme_override_constants/margin_bottom = 24
 
-[node name="Content" type="VBoxContainer" parent="SafeArea/CardCenter/Cards/OptionalUnitChoiceWrap/UnitChoiceCard/MarginContainer" unique_id=140593600]
+[node name="Content" type="VBoxContainer" parent="SafeArea/CardCenter/Cards/UnitChoiceCard/MarginContainer" unique_id=140593600]
 layout_mode = 2
 theme_override_constants/separation = 18
 
-[node name="IconSlot" type="PanelContainer" parent="SafeArea/CardCenter/Cards/OptionalUnitChoiceWrap/UnitChoiceCard/MarginContainer/Content" unique_id=2137699031]
+[node name="IconSlot" type="PanelContainer" parent="SafeArea/CardCenter/Cards/UnitChoiceCard/MarginContainer/Content" unique_id=2137699031]
 custom_minimum_size = Vector2(0, 142)
 layout_mode = 2
 mouse_filter = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_icon_slot")
 
-[node name="IconCenter" type="CenterContainer" parent="SafeArea/CardCenter/Cards/OptionalUnitChoiceWrap/UnitChoiceCard/MarginContainer/Content/IconSlot" unique_id=778291882]
+[node name="IconCenter" type="CenterContainer" parent="SafeArea/CardCenter/Cards/UnitChoiceCard/MarginContainer/Content/IconSlot" unique_id=778291882]
 layout_mode = 2
 mouse_filter = 2
 
-[node name="IconPlaceholder" type="Label" parent="SafeArea/CardCenter/Cards/OptionalUnitChoiceWrap/UnitChoiceCard/MarginContainer/Content/IconSlot/IconCenter" unique_id=2074429349]
+[node name="IconPlaceholder" type="Label" parent="SafeArea/CardCenter/Cards/UnitChoiceCard/MarginContainer/Content/IconSlot/IconCenter" unique_id=2074429349]
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 1, 1, 0.45)
 theme_override_fonts/font = ExtResource("4_bold")
@@ -317,7 +315,7 @@ text = "UNIT"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="IconTexture" type="TextureRect" parent="SafeArea/CardCenter/Cards/OptionalUnitChoiceWrap/UnitChoiceCard/MarginContainer/Content/IconSlot/IconCenter" unique_id=1304843436]
+[node name="IconTexture" type="TextureRect" parent="SafeArea/CardCenter/Cards/UnitChoiceCard/MarginContainer/Content/IconSlot/IconCenter" unique_id=1304843436]
 custom_minimum_size = Vector2(96, 96)
 layout_mode = 2
 mouse_filter = 2
@@ -325,7 +323,7 @@ texture = ExtResource("5_vn4c3")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="NameLabel" type="Label" parent="SafeArea/CardCenter/Cards/OptionalUnitChoiceWrap/UnitChoiceCard/MarginContainer/Content" unique_id=1264957239]
+[node name="NameLabel" type="Label" parent="SafeArea/CardCenter/Cards/UnitChoiceCard/MarginContainer/Content" unique_id=1264957239]
 custom_minimum_size = Vector2(0, 48)
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 1, 1, 1)
@@ -336,7 +334,7 @@ horizontal_alignment = 1
 vertical_alignment = 1
 autowrap_mode = 3
 
-[node name="DescriptionLabel" type="Label" parent="SafeArea/CardCenter/Cards/OptionalUnitChoiceWrap/UnitChoiceCard/MarginContainer/Content" unique_id=1593461327]
+[node name="DescriptionLabel" type="Label" parent="SafeArea/CardCenter/Cards/UnitChoiceCard/MarginContainer/Content" unique_id=1593461327]
 custom_minimum_size = Vector2(0, 108)
 layout_mode = 2
 size_flags_vertical = 3

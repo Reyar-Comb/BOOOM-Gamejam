@@ -30,12 +30,20 @@ public partial class ChoicePanel : Control
     private readonly Dictionary<Control, Vector2> _cardTargetPositions = new();
     private readonly List<Upgrade> _currentChoices = new();
     private readonly Dictionary<Control, Tween> _cardTweens = new();
-    private Tween _activeTween;
+    private Tween _backgroundTween;
     private TaskCompletionSource<Upgrade> _choiceCompletionSource;
     private bool _layoutCaptured;
     private bool _isOpen;
     private bool _isChoosing;
     private bool _choiceSelected;
+
+    private async Task FrameDelay(int frame = 2)
+    {
+        for (int i = 0; i < frame; i++)
+        {
+            await ToSignal(GetTree(), SceneTree.SignalName.ProcessFrame);
+        }
+    }
 
     public override async void _Ready()
     {
@@ -43,7 +51,7 @@ public partial class ChoicePanel : Control
         ConnectCardInputs();
         SetBackgroundAlpha(0.0f);
 
-        await ToSignal(GetTree(), SceneTree.SignalName.ProcessFrame);
+        await FrameDelay();
         CaptureCardLayout();
 
         if (StartHidden)
@@ -101,35 +109,29 @@ public partial class ChoicePanel : Control
         PrepareCardsForShow();
         ResetCardVisuals();
 
-        _activeTween = CreateTween();
-        _activeTween.SetParallel(true);
-        _activeTween.TweenMethod(Callable.From((float value) => 
+        _backgroundTween = CreateTween();
+        _backgroundTween.SetParallel(true);
+        _backgroundTween.TweenMethod(Callable.From((float value) => 
         {
             GaussianBlurLayer.Modulate = new Color(GaussianBlurLayer.Modulate, value);
             DimLayer.Modulate = new Color(DimLayer.Modulate, value);
         }
         ), 0f, 1f, BackgroundFadeDuration);
 
-        int visibleIndex = 0;
-        foreach (Control card in _cards)
+        for (int i = 0; i < _cards.Count; i++)
         {
-            if (!card.Visible)
-            {
-                continue;
-            }
-
+            Control card = _cards[i];
             Vector2 target = _cardTargetPositions[card];
-            float delay = BackgroundFadeDuration + visibleIndex * CardStagger;
+            float delay = BackgroundFadeDuration + i * CardStagger;
 
-            _activeTween.TweenProperty(card, "global_position", target, CardFlyDuration)
+            _backgroundTween.TweenProperty(card, "global_position", target, CardFlyDuration)
                 .SetDelay(delay)
                 .SetTrans(Tween.TransitionType.Cubic)
                 .SetEase(Tween.EaseType.Out);
-            visibleIndex++;
         }
 
-        await ToSignal(_activeTween, Tween.SignalName.Finished);
-        _activeTween = null;
+        await ToSignal(_backgroundTween, Tween.SignalName.Finished);
+        _backgroundTween = null;
     }
 
     public override void _GuiInput(InputEvent @event)
@@ -145,37 +147,31 @@ public partial class ChoicePanel : Control
         await EnsureLayoutCapturedAsync();
         StopActiveTween();
 
-        _activeTween = CreateTween();
-        _activeTween.SetParallel(true);
-        _activeTween.TweenMethod(Callable.From((float value) => 
+        _backgroundTween = CreateTween();
+        _backgroundTween.SetParallel(true);
+        _backgroundTween.TweenMethod(Callable.From((float value) => 
         {
             GaussianBlurLayer.Modulate = new Color(GaussianBlurLayer.Modulate, value);
             DimLayer.Modulate = new Color(DimLayer.Modulate, value);
         }
         ), 1f, 0f, BackgroundFadeDuration);
 
-        int visibleIndex = 0;
-        foreach (Control card in _cards)
+        for (int i = 0; i < _cards.Count; i++)
         {
-            if (!card.Visible)
-            {
-                continue;
-            }
-
+            Control card = _cards[i];
             Vector2 target = _cardTargetPositions[card] + Vector2.Down * CardFlyDistance;
-            float delay = visibleIndex * CardStagger;
+            float delay = i * CardStagger;
 
-            _activeTween.TweenProperty(card, "global_position", target, CardFlyDuration)
+            _backgroundTween.TweenProperty(card, "global_position", target, CardFlyDuration)
                 .SetDelay(delay)
                 .SetTrans(Tween.TransitionType.Cubic)
                 .SetEase(Tween.EaseType.In);
-            visibleIndex++;
         }
 
-        await ToSignal(_activeTween, Tween.SignalName.Finished);
+        await ToSignal(_backgroundTween, Tween.SignalName.Finished);
         SetHiddenState();
         _isOpen = false;
-        _activeTween = null;
+        _backgroundTween = null;
     }
 
     private void CaptureCards()
@@ -184,7 +180,7 @@ public partial class ChoicePanel : Control
 
         foreach (Node child in CardsContainer.GetChildren())
         {
-            if (child is Control card)
+            if (child is Control card && card.Visible)
             {
                 _cards.Add(card);
             }
@@ -197,11 +193,10 @@ public partial class ChoicePanel : Control
         {
             int choiceIndex = i;
             Control card = _cards[i];
-            Control inputTarget = GetCardInputTarget(card);
-            inputTarget.MouseFilter = MouseFilterEnum.Stop;
-            inputTarget.MouseEntered += () => OnCardMouseEntered(card);
-            inputTarget.MouseExited += () => OnCardMouseExited(card);
-            inputTarget.GuiInput += inputEvent => OnCardGuiInput(choiceIndex, inputEvent);
+            card.MouseFilter = MouseFilterEnum.Stop;
+            card.MouseEntered += () => OnCardMouseEntered(card);
+            card.MouseExited += () => OnCardMouseExited(card);
+            card.GuiInput += inputEvent => OnCardGuiInput(choiceIndex, inputEvent);
         }
     }
 
@@ -211,11 +206,6 @@ public partial class ChoicePanel : Control
 
         foreach (Control card in _cards)
         {
-            if (!card.Visible)
-            {
-                continue;
-            }
-
             Vector2 target = card.GlobalPosition;
             card.TopLevel = true;
             card.GlobalPosition = target;
@@ -233,8 +223,7 @@ public partial class ChoicePanel : Control
             return;
         }
 
-        CaptureCards();
-        await ToSignal(GetTree(), SceneTree.SignalName.ProcessFrame);
+        await FrameDelay();
         CaptureCardLayout();
     }
 
@@ -242,11 +231,6 @@ public partial class ChoicePanel : Control
     {
         foreach (Control card in _cards)
         {
-            if (!card.Visible)
-            {
-                continue;
-            }
-
             Vector2 target = _cardTargetPositions[card];
             card.TopLevel = true;
             card.GlobalPosition = target + Vector2.Down * CardFlyDistance;
@@ -284,18 +268,16 @@ public partial class ChoicePanel : Control
     private async Task RelayoutCardsAsync()
     {
         _layoutCaptured = false;
-        await ToSignal(GetTree(), SceneTree.SignalName.ProcessFrame);
+        await FrameDelay();
         CaptureCardLayout();
     }
 
     private void SetCardContent(Control card, Upgrade upgrade)
     {
-        Control contentRoot = GetCardContentRoot(card);
-        PanelContainer panel = GetCardPanel(card);
-        Label nameLabel = contentRoot.GetNodeOrNull<Label>("MarginContainer/Content/NameLabel");
-        Label descriptionLabel = contentRoot.GetNodeOrNull<Label>("MarginContainer/Content/DescriptionLabel");
-        TextureRect iconTexture = contentRoot.GetNodeOrNull<TextureRect>("MarginContainer/Content/IconSlot/IconCenter/IconTexture");
-        Label iconPlaceholder = contentRoot.GetNodeOrNull<Label>("MarginContainer/Content/IconSlot/IconCenter/IconPlaceholder");
+        Label nameLabel = card.GetNodeOrNull<Label>("MarginContainer/Content/NameLabel");
+        Label descriptionLabel = card.GetNodeOrNull<Label>("MarginContainer/Content/DescriptionLabel");
+        TextureRect iconTexture = card.GetNodeOrNull<TextureRect>("MarginContainer/Content/IconSlot/IconCenter/IconTexture");
+        Label iconPlaceholder = card.GetNodeOrNull<Label>("MarginContainer/Content/IconSlot/IconCenter/IconPlaceholder");
 
         if (nameLabel != null)
         {
@@ -318,27 +300,7 @@ public partial class ChoicePanel : Control
         {
             iconPlaceholder.Visible = upgrade.Icon == null;
         }
-        panel.Set("theme_override_styles/panel", _cardStyleBoxes[(int)upgrade.Rarity]);
-    }
-
-    private Control GetCardContentRoot(Control card)
-    {
-        return GetCardPanel(card) ?? card;
-    }
-
-    private PanelContainer GetCardPanel(Control card)
-    {
-        if (card is PanelContainer panel)
-        {
-            return panel;
-        }
-
-        return card.GetNodeOrNull<PanelContainer>("UnitChoiceCard");
-    }
-
-    private Control GetCardInputTarget(Control card)
-    {
-        return GetCardPanel(card) ?? card;
+        card.Set("theme_override_styles/panel", _cardStyleBoxes[(int)upgrade.Rarity]);
     }
 
     private void SetHiddenState()
@@ -378,13 +340,13 @@ public partial class ChoicePanel : Control
 
     private void StopActiveTween()
     {
-        if (_activeTween == null || !_activeTween.IsValid())
+        if (_backgroundTween == null || !_backgroundTween.IsValid())
         {
             return;
         }
 
-        _activeTween.Kill();
-        _activeTween = null;
+        _backgroundTween.Kill();
+        _backgroundTween = null;
     }
 
     private void StopCardTween(Control card)

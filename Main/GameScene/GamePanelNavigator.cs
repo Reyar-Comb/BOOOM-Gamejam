@@ -19,6 +19,9 @@ public partial class GamePanelNavigator : PanelNavigator
 	private List<PackedScene> _varButtons = new List<PackedScene>();
 
 	private PackedScene _buttonScene;
+	private Var _currentVar;
+	private Callable _currentVarDeathCallable;
+	private bool _hasCurrentVarDeathCallable = false;
 
 	public override string CurrentVarName { get;
 		set
@@ -28,6 +31,7 @@ public partial class GamePanelNavigator : PanelNavigator
 			{
 				label.Text = $"[b]{value}[/b]";
 			}
+			TrackCurrentVarByName(value);
 		}
 	} = "";
 
@@ -65,6 +69,53 @@ public partial class GamePanelNavigator : PanelNavigator
 	{
 		_mapData = mapData;
 	}
+
+	private void TrackCurrentVarByName(string varName)
+	{
+		DisconnectCurrentVarDeath();
+
+		if (string.IsNullOrEmpty(varName) || VarManager == null)
+		{
+			_currentVar = null;
+			return;
+		}
+
+		_currentVar = VarManager.GetVarByName(varName);
+		if (_currentVar == null || _currentVar.IsDead || _currentVar.Stats == null)
+		{
+			_currentVar = null;
+			CallDeferred("GoToRoot");
+			return;
+		}
+
+		_currentVarDeathCallable = Callable.From(OnCurrentVarDeath);
+		_currentVar.Stats.Connect(VarStats.SignalName.OnDeath, _currentVarDeathCallable);
+		_hasCurrentVarDeathCallable = true;
+	}
+
+	private void DisconnectCurrentVarDeath()
+	{
+		if (!_hasCurrentVarDeathCallable)
+		{
+			return;
+		}
+
+		if (_currentVar?.Stats != null && _currentVar.Stats.IsConnected(VarStats.SignalName.OnDeath, _currentVarDeathCallable))
+		{
+			_currentVar.Stats.Disconnect(VarStats.SignalName.OnDeath, _currentVarDeathCallable);
+		}
+
+		_currentVar = null;
+		_currentVarDeathCallable = default;
+		_hasCurrentVarDeathCallable = false;
+	}
+
+	private void OnCurrentVarDeath()
+	{
+		DisconnectCurrentVarDeath();
+		CallDeferred("GoToRoot");
+	}
+
 	public override void _Ready()
 	{
 		base._Ready();

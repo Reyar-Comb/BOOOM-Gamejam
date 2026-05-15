@@ -78,6 +78,12 @@ public partial class ConsoleManager : Node
 		var onDetectedCallable = Callable.From((DetectInfo detectInfo) => {
 			AddLog(new DetectedWarning(detectInfo));
 		});
+		var onMoveCompletedCallable = Callable.From(() => {
+			AddLog(new MoveCompletedAck(v));
+		});
+		v.Connect(Var.SignalName.MoveCompleted, onMoveCompletedCallable);
+		callables.Add(onMoveCompletedCallable);
+
 		v.Connect(Var.SignalName.OnDetected, onDetectedCallable);
 		callables.Add(onDetectedCallable);
 
@@ -102,21 +108,37 @@ public partial class ConsoleManager : Node
 		if (!_logSources.ContainsKey(v)) return;
 
 		var callables = _logSources[v];
-		if (v.Stats?.VarTeam == VarStats.Team.Hostile)
+		if (callables.Count == 2)
 		{
-			v.Disconnect(Var.SignalName.OnDamageReceived, callables[0]);
-			v.Stats.Disconnect(VarStats.SignalName.OnDeath, callables[1]);
+			DisconnectIfConnected(v, Var.SignalName.OnDamageReceived, callables[0]);
+			DisconnectIfConnected(v.Stats, VarStats.SignalName.OnDeath, callables[1]);
 			_lastFriendlyAttackersByEnemy.Remove(v);
 		}
-		else
+		else if (callables.Count >= 3)
 		{
-			v.Disconnect(Var.SignalName.OnDetected, callables[0]);
-			v.Disconnect(Var.SignalName.OnAttacked, callables[1]);
-			v.Stats?.Disconnect(VarStats.SignalName.OnDeath, callables[2]);
+			DisconnectIfConnected(v, Var.SignalName.OnDetected, callables[0]);
+			DisconnectIfConnected(v, Var.SignalName.OnAttacked, callables[1]);
+			DisconnectIfConnected(v.Stats, VarStats.SignalName.OnDeath, callables[2]);
+		} else if (callables.Count >= 4)
+		{
+			DisconnectIfConnected(v, Var.SignalName.MoveCompleted, callables[3]);
 		}
 
 
 		_logSources.Remove(v);
+	}
+
+	private static void DisconnectIfConnected(GodotObject source, StringName signalName, Callable callable)
+	{
+		if (source == null)
+		{
+			return;
+		}
+
+		if (source.IsConnected(signalName, callable))
+		{
+			source.Disconnect(signalName, callable);
+		}
 	}
 
 	public void UnsubscribeAllVarEvents()
@@ -143,6 +165,13 @@ public partial class ConsoleManager : Node
 	{
 		if (v == null) return;
 		AddLog(new MoveAck(v, newPosition));
+	}
+
+	public void OnVarMoveCompleted(Var v)
+	{
+		GD.Print($"Var {v.Stats.Name} move completed at position {v.Stats.Position}");
+		if (v == null) return;
+		AddLog(new MoveCompletedAck(v));
 	}
 
 	public void QueryLocation(Var v)

@@ -2,6 +2,7 @@ using Godot;
 
 public abstract class Upgrade
 {
+    public abstract Skill.RarityLevel Rarity { get; }
     public abstract string Name { get; }
     public abstract string Description { get; }
     public abstract Texture2D Icon { get; }
@@ -20,7 +21,7 @@ public class SkillUpgrade : Upgrade
     public override string Name => Skill.Name;
     public override string Description => Skill.Description;
     public override Texture2D Icon => Skill.Icon;
-
+    public override Skill.RarityLevel Rarity => Skill.Rarity;
     public override void Apply(GameData data)
     {
         data.SkillManager.OwnedSkills.Add(Skill);
@@ -30,7 +31,7 @@ public class SkillUpgrade : Upgrade
 public class VarTypeUnlockUpgrade : Upgrade
 {
     public VarStats.VarType VarType { get; }
-
+    public override Skill.RarityLevel Rarity => Skill.RarityLevel.Special;
     public VarTypeUnlockUpgrade(VarStats.VarType varType)
     {
         VarType = varType;

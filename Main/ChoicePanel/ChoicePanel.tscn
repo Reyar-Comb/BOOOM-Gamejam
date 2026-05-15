@@ -1,0 +1,349 @@
+[gd_scene format=3 uid="uid://ckubueh7x4v6i"]
+
+[ext_resource type="Shader" uid="uid://ql424av8n4oq" path="res://Shaders/Blur2.gdshader" id="2_blur"]
+[ext_resource type="Script" uid="uid://xbc42c0xq0hy" path="res://Main/ChoicePanel/ChoicePanel.cs" id="2_script"]
+[ext_resource type="StyleBox" uid="uid://dkysgv0s0kpbw" path="res://Main/ChoicePanel/CardStyleBoxes/CardStyleBoxCommon.tres" id="3_l7tuc"]
+[ext_resource type="FontFile" uid="uid://bnl5ekwhqxwkt" path="res://assets/Fonts/Hack-Bold.ttf" id="4_bold"]
+[ext_resource type="FontFile" uid="uid://cbst7pqnmxosu" path="res://assets/Fonts/Hack-Regular.ttf" id="5_regular"]
+[ext_resource type="Texture2D" uid="uid://dr1v2f27hialu" path="res://icon.svg" id="5_vn4c3"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_blur"]
+shader = ExtResource("2_blur")
+shader_parameter/blur_type = 0
+shader_parameter/blur_amount = 12
+shader_parameter/blur_radius = 1.0
+shader_parameter/blur_direction = Vector2(1, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_icon_slot"]
+bg_color = Color(0, 0, 0, 0.22)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(1, 1, 1, 0.32)
+corner_radius_top_left = 16
+corner_radius_top_right = 16
+corner_radius_bottom_right = 16
+corner_radius_bottom_left = 16
+corner_detail = 10
+
+[node name="ChoicePanel" type="Control" unique_id=1654918493]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+script = ExtResource("2_script")
+
+[node name="GaussianBlurLayer" type="ColorRect" parent="." unique_id=2091465014]
+material = SubResource("ShaderMaterial_blur")
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="DimLayer" type="ColorRect" parent="." unique_id=821659561]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0, 0, 0, 0.42)
+
+[node name="SafeArea" type="MarginContainer" parent="." unique_id=963343454]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_constants/margin_left = 120
+theme_override_constants/margin_top = 96
+theme_override_constants/margin_right = 120
+theme_override_constants/margin_bottom = 96
+
+[node name="CardCenter" type="CenterContainer" parent="SafeArea" unique_id=39720707]
+layout_mode = 2
+mouse_filter = 2
+
+[node name="Cards" type="HBoxContainer" parent="SafeArea/CardCenter" unique_id=1571678696]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 42
+alignment = 1
+
+[node name="SkillCard1" type="PanelContainer" parent="SafeArea/CardCenter/Cards" unique_id=1779319690]
+custom_minimum_size = Vector2(360, 520)
+layout_mode = 2
+theme_override_styles/panel = ExtResource("3_l7tuc")
+
+[node name="MarginContainer" type="MarginContainer" parent="SafeArea/CardCenter/Cards/SkillCard1" unique_id=346028083]
+layout_mode = 2
+theme_override_constants/margin_left = 30
+theme_override_constants/margin_top = 30
+theme_override_constants/margin_right = 30
+theme_override_constants/margin_bottom = 30
+
+[node name="Content" type="VBoxContainer" parent="SafeArea/CardCenter/Cards/SkillCard1/MarginContainer" unique_id=2065556409]
+layout_mode = 2
+theme_override_constants/separation = 22
+
+[node name="IconSlot" type="PanelContainer" parent="SafeArea/CardCenter/Cards/SkillCard1/MarginContainer/Content" unique_id=388969451]
+custom_minimum_size = Vector2(0, 210)
+layout_mode = 2
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_icon_slot")
+
+[node name="IconCenter" type="CenterContainer" parent="SafeArea/CardCenter/Cards/SkillCard1/MarginContainer/Content/IconSlot" unique_id=2141464012]
+layout_mode = 2
+mouse_filter = 2
+
+[node name="IconPlaceholder" type="Label" parent="SafeArea/CardCenter/Cards/SkillCard1/MarginContainer/Content/IconSlot/IconCenter" unique_id=1689214920]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 1, 0.45)
+theme_override_fonts/font = ExtResource("4_bold")
+theme_override_font_sizes/font_size = 32
+text = "ICON"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="IconTexture" type="TextureRect" parent="SafeArea/CardCenter/Cards/SkillCard1/MarginContainer/Content/IconSlot/IconCenter" unique_id=1288338848]
+custom_minimum_size = Vector2(132, 132)
+layout_mode = 2
+mouse_filter = 2
+texture = ExtResource("5_vn4c3")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="NameLabel" type="Label" parent="SafeArea/CardCenter/Cards/SkillCard1/MarginContainer/Content" unique_id=834662948]
+custom_minimum_size = Vector2(0, 56)
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_fonts/font = ExtResource("4_bold")
+theme_override_font_sizes/font_size = 32
+text = "greater-stability"
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 3
+
+[node name="DescriptionLabel" type="Label" parent="SafeArea/CardCenter/Cards/SkillCard1/MarginContainer/Content" unique_id=415313694]
+custom_minimum_size = Vector2(0, 145)
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_colors/font_color = Color(1, 1, 1, 0.78)
+theme_override_fonts/font = ExtResource("5_regular")
+theme_override_font_sizes/font_size = 23
+text = "Increases health of created vars."
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 3
+
+[node name="SkillCard2" type="PanelContainer" parent="SafeArea/CardCenter/Cards" unique_id=1167118760]
+custom_minimum_size = Vector2(360, 520)
+layout_mode = 2
+theme_override_styles/panel = ExtResource("3_l7tuc")
+
+[node name="MarginContainer" type="MarginContainer" parent="SafeArea/CardCenter/Cards/SkillCard2" unique_id=1907383980]
+layout_mode = 2
+theme_override_constants/margin_left = 30
+theme_override_constants/margin_top = 30
+theme_override_constants/margin_right = 30
+theme_override_constants/margin_bottom = 30
+
+[node name="Content" type="VBoxContainer" parent="SafeArea/CardCenter/Cards/SkillCard2/MarginContainer" unique_id=1113213613]
+layout_mode = 2
+theme_override_constants/separation = 22
+
+[node name="IconSlot" type="PanelContainer" parent="SafeArea/CardCenter/Cards/SkillCard2/MarginContainer/Content" unique_id=610336065]
+custom_minimum_size = Vector2(0, 210)
+layout_mode = 2
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_icon_slot")
+
+[node name="IconCenter" type="CenterContainer" parent="SafeArea/CardCenter/Cards/SkillCard2/MarginContainer/Content/IconSlot" unique_id=251533560]
+layout_mode = 2
+mouse_filter = 2
+
+[node name="IconPlaceholder" type="Label" parent="SafeArea/CardCenter/Cards/SkillCard2/MarginContainer/Content/IconSlot/IconCenter" unique_id=1882771478]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 1, 0.45)
+theme_override_fonts/font = ExtResource("4_bold")
+theme_override_font_sizes/font_size = 32
+text = "ICON"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="IconTexture" type="TextureRect" parent="SafeArea/CardCenter/Cards/SkillCard2/MarginContainer/Content/IconSlot/IconCenter" unique_id=318736927]
+custom_minimum_size = Vector2(132, 132)
+layout_mode = 2
+mouse_filter = 2
+texture = ExtResource("5_vn4c3")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="NameLabel" type="Label" parent="SafeArea/CardCenter/Cards/SkillCard2/MarginContainer/Content" unique_id=333540502]
+custom_minimum_size = Vector2(0, 56)
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_fonts/font = ExtResource("4_bold")
+theme_override_font_sizes/font_size = 32
+text = "fast-iteration"
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 3
+
+[node name="DescriptionLabel" type="Label" parent="SafeArea/CardCenter/Cards/SkillCard2/MarginContainer/Content" unique_id=212272421]
+custom_minimum_size = Vector2(0, 145)
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_colors/font_color = Color(1, 1, 1, 0.78)
+theme_override_fonts/font = ExtResource("5_regular")
+theme_override_font_sizes/font_size = 23
+text = "Increases move speed of created vars."
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 3
+
+[node name="SkillCard3" type="PanelContainer" parent="SafeArea/CardCenter/Cards" unique_id=2068423957]
+custom_minimum_size = Vector2(360, 520)
+layout_mode = 2
+theme_override_styles/panel = ExtResource("3_l7tuc")
+
+[node name="MarginContainer" type="MarginContainer" parent="SafeArea/CardCenter/Cards/SkillCard3" unique_id=526820261]
+layout_mode = 2
+theme_override_constants/margin_left = 30
+theme_override_constants/margin_top = 30
+theme_override_constants/margin_right = 30
+theme_override_constants/margin_bottom = 30
+
+[node name="Content" type="VBoxContainer" parent="SafeArea/CardCenter/Cards/SkillCard3/MarginContainer" unique_id=1575222904]
+layout_mode = 2
+theme_override_constants/separation = 22
+
+[node name="IconSlot" type="PanelContainer" parent="SafeArea/CardCenter/Cards/SkillCard3/MarginContainer/Content" unique_id=1832503150]
+custom_minimum_size = Vector2(0, 210)
+layout_mode = 2
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_icon_slot")
+
+[node name="IconCenter" type="CenterContainer" parent="SafeArea/CardCenter/Cards/SkillCard3/MarginContainer/Content/IconSlot" unique_id=943875835]
+layout_mode = 2
+mouse_filter = 2
+
+[node name="IconPlaceholder" type="Label" parent="SafeArea/CardCenter/Cards/SkillCard3/MarginContainer/Content/IconSlot/IconCenter" unique_id=2072086710]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 1, 0.45)
+theme_override_fonts/font = ExtResource("4_bold")
+theme_override_font_sizes/font_size = 32
+text = "ICON"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="IconTexture" type="TextureRect" parent="SafeArea/CardCenter/Cards/SkillCard3/MarginContainer/Content/IconSlot/IconCenter" unique_id=2108258319]
+custom_minimum_size = Vector2(132, 132)
+layout_mode = 2
+mouse_filter = 2
+texture = ExtResource("5_vn4c3")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="NameLabel" type="Label" parent="SafeArea/CardCenter/Cards/SkillCard3/MarginContainer/Content" unique_id=900946120]
+custom_minimum_size = Vector2(0, 56)
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_fonts/font = ExtResource("4_bold")
+theme_override_font_sizes/font_size = 32
+text = "effective-feedback"
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 3
+
+[node name="DescriptionLabel" type="Label" parent="SafeArea/CardCenter/Cards/SkillCard3/MarginContainer/Content" unique_id=2051932240]
+custom_minimum_size = Vector2(0, 145)
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_colors/font_color = Color(1, 1, 1, 0.78)
+theme_override_fonts/font = ExtResource("5_regular")
+theme_override_font_sizes/font_size = 23
+text = "Reduces token cost when querying or commanding vars by a fixed amount."
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 3
+
+[node name="OptionalUnitChoiceWrap" type="CenterContainer" parent="SafeArea/CardCenter/Cards" unique_id=1573417987]
+custom_minimum_size = Vector2(270, 520)
+layout_mode = 2
+
+[node name="UnitChoiceCard" type="PanelContainer" parent="SafeArea/CardCenter/Cards/OptionalUnitChoiceWrap" unique_id=2035222066]
+custom_minimum_size = Vector2(270, 390)
+layout_mode = 2
+theme_override_styles/panel = ExtResource("3_l7tuc")
+
+[node name="MarginContainer" type="MarginContainer" parent="SafeArea/CardCenter/Cards/OptionalUnitChoiceWrap/UnitChoiceCard" unique_id=829678466]
+layout_mode = 2
+theme_override_constants/margin_left = 24
+theme_override_constants/margin_top = 24
+theme_override_constants/margin_right = 24
+theme_override_constants/margin_bottom = 24
+
+[node name="Content" type="VBoxContainer" parent="SafeArea/CardCenter/Cards/OptionalUnitChoiceWrap/UnitChoiceCard/MarginContainer" unique_id=140593600]
+layout_mode = 2
+theme_override_constants/separation = 18
+
+[node name="IconSlot" type="PanelContainer" parent="SafeArea/CardCenter/Cards/OptionalUnitChoiceWrap/UnitChoiceCard/MarginContainer/Content" unique_id=2137699031]
+custom_minimum_size = Vector2(0, 142)
+layout_mode = 2
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_icon_slot")
+
+[node name="IconCenter" type="CenterContainer" parent="SafeArea/CardCenter/Cards/OptionalUnitChoiceWrap/UnitChoiceCard/MarginContainer/Content/IconSlot" unique_id=778291882]
+layout_mode = 2
+mouse_filter = 2
+
+[node name="IconPlaceholder" type="Label" parent="SafeArea/CardCenter/Cards/OptionalUnitChoiceWrap/UnitChoiceCard/MarginContainer/Content/IconSlot/IconCenter" unique_id=2074429349]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 1, 0.45)
+theme_override_fonts/font = ExtResource("4_bold")
+theme_override_font_sizes/font_size = 26
+text = "UNIT"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="IconTexture" type="TextureRect" parent="SafeArea/CardCenter/Cards/OptionalUnitChoiceWrap/UnitChoiceCard/MarginContainer/Content/IconSlot/IconCenter" unique_id=1304843436]
+custom_minimum_size = Vector2(96, 96)
+layout_mode = 2
+mouse_filter = 2
+texture = ExtResource("5_vn4c3")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="NameLabel" type="Label" parent="SafeArea/CardCenter/Cards/OptionalUnitChoiceWrap/UnitChoiceCard/MarginContainer/Content" unique_id=1264957239]
+custom_minimum_size = Vector2(0, 48)
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_fonts/font = ExtResource("4_bold")
+theme_override_font_sizes/font_size = 26
+text = "New Var Type"
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 3
+
+[node name="DescriptionLabel" type="Label" parent="SafeArea/CardCenter/Cards/OptionalUnitChoiceWrap/UnitChoiceCard/MarginContainer/Content" unique_id=1593461327]
+custom_minimum_size = Vector2(0, 108)
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_colors/font_color = Color(1, 1, 1, 0.78)
+theme_override_fonts/font = ExtResource("5_regular")
+theme_override_font_sizes/font_size = 20
+text = "Unlock a new unit choice."
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 3

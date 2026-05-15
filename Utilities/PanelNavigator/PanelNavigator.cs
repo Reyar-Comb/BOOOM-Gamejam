@@ -159,6 +159,11 @@ public partial class PanelNavigator : Control
 
 	public override void _Input(InputEvent @event)
 	{
+		if (BattleManager.Instance != null && BattleManager.Instance.State != BattleState.Running)
+		{
+			return;
+		}
+
 		if (@event is InputEventMouseButton mb
 			&& mb.Pressed
 			&& mb.ButtonIndex == MouseButton.Left

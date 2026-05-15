@@ -76,6 +76,7 @@ public partial class Var_MoveState : STNode
         IsWalking = false;
         CurrentPath?.Clear();
         CurrentPathIndex = 0;
+        Self.OnMovePathCompleted();
         RequestTransition("Idle");
     }
 

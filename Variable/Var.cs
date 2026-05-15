@@ -36,6 +36,10 @@ public partial class Var : RefCounted, ICleanable
 
     [Signal]
     public delegate void OnDamageReceivedEventHandler(AttackInfo attackInfo);
+
+    [Signal]
+    public delegate void MoveCompletedEventHandler();
+
     public void Initialize(Blackboard parentBlackboard)
     {
         if (_isInitialized) return;
@@ -314,6 +318,7 @@ public partial class Var : RefCounted, ICleanable
         _blackboard.Set("DummyCell", Vector2I.Zero);
         _blackboard.Set("EnemyRandomMoveInterval", 2.0f);
         _blackboard.Set("EnemyRandomMoveTimeRemaining", 2.0f);
+        _blackboard.Set("IsMoveCommandPath", false);   
 
         _stateTree.Initialize(_blackboard);
     }
@@ -339,6 +344,21 @@ public partial class Var : RefCounted, ICleanable
 
             Stats.Direction = nextDirection.ToFacingDirection();
             return;
+        }
+    }
+
+    public void MarkMoveAsCommand()
+    {
+        GD.Print($"Var {Stats.Name} marked move as command");
+        _blackboard.Set("IsMoveCommandPath", true);
+    }
+
+    public void OnMovePathCompleted()
+    {
+        if (_blackboard.Get<bool>("IsMoveCommandPath"))
+        {
+            _blackboard.Set("IsMoveCommandPath", false);
+            EmitSignal(SignalName.MoveCompleted);
         }
     }
 }

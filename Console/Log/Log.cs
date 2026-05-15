@@ -1,4 +1,5 @@
 using System;
+using System.Runtime.InteropServices.ObjectiveC;
 using Godot;
 
 public abstract class Log
@@ -8,6 +9,7 @@ public abstract class Log
 	public string Actor { get; set; }
 	public string Message { get; set; }
 	public Vector2I? ReportedCell { get; protected set; }
+	public string Objective { get; set; } = "";
 
 
 	protected static Color InfoColor;
@@ -39,6 +41,14 @@ public abstract class Log
 		Time = DateTime.Now.ToString("HH:mm:ss.fff");
 		Type = type;
 		Actor = actor ?? "System";
+	}
+
+	protected Log(LogType type, string actor, string objective)
+	{
+		Time = DateTime.Now.ToString("HH:mm:ss.fff");
+		Type = type;
+		Actor = actor ?? "System";
+		Objective = objective;
 	}
 
 	protected void SetReportedWorldPosition(Vector2 worldPosition)
@@ -86,6 +96,7 @@ public class CreateAck : Log
 	public CreateAck(Var targetVar) : base(LogType.Info, "System")
 	{
 		SetReportedWorldPosition(targetVar.Stats.Position);
+		Objective = targetVar.Stats.Name;
 		Message = $"成功创建 {targetVar.Stats.Type} 于 {ReportedCell} ！";
 	}
 
@@ -164,11 +175,26 @@ public class MoveAck : Log
 	}
 }
 
+public class MoveCompletedAck : Log
+{
+	public MoveCompletedAck(Var targetVar) : base(LogType.Info, targetVar.Stats.Name)
+	{
+		SetReportedWorldPosition(targetVar.Stats.Position);
+		Message = $"已到达 {ReportedCell}";
+	}
+
+	protected override string FormatMessage()
+	{
+		return $"{_infoText} {_timeText} {_actorText}: {_messageText}";
+	}
+}
+
 public class AttackedWarning : Log
 {
 	public AttackedWarning(Var targetVar, AttackInfo atkInfo) : base(LogType.Warning, targetVar.Stats.Name)
 	{
 		SetReportedWorldPosition(targetVar.Stats.Position);
+		Objective = targetVar.Stats.Name;
 		Message = $"受到异常变量干扰于 {ReportedCell}";
 	}
 
@@ -183,6 +209,7 @@ public class DetectedWarning : Log
 	public DetectedWarning(DetectInfo detectInfo) : base(LogType.Warning, detectInfo.Detector.Stats.Name)
 	{
 		SetReportedWorldPosition(detectInfo.DetectedVar.Stats.Position);
+		Objective = detectInfo.DetectedVar.Stats.Name;
 		Message = $"发现 {detectInfo.DetectedVar.Stats.Type} 类敌人于 {ReportedCell} 处！";
 	}
 

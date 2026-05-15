@@ -29,6 +29,8 @@ public enum BattleState
 
 public partial class BattleManager : Node
 {
+	private const int VarUnlockChoiceWaveLimit = 5;
+
 	public static BattleManager Instance { get; private set; } = null!;
 	[Export] public int TickRate = 20;
 
@@ -48,6 +50,8 @@ public partial class BattleManager : Node
 
 	[Export] public TokenManager TokenManager { get; private set; } = null!;
 
+	[Export] public ChoicePanel ChoicePanel { get; private set; } = null!;
+
 	[Export] public InitialSkills InitialSkills { get; private set; } = null!;
 
 	public long CurrentTick { get; private set; } = 0;
@@ -59,7 +63,7 @@ public partial class BattleManager : Node
 	public double TickInterval => 1.0 / TickRate;
 
 	public ColorData ColorData => _colorData;
-	
+
 	private double _accumulator = 0.0;
 
 	private bool _isTicking = false;
@@ -101,7 +105,7 @@ public partial class BattleManager : Node
 		_mapData = new MapData(80, 46);
 		_gameData = new GameData();
 		_colorData = new ColorData();
-		InitialSkills ??= ResourceLoader.Load<InitialSkills>("res://GameData/InitialSkills.tres");
+
 		VarManager.Initialize(_mapData, _gameData);
 		VarRenderer.Initialize(_mapData);
 		TokenManager.Initialize(_gameData);
@@ -165,6 +169,7 @@ public partial class BattleManager : Node
 		State = BattleState.Choice;
 		await ChooseUpgrades();
 
+		VarRenderer.RestartReveal();
 		StartWave();
 		_isWaveFinished = false;
 		_isWaveTransitioning = false;
@@ -212,6 +217,25 @@ public partial class BattleManager : Node
 		}
 
 		VarRenderer.AddLogRipple(log.ReportedCell.Value, log.Type);
+
+		Var actor = VarManager.GetVarByName(log.Actor);
+		Var objective = VarManager.GetVarByName(log.Objective);
+		if (log is LocationAck || log is MoveCompletedAck)
+		{
+			VarRenderer.AddOrUpdatePiece(actor, actor.Stats.Position);
+		} 
+		else if (log is DetectedWarning || log is AttackedWarning || log is CreateAck)
+		{
+			VarRenderer.AddOrUpdatePiece(objective, objective.Stats.Position);
+		}
+		else if (log is EnemyRepairedInfo)
+		{
+			VarRenderer.RemovePiece(objective);
+		}
+		else if (log is DeathError)
+		{
+			VarRenderer.RemovePiece(actor);
+		}
 	}
 
 	private WaveConfig AdvanceWave()
@@ -232,6 +256,7 @@ public partial class BattleManager : Node
 		ConsoleManager?.UnsubscribeAllVarEvents();
 		VarManager?.ClearAllVars();
 		VarRenderer?.ClearVars();
+		VarRenderer?.ClearPiece();
 		_gameData.Reset();
 		TokenManager?.Reset();
 	}
@@ -277,18 +302,33 @@ public partial class BattleManager : Node
 	}
 	private async Task ChooseUpgrades()
 	{
-		// List<Upgrade> choices = _gameData.GetRandomSkillChoices();
-		// if (choices.Count == 0)
-		// {
-		// 	return;
-		// }
-
 		await WaitSeconds(SkillChoiceDelay);
 
-		// Upgrade upgrade = choices[Random.Shared.Next(choices.Count)];
-		// upgrade.Apply(_gameData);
-		// GD.Print($"Wave finished. Applied upgrade: {upgrade.Name}");
+		List<Upgrade> choices = CurrentWave <= VarUnlockChoiceWaveLimit
+			? _gameData.GetRandomUpgradeChoices()
+			: _gameData.GetRandomSkillChoices();
+		// List<Upgrade> choices = _gameData.GetRandomSkillChoices();
+		if (choices.Count == 0)
+		{
+			return;
+		}
+
+		if (ChoicePanel == null)
+		{
+			GD.PushError("Cannot present upgrade choices because BattleManager.ChoicePanel is not assigned.");
+			return;
+		}
+
+		Upgrade upgrade = await ChoicePanel.ChooseUpgradeAsync(choices);
+		if (upgrade == null)
+		{
+			return;
+		}
+
+		upgrade.Apply(_gameData);
+		GD.Print($"Wave finished. Applied upgrade: {upgrade.Name}");
 	}
+
 	private Color GetRenderColor(VarStats.VarType type, VarStats.Team team)
 	{
 		if (type == VarStats.VarType.Dummy)
@@ -403,6 +443,7 @@ public partial class BattleManager : Node
 			return;
 		}
 		TokenManager.MoveVar(var);
+		var.MarkMoveAsCommand();
 		var.MoveTo(Grid.GridToWorld(newPosition));
 		ConsoleManager.MoveVar(var, Grid.GridToWorld(newPosition));
 	}
@@ -416,6 +457,11 @@ public partial class BattleManager : Node
 		}
 		TokenManager.QueryVarLocation(var);
 		ConsoleManager.QueryLocation(var);
+	}
+
+	public void OnVarMoveCompleted(Var var)
+	{
+		ConsoleManager.OnVarMoveCompleted(var);
 	}
 
 	public void QueryVarHealth(Var var, bool isHovering = false)

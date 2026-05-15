@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Godot;
 
 public abstract class Upgrade
@@ -32,6 +33,13 @@ public class VarTypeUnlockUpgrade : Upgrade
 {
     public VarStats.VarType VarType { get; }
     public override Skill.RarityLevel Rarity => Skill.RarityLevel.Special;
+    private static readonly Dictionary<VarStats.VarType, Texture2D> VarTypeIcons = new Dictionary<VarStats.VarType, Texture2D>
+    {
+        [VarStats.VarType.Bool] = ResourceLoader.Load<Texture2D>("res://assets/Image/Bol.png"),
+        [VarStats.VarType.Long] = ResourceLoader.Load<Texture2D>("res://assets/Image/Lon.png"),
+        [VarStats.VarType.LongDouble] = ResourceLoader.Load<Texture2D>("res://assets/Image/LDb.png"),
+        [VarStats.VarType.Double] = ResourceLoader.Load<Texture2D>("res://assets/Image/Dob.png")
+    };
     public VarTypeUnlockUpgrade(VarStats.VarType varType)
     {
         VarType = varType;
@@ -39,7 +47,7 @@ public class VarTypeUnlockUpgrade : Upgrade
 
     public override string Name => $"{VarType} Unlock";
     public override string Description => $"Unlock {VarType} permanently.";
-    public override Texture2D Icon => null;
+    public override Texture2D Icon => VarTypeIcons.TryGetValue(VarType, out var icon) ? icon : null;
 
     public override void Apply(GameData data)
     {

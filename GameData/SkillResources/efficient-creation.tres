@@ -1,11 +1,13 @@
 [gd_resource type="Resource" script_class="SkillResource" format=3 uid="uid://tifb2x3ofgm2"]
 
-[ext_resource type="Script" uid="uid://uv786iry0jub" path="res://GameData/SkillResource.cs" id="1"]
+[ext_resource type="Texture2D" uid="uid://cyi1f3gyplsrq" path="res://assets/Image/SkillIcons/efficient-creation.png" id="1_40sh6"]
+[ext_resource type="Script" uid="uid://uv786iry0jub" path="res://GameData/SkillResource.cs" id="2_otdho"]
 
 [resource]
-script = ExtResource("1")
+script = ExtResource("2_otdho")
 Name = "efficient-creation"
 Description = "Reduces token cost when creating vars by a fixed amount."
+Icon = ExtResource("1_40sh6")
 Rarity = 1
 Values = Dictionary[String, int]({
 "CreateTokenCostReduction": 2

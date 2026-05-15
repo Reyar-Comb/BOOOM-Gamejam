@@ -1,11 +1,13 @@
 [gd_resource type="Resource" script_class="SkillResource" format=3 uid="uid://dlsgi6eg6g05n"]
 
 [ext_resource type="Script" uid="uid://uv786iry0jub" path="res://GameData/SkillResource.cs" id="1"]
+[ext_resource type="Texture2D" uid="uid://7wmcoajk08vi" path="res://assets/Image/SkillIcons/greater-safety.png" id="1_g73q2"]
 
 [resource]
 script = ExtResource("1")
 Name = "greater-safety"
 Description = "Increases defense of created vars."
+Icon = ExtResource("1_g73q2")
 Values = Dictionary[String, int]({
 "DefenseBonus": 2
 })

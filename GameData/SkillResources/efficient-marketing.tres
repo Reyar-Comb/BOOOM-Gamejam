@@ -1,11 +1,13 @@
 [gd_resource type="Resource" script_class="SkillResource" format=3 uid="uid://bkg5320flysjs"]
 
 [ext_resource type="Script" uid="uid://uv786iry0jub" path="res://GameData/SkillResource.cs" id="1"]
+[ext_resource type="Texture2D" uid="uid://bfilpbx2okkpb" path="res://assets/Image/SkillIcons/efficient-marketing.png" id="1_cs6r4"]
 
 [resource]
 script = ExtResource("1")
 Name = "efficient-marketing"
 Description = "Increases tokens gained when requesting them from users."
+Icon = ExtResource("1_cs6r4")
 Rarity = 1
 Values = Dictionary[String, int]({
 "TokenRequestGainBonus": 5

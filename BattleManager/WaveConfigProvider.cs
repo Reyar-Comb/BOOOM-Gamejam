@@ -135,7 +135,7 @@ public class WaveConfigProvider
 				continue;
 			}
 
-			if (type == VarStats.VarType.Dummy)
+			if (type == VarStats.VarType.Bug)
 			{
 				continue;
 			}

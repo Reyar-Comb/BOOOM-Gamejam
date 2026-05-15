@@ -1,9 +1,11 @@
 [gd_resource type="Resource" script_class="SkillResource" format=3 uid="uid://dl2vuwnifnxk7"]
 
 [ext_resource type="Script" uid="uid://uv786iry0jub" path="res://GameData/SkillResource.cs" id="1"]
+[ext_resource type="Texture2D" uid="uid://bh63cdhbifa4m" path="res://assets/Image/SkillIcons/sniper-double.png" id="1_vhb1l"]
 
 [resource]
 script = ExtResource("1")
 Name = "sniper-double"
 Description = "Double vars can attack enemies in detect range when they share the same x or y axis."
+Icon = ExtResource("1_vhb1l")
 Rarity = 2

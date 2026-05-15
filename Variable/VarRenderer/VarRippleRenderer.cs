@@ -57,9 +57,9 @@ internal sealed partial class VarRippleRenderer : Control
         QueueRedraw();
     }
 
-    public void AddDummyDeathRipple(Vector2I origin)
+    public void AddBugDeathRipple(Vector2I origin)
     {
-        if (!_config.RenderDummyDeathRipple)
+        if (!_config.RenderBugDeathRipple)
         {
             return;
         }
@@ -67,13 +67,13 @@ internal sealed partial class VarRippleRenderer : Control
         _ripples.Add(new Ripple
         {
             Origin = origin,
-            Duration = _config.DummyDeathRippleDuration,
-            Radius = _config.DummyDeathRippleRadius,
-            RingWidth = _config.DummyDeathRippleRingWidth,
-            OriginFlashPortion = _config.DummyDeathRippleOriginFlashPortion,
-            OutlineWidth = _config.DummyDeathRippleOutlineWidth,
-            Color = _config.DummyDeathRippleColor,
-            OutlineColor = _config.DummyDeathRippleOutlineColor,
+            Duration = _config.BugDeathRippleDuration,
+            Radius = _config.BugDeathRippleRadius,
+            RingWidth = _config.BugDeathRippleRingWidth,
+            OriginFlashPortion = _config.BugDeathRippleOriginFlashPortion,
+            OutlineWidth = _config.BugDeathRippleOutlineWidth,
+            Color = _config.BugDeathRippleColor,
+            OutlineColor = _config.BugDeathRippleOutlineColor,
         });
         QueueRedraw();
     }

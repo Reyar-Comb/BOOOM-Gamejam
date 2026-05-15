@@ -1,11 +1,13 @@
 [gd_resource type="Resource" script_class="SkillResource" format=3 uid="uid://sepowb40c5uv"]
 
 [ext_resource type="Script" uid="uid://uv786iry0jub" path="res://GameData/SkillResource.cs" id="1"]
+[ext_resource type="Texture2D" uid="uid://bpocpxajbppp7" path="res://assets/Image/SkillIcons/garbage-collector.png" id="1_n0h1v"]
 
 [resource]
 script = ExtResource("1")
 Name = "garbage-collector"
 Description = "Refunds a fixed amount of tokens when a var dies."
+Icon = ExtResource("1_n0h1v")
 Rarity = 2
 Values = Dictionary[String, int]({
 "DeathTokenRefund": 3

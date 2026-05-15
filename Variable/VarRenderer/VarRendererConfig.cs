@@ -36,14 +36,14 @@ public partial class VarRendererConfig : Resource
 	[Export] public float ClickRippleRingWidth { get; set; } = 0.55f;
 	[Export] public float ClickRippleOriginFlashPortion { get; set; } = 0.24f;
 	[Export] public float ClickRippleOutlineWidth { get; set; } = 2.0f;
-	[Export] public bool RenderDummyDeathRipple { get; set; } = true;
-	[Export] public Color DummyDeathRippleColor { get; set; } = new(0.82f, 0.82f, 1.0f, 0.44f);
-	[Export] public Color DummyDeathRippleOutlineColor { get; set; } = new(0.98f, 0.98f, 1.0f, 0.88f);
-	[Export] public float DummyDeathRippleDuration { get; set; } = 0.8f;
-	[Export] public float DummyDeathRippleRadius { get; set; } = 8.0f;
-	[Export] public float DummyDeathRippleRingWidth { get; set; } = 1.2f;
-	[Export] public float DummyDeathRippleOriginFlashPortion { get; set; } = 0.3f;
-	[Export] public float DummyDeathRippleOutlineWidth { get; set; } = 3.0f;
+	[Export] public bool RenderBugDeathRipple { get; set; } = true;
+	[Export] public Color BugDeathRippleColor { get; set; } = new(0.82f, 0.82f, 1.0f, 0.44f);
+	[Export] public Color BugDeathRippleOutlineColor { get; set; } = new(0.98f, 0.98f, 1.0f, 0.88f);
+	[Export] public float BugDeathRippleDuration { get; set; } = 0.8f;
+	[Export] public float BugDeathRippleRadius { get; set; } = 8.0f;
+	[Export] public float BugDeathRippleRingWidth { get; set; } = 1.2f;
+	[Export] public float BugDeathRippleOriginFlashPortion { get; set; } = 0.3f;
+	[Export] public float BugDeathRippleOutlineWidth { get; set; } = 3.0f;
 	[Export] public bool RenderLogRipple { get; set; } = true;
 	[Export] public Color LogInfoRippleColor { get; set; } = new(0.0f, 1.0f, 0.0f, 0.34f);
 	[Export] public Color LogInfoRippleOutlineColor { get; set; } = new(0.58f, 1.0f, 0.58f, 0.82f);
@@ -101,7 +101,7 @@ public partial class VarRendererConfig : Resource
 	[Export] public float VarPieceBorderWidth { get; set; } = 2.0f;
 	[Export] public Color FriendlyPieceColor { get; set; }
 	[Export] public Color EnemyPieceColor { get; set; }
-	[Export] public Color DummyPieceColor { get; set; }
+	[Export] public Color BugPieceColor { get; set; }
 
 	public static VarRendererConfig GetDefault()
 	{

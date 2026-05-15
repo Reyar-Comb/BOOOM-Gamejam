@@ -377,7 +377,7 @@ public partial class BattleManager : Node
 		var.Stats.SetGridPosition(position);
 		var.Stats.Type = type;
 		var.Stats.VarTeam = team;
-		var.Stats.Name = $"{type}_{VarManager.CountVar(type, GetQueryType(team)) + 1}";
+		var.Stats.Name = VarManager.GenerateVarName(type, team, isHovering);
 		if (team == VarStats.Team.Hostile)
 		{
 			var.Stats.Name += "_Enemy";

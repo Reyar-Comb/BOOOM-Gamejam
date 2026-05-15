@@ -10,6 +10,9 @@ public partial class VarManager : Node
     private MapData _mapData = null!;
     private GameData _gameData = null!;
 
+    private readonly Dictionary<VarStats.VarType, int> _friendlyVarTypeCounts = new();
+    private readonly Dictionary<VarStats.VarType, int> _hostileVarTypeCounts = new();
+
     [Signal] public delegate void VarListUpdatedEventHandler();
     public static class VarListPool
     {
@@ -262,27 +265,18 @@ public partial class VarManager : Node
         Friendly,
         Hostile
     }
-    public int CountVar(VarStats.VarType type, CountQueryType queryType)
-    {
-        int count = 0;
-        foreach (var var in Vars)
-        {
-            switch (queryType)
-            {
-                case CountQueryType.Friendly:
-                    if (var.Stats.VarTeam != VarStats.Team.Friendly) continue;
-                    break;
-                case CountQueryType.Hostile:
-                    if (var.Stats.VarTeam != VarStats.Team.Hostile) continue;
-                    break;
-            }
 
-            if (var.Stats.Type == type)
-            {
-                count++;
-            }
+    public string GenerateVarName(VarStats.VarType type, VarStats.Team team, bool isHovering = false)
+    {
+        if (isHovering)
+        {
+            return $"{type} Hover";
         }
-        return count;
+        Dictionary<VarStats.VarType, int> varTypeCounts = team == VarStats.Team.Friendly ? _friendlyVarTypeCounts : _hostileVarTypeCounts;
+        int count = varTypeCounts.GetValueOrDefault(type, 0) + 1;
+        varTypeCounts[type] = count;
+        GD.Print("Type " + type + "Team" + team + " count: " + count);
+        return $"{type}_{count}";
     }
 
     public Var GetVarByName(string name)

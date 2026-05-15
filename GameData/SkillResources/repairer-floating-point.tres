@@ -6,9 +6,9 @@
 [resource]
 script = ExtResource("1")
 Name = "浮点强化"
-Description = "创建 Float、Double 或 LongDouble 变量时，该变量攻击力 +4。"
+Description = "创建 Float、Double 或 LongDouble 变量时，该变量攻击力 +5。"
 Icon = ExtResource("1_uiqaj")
 Rarity = 1
 Values = Dictionary[String, int]({
-"FloatingPointAttackBonus": 4
+"FloatingPointAttackBonus": 5
 })

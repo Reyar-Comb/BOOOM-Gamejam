@@ -6,9 +6,9 @@
 [resource]
 script = ExtResource("1")
 Name = "Float 精确打击"
-Description = "Float 变量攻击与自身处于同一横轴或纵轴的敌人时，本次伤害 +3。"
+Description = "Float 变量攻击与自身处于同一横轴或纵轴的敌人时，本次伤害 +10。"
 Icon = ExtResource("1_gwek3")
 Rarity = 2
 Values = Dictionary[String, int]({
-"SameAxisDamageBonus": 3
+"SameAxisDamageBonus": 10
 })

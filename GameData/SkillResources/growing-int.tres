@@ -6,7 +6,7 @@
 [resource]
 script = ExtResource("1")
 Name = "Int 成长"
-Description = "本波次每创建一个 Int 变量，后续创建的 Int 变量会随机获得最大生命值 +1、攻击力 +1 或防御力 +1 的累积加成。"
+Description = "本波次每创建一个 Int 变量，后续创建的 Int 变量会随机获得最大生命值 +10、攻击力 +1 或防御力 +1 的累积加成。"
 Icon = ExtResource("1_kinsj")
 Rarity = 2
 Values = Dictionary[String, int]({

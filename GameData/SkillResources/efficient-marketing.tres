@@ -6,9 +6,9 @@
 [resource]
 script = ExtResource("1")
 Name = "高效营销"
-Description = "向用户索取 Token 时，获得的 Token 数量 +5。"
+Description = "向用户索取 Token 时，获得的 Token 数量 +10。"
 Icon = ExtResource("1_cs6r4")
 Rarity = 1
 Values = Dictionary[String, int]({
-"TokenRequestGainBonus": 5
+"TokenRequestGainBonus": 10
 })

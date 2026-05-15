@@ -6,7 +6,7 @@
 [resource]
 script = ExtResource("1")
 Name = "跨 class 强化"
-Description = "变量首次进入一个新的 class 区域时，生命值 +10、攻击力 +2、防御力 +1、移动速度 +1。"
+Description = "变量首次进入一个新的 class 区域时，生命值 +10、攻击力 +2、防御力 +1、移动速度 +10。"
 Icon = ExtResource("1_ly8ga")
 Rarity = 2
 Values = Dictionary[String, int]({
@@ -14,5 +14,5 @@ Values = Dictionary[String, int]({
 "AttackSpeedBonus": 0,
 "DefenseBonus": 1,
 "HealthBonus": 10,
-"MoveSpeedBonus": 1
+"MoveSpeedBonus": 10
 })

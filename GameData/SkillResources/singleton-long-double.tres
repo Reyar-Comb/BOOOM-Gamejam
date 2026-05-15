@@ -6,11 +6,11 @@
 [resource]
 script = ExtResource("1")
 Name = "LongDouble 超长续航"
-Description = "若本波次第一个创建的变量是 LongDouble，该变量最大生命值 +1800、攻击力 +270，防御力变为 0；触发后本波次无法再创建 Float、Double 或 LongDouble 变量。"
+Description = "若本波次第一个创建的变量是 LongDouble，该变量最大生命值 +300、攻击力 +10，防御力变为 0；触发后本波次无法再创建 Float、Double 或 LongDouble 变量。"
 Icon = ExtResource("1_628n3")
 Rarity = 2
 Values = Dictionary[String, int]({
-"AttackDamageBonus": 270,
+"AttackDamageBonus": 10,
 "DefenseOverride": 0,
-"HealthBonus": 1800
+"HealthBonus": 300
 })

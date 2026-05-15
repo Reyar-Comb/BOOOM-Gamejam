@@ -177,7 +177,7 @@ public partial class GamePanelNavigator : PanelNavigator
 	}
 	public void RefreshVarList()
 	{
-		GD.Print("Refreshing var list in UI...");
+		// GD.Print("Refreshing var list in UI...");
 		var children = _varListContainer.GetChildren();
 		foreach (Node child in children)		{
 			child.QueueFree();
@@ -213,10 +213,10 @@ public partial class GamePanelNavigator : PanelNavigator
 		}
 
 		QueueRedraw();
-		foreach (var kvp in _addButtonsByVarType)
-		{
-			GD.Print(kvp.Value.Name + " visibility: " + kvp.Value.Visible);
-		}
+		// foreach (var kvp in _addButtonsByVarType)
+		// {
+		// 	GD.Print(kvp.Value.Name + " visibility: " + kvp.Value.Visible);
+		// }
 	}
 	public void InitAddButton()
 	{

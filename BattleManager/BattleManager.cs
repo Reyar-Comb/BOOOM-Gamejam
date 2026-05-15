@@ -398,7 +398,7 @@ public partial class BattleManager : Node
 		VarRenderer.AddVar(var, color);
 
 		ConsoleManager?.RegisterVar(var);
-		GD.Print($"Registered var of type {type} at position {position}");
+		// GD.Print($"Registered var of type {type} at position {position}");
 		return var;
 	}
 	private void OnEnemyDie(Var enemy)

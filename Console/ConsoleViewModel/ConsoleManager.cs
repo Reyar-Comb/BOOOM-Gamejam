@@ -40,7 +40,7 @@ public partial class ConsoleManager : Node
 	public void AddLog(Log log)
 	{
 		Logs.Add(log);
-		GD.Print($"Added log: {log.ToString()}");
+		// GD.Print($"Added log: {log.ToString()}");
 		LogCreated?.Invoke(log);
 		EmitSignal(SignalName.LogAdded, log.ToString());
 	}

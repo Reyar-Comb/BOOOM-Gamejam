@@ -4,7 +4,7 @@
 [ext_resource type="PackedScene" uid="uid://d0xq4j2ohsk2q" path="res://Main/GameScene/GameScene.tscn" id="1_k72b0"]
 [ext_resource type="Script" uid="uid://dxmg6qq286ydp" path="res://Main/MainGame/SubView/sub_viewport_container.gd" id="2_i30qx"]
 [ext_resource type="Shader" uid="uid://0nm2jqery7f5" path="res://Shaders/ScanningLine.gdshader" id="4_i30qx"]
-[ext_resource type="Shader" uid="uid://bnphvjwxdwlee" path="res://Shaders/AlertBorder.gdshader" id="5_57a1t"]
+[ext_resource type="Shader" path="res://Shaders/AlertBorder.gdshader" id="5_57a1t"]
 [ext_resource type="Script" uid="uid://dciy3eckmbbh3" path="res://Main/AlertBorder/AlertBorder.cs" id="5_iyuwi"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_byatl"]

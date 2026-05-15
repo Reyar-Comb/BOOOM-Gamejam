@@ -27,9 +27,11 @@ public partial class ChoicePanel : Control
         ResourceLoader.Load<StyleBoxFlat>("res://Main/ChoicePanel/CardStyleBoxes/CardStyleBoxSpecial.tres")
     };
     private readonly List<Control> _cards = new();
+    private readonly List<Control> _activeChoiceCards = new();
     private readonly Dictionary<Control, Vector2> _cardTargetPositions = new();
     private readonly List<Upgrade> _currentChoices = new();
     private readonly Dictionary<Control, Tween> _cardTweens = new();
+    private readonly Dictionary<Control, int> _choiceIndexesByCard = new();
     private Tween _backgroundTween;
     private TaskCompletionSource<Upgrade> _choiceCompletionSource;
     private bool _layoutCaptured;
@@ -103,7 +105,6 @@ public partial class ChoicePanel : Control
         await EnsureLayoutCapturedAsync();
         StopActiveTween();
 
-        _isOpen = true;
         Visible = true;
         SetBackgroundAlpha(0.0f);
         PrepareCardsForShow();
@@ -111,16 +112,17 @@ public partial class ChoicePanel : Control
 
         _backgroundTween = CreateTween();
         _backgroundTween.SetParallel(true);
-        _backgroundTween.TweenMethod(Callable.From((float value) => 
+        _backgroundTween.TweenMethod(Callable.From((float value) =>
         {
             GaussianBlurLayer.Modulate = new Color(GaussianBlurLayer.Modulate, value);
             DimLayer.Modulate = new Color(DimLayer.Modulate, value);
         }
         ), 0f, 1f, BackgroundFadeDuration);
 
-        for (int i = 0; i < _cards.Count; i++)
+        List<Control> animatedCards = GetAnimatedCards();
+        for (int i = 0; i < animatedCards.Count; i++)
         {
-            Control card = _cards[i];
+            Control card = animatedCards[i];
             Vector2 target = _cardTargetPositions[card];
             float delay = BackgroundFadeDuration + i * CardStagger;
 
@@ -131,6 +133,7 @@ public partial class ChoicePanel : Control
         }
 
         await ToSignal(_backgroundTween, Tween.SignalName.Finished);
+        _isOpen = true;
         _backgroundTween = null;
     }
 
@@ -149,16 +152,17 @@ public partial class ChoicePanel : Control
 
         _backgroundTween = CreateTween();
         _backgroundTween.SetParallel(true);
-        _backgroundTween.TweenMethod(Callable.From((float value) => 
+        _backgroundTween.TweenMethod(Callable.From((float value) =>
         {
             GaussianBlurLayer.Modulate = new Color(GaussianBlurLayer.Modulate, value);
             DimLayer.Modulate = new Color(DimLayer.Modulate, value);
         }
         ), 1f, 0f, BackgroundFadeDuration);
 
-        for (int i = 0; i < _cards.Count; i++)
+        List<Control> animatedCards = GetAnimatedCards();
+        for (int i = 0; i < animatedCards.Count; i++)
         {
-            Control card = _cards[i];
+            Control card = animatedCards[i];
             Vector2 target = _cardTargetPositions[card] + Vector2.Down * CardFlyDistance;
             float delay = i * CardStagger;
 
@@ -180,7 +184,7 @@ public partial class ChoicePanel : Control
 
         foreach (Node child in CardsContainer.GetChildren())
         {
-            if (child is Control card && card.Visible)
+            if (child is Control card)
             {
                 _cards.Add(card);
             }
@@ -191,12 +195,11 @@ public partial class ChoicePanel : Control
     {
         for (int i = 0; i < _cards.Count; i++)
         {
-            int choiceIndex = i;
             Control card = _cards[i];
             card.MouseFilter = MouseFilterEnum.Stop;
             card.MouseEntered += () => OnCardMouseEntered(card);
             card.MouseExited += () => OnCardMouseExited(card);
-            card.GuiInput += inputEvent => OnCardGuiInput(choiceIndex, inputEvent);
+            card.GuiInput += inputEvent => OnCardGuiInput(card, inputEvent);
         }
     }
 
@@ -204,12 +207,13 @@ public partial class ChoicePanel : Control
     {
         _cardTargetPositions.Clear();
 
-        foreach (Control card in _cards)
+        foreach (Control card in GetAnimatedCards())
         {
             Vector2 target = card.GlobalPosition;
             card.TopLevel = true;
             card.GlobalPosition = target;
             card.PivotOffset = card.Size * 0.5f;
+            card.ZIndex = 100;
             _cardTargetPositions[card] = target;
         }
 
@@ -229,18 +233,21 @@ public partial class ChoicePanel : Control
 
     private void PrepareCardsForShow()
     {
-        foreach (Control card in _cards)
+        foreach (Control card in GetAnimatedCards())
         {
             Vector2 target = _cardTargetPositions[card];
             card.TopLevel = true;
             card.GlobalPosition = target + Vector2.Down * CardFlyDistance;
             card.PivotOffset = card.Size * 0.5f;
+            card.ZIndex = 100;
         }
     }
 
     private void SetChoices(IReadOnlyList<Upgrade> choices)
     {
         _currentChoices.Clear();
+        _activeChoiceCards.Clear();
+        _choiceIndexesByCard.Clear();
         _choiceSelected = false;
 
         int visibleCount = Math.Min(choices.Count, _cards.Count);
@@ -258,9 +265,12 @@ public partial class ChoicePanel : Control
 
             Upgrade upgrade = choices[i];
             _currentChoices.Add(upgrade);
+            _activeChoiceCards.Add(card);
+            _choiceIndexesByCard[card] = i;
             StopCardTween(card);
             card.Scale = Vector2.One;
             card.Modulate = new Color(1f, 1f, 1f, 0f);
+            card.ZIndex = 100;
             SetCardContent(card, upgrade);
         }
     }
@@ -314,8 +324,14 @@ public partial class ChoicePanel : Control
                 : card.GlobalPosition;
             card.TopLevel = true;
             card.GlobalPosition = target + Vector2.Down * CardFlyDistance;
+            card.ZIndex = 0;
             ResetCardVisual(card);
         }
+    }
+
+    private List<Control> GetAnimatedCards()
+    {
+        return _activeChoiceCards.Count > 0 ? _activeChoiceCards : _cards;
     }
 
     private void SetBackgroundAlpha(float alpha)
@@ -397,7 +413,7 @@ public partial class ChoicePanel : Control
         {
             return;
         }
-
+        GD.Print("Mouse entered card: " + card.Name);
         TweenCardScale(card, Vector2.One * CardHoverScale, CardHoverDuration);
     }
 
@@ -407,14 +423,12 @@ public partial class ChoicePanel : Control
         {
             return;
         }
-
+        GD.Print("Mouse exited card: " + card.Name);
         TweenCardScale(card, Vector2.One, CardHoverDuration);
     }
 
     private async Task PlayCardSelectedAsync(Control selectedCard)
     {
-        _choiceSelected = true;
-
         foreach (Control card in _cards)
         {
             StopCardTween(card);
@@ -439,9 +453,14 @@ public partial class ChoicePanel : Control
         _cardTweens.Remove(selectedCard);
     }
 
-    private async void OnCardGuiInput(int choiceIndex, InputEvent inputEvent)
+    private async void OnCardGuiInput(Control card, InputEvent inputEvent)
     {
-        if (!_isChoosing || _choiceSelected || _choiceCompletionSource == null || _choiceCompletionSource.Task.IsCompleted)
+        if (!_isChoosing || _choiceSelected || _choiceCompletionSource == null || _choiceCompletionSource.Task.IsCompleted || !_isOpen)
+        {
+            return;
+        }
+
+        if (!_choiceIndexesByCard.TryGetValue(card, out int choiceIndex))
         {
             return;
         }
@@ -455,8 +474,9 @@ public partial class ChoicePanel : Control
         {
             return;
         }
-
-        await PlayCardSelectedAsync(_cards[choiceIndex]);
+        GD.Print("Choice card clicked: " + _currentChoices[choiceIndex].Name);
+        _choiceSelected = true;
+        await PlayCardSelectedAsync(card);
         _choiceCompletionSource.SetResult(_currentChoices[choiceIndex]);
     }
 }

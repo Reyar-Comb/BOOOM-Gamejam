@@ -529,8 +529,10 @@ public partial class BattleManager : Node
 
 	}
 
-	public void InitAlertBorder()
+	public async void InitAlertBorder()
 	{
+		await ToSignal(GetTree().CurrentScene, Node.SignalName.Ready);
+		
 		AlertBorder alertBorder = GetTree().Root.GetNode<AlertBorder>("MainGame/CanvasLayer/AlertBorder");
 		alertBorder.GameData = _gameData;
 	}

@@ -1,4 +1,37 @@
-[gd_scene format=3 uid="uid://c8wjvuv5krl63"]
+[gd_scene load_steps=9 format=3 uid="uid://c8wjvuv5krl63"]
+
+[ext_resource type="Script" uid="uid://cawn1xhmwc6s1" path="res://Main/StartMenu/StartMenu.cs" id="1_1tgq3"]
+[ext_resource type="Script" uid="uid://de1oryn5icnbq" path="res://Variable/VarRenderer/VarRenderer.cs" id="2_q5xrk"]
+[ext_resource type="Script" uid="uid://bixggai0cuh5h" path="res://Variable/VarRenderer/VarRendererConfig.cs" id="3_87pud"]
+[ext_resource type="Texture2D" uid="uid://bridtbrunps11" path="res://assets/Image/StartMenu/Title.png" id="4_nqn02"]
+[ext_resource type="Texture2D" uid="uid://cnqunws4bfxch" path="res://assets/Image/StartMenu/Start.png" id="5_76s20"]
+[ext_resource type="Texture2D" uid="uid://ccbdd18bvrc5t" path="res://assets/Image/StartMenu/Option.png" id="6_p4abd"]
+[ext_resource type="Texture2D" uid="uid://12vlkxvnncy8" path="res://assets/Image/StartMenu/Quit.png" id="7_thbqn"]
+
+[sub_resource type="Resource" id="Resource_87pud"]
+script = ExtResource("3_87pud")
+DrawBackground = true
+BackgroundColor = Color(0.035, 0.043, 0.055, 1)
+RenderMapRegions = false
+RenderMapBridges = false
+RenderMapFillReveal = false
+RenderGrid = true
+GridColor = Color(0.72, 0.88, 1, 0.11)
+AxisGridColor = Color(0.72, 0.88, 1, 0.18)
+RenderHoveredGridCell = false
+RenderClickRipple = true
+ClickRippleDuration = 0.55
+ClickRippleRadius = 5.0
+ClickRippleRingWidth = 0.55
+RenderBugDeathRipple = true
+BugDeathRippleDuration = 1.6
+BugDeathRippleRadius = 48.0
+BugDeathRippleRingWidth = 10.0
+BugDeathRippleOriginFlashPortion = 0.6
+EnableViewControls = false
+Zoom = 1.0
+MinZoom = 1.0
+MaxZoom = 1.0
 
 [node name="StartMenu" type="Control" unique_id=1100427882]
 layout_mode = 3
@@ -7,3 +40,73 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+script = ExtResource("1_1tgq3")
+
+[node name="VarRendererBackground" type="Control" parent="." unique_id=143377091]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("2_q5xrk")
+Config = SubResource("Resource_87pud")
+
+[node name="MenuRoot" type="Control" parent="." unique_id=2055390258]
+layout_mode = 0
+offset_left = 220.0
+offset_top = 118.0
+offset_right = 980.0
+offset_bottom = 748.0
+mouse_filter = 2
+
+[node name="Title" type="TextureRect" parent="MenuRoot" unique_id=856956173]
+layout_mode = 0
+offset_right = 760.0
+offset_bottom = 171.0
+mouse_filter = 2
+texture = ExtResource("4_nqn02")
+expand_mode = 2
+stretch_mode = 5
+
+[node name="Start" type="TextureButton" parent="MenuRoot" unique_id=1308298818]
+layout_mode = 0
+offset_left = 98.8
+offset_top = 223.0
+offset_right = 488.8
+offset_bottom = 347.0
+focus_mode = 0
+mouse_default_cursor_shape = 2
+texture_normal = ExtResource("5_76s20")
+texture_pressed = ExtResource("5_76s20")
+texture_hover = ExtResource("5_76s20")
+ignore_texture_size = true
+stretch_mode = 5
+
+[node name="Option" type="TextureButton" parent="MenuRoot" unique_id=521768611]
+layout_mode = 0
+offset_left = 98.8
+offset_top = 399.0
+offset_right = 488.8
+offset_bottom = 523.0
+focus_mode = 0
+mouse_default_cursor_shape = 2
+texture_normal = ExtResource("6_p4abd")
+texture_pressed = ExtResource("6_p4abd")
+texture_hover = ExtResource("6_p4abd")
+ignore_texture_size = true
+stretch_mode = 5
+
+[node name="Quit" type="TextureButton" parent="MenuRoot" unique_id=2125940291]
+layout_mode = 0
+offset_left = 98.8
+offset_top = 575.0
+offset_right = 488.8
+offset_bottom = 699.0
+focus_mode = 0
+mouse_default_cursor_shape = 2
+texture_normal = ExtResource("7_thbqn")
+texture_pressed = ExtResource("7_thbqn")
+texture_hover = ExtResource("7_thbqn")
+ignore_texture_size = true
+stretch_mode = 5

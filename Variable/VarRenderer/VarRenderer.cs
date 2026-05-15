@@ -234,6 +234,16 @@ public partial class VarRenderer : Control, IVarRenderer
         _rippleRenderer.AddLogRipple(cell, logType);
     }
 
+    public void AddRipple(Vector2I cell)
+    {
+        _rippleRenderer.AddRipple(cell);
+    }
+
+    public void AddBugDeathRipple(Vector2I cell)
+    {
+        _rippleRenderer.AddBugDeathRipple(cell);
+    }
+
     public void AddOrUpdatePiece(Var var, Vector2 origin)
     {
         _varPieceRenderer.AddOrUpdatePiece(var, origin);

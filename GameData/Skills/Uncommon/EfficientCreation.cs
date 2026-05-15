@@ -1,7 +1,7 @@
 using Godot;
 using System;
 
-public class EffectiveCreation : Skill
+public class EfficientCreation : Skill
 {
     public override void Apply(GameData data, int stack = 1)
     {

@@ -25,5 +25,10 @@ public partial class AlertBorder : ColorRect
 		{
 			Visible = false;
 		}
+
+		if (BattleManager.Instance.State == BattleState.Choice)
+		{
+			Visible = false;
+		}
 	}
 }

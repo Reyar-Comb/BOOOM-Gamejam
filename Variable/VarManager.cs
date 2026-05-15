@@ -90,8 +90,16 @@ public partial class VarManager : Node
             GD.Print($"Removing var {var.Stats.Name} of type {var.Stats.Type} from VarManager.");
             DisconnectSignals(var);
             RemoveFromTeamLists(var);
-            var.Cleanup();
+            if (var.Stats.VarTeam == VarStats.Team.Friendly)
+            {
+                _friendlyVarTypeCounts[var.Stats.Type] = Math.Max(0, _friendlyVarTypeCounts.GetValueOrDefault(var.Stats.Type, 1) - 1);
+            }
+            else if (var.Stats.VarTeam == VarStats.Team.Hostile)
+            {
+                _hostileVarTypeCounts[var.Stats.Type] = Math.Max(0, _hostileVarTypeCounts.GetValueOrDefault(var.Stats.Type, 1) - 1);
+            }
             Vars.Remove(var);
+            var.Cleanup();
             EmitSignal(SignalName.VarListUpdated);
         }
         VarListPool.Return(varsToRemove);
@@ -166,6 +174,8 @@ public partial class VarManager : Node
         Vars.Clear();
         _friendlyVars.Clear();
         _hostileVars.Clear();
+        _friendlyVarTypeCounts.Clear();
+        _hostileVarTypeCounts.Clear();
         _onDeathCallablesByVar.Clear();
         _onDamageReceivedCallablesByVar.Clear();
         EmitSignal(SignalName.VarListUpdated);

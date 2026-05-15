@@ -262,6 +262,7 @@ public partial class BattleManager : Node
 		VarRenderer?.ClearPiece();
 		_gameData.Reset();
 		TokenManager?.Reset();
+		PanelNavigator.GoToRoot();
 	}
 	public void StartWave()
 	{

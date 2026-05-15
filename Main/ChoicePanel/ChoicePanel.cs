@@ -5,6 +5,8 @@ using Godot;
 
 public partial class ChoicePanel : Control
 {
+    private const string LogPrefix = "[ChoicePanel] ";
+
     [Export] public float BackgroundFadeDuration { get; set; } = 0.35f;
     [Export] public float CardFlyDuration { get; set; } = 0.38f;
     [Export] public float CardStagger { get; set; } = 0.09f;
@@ -14,6 +16,7 @@ public partial class ChoicePanel : Control
     [Export] public float CardDimAlpha { get; set; } = 0.34f;
     [Export] public float CardHoverDuration { get; set; } = 0.12f;
     [Export] public float CardSelectPopDuration { get; set; } = 0.11f;
+    [Export] public float CardSeparation { get; set; } = 42.0f;
     [Export] public bool StartHidden { get; set; } = true;
 
     private ColorRect GaussianBlurLayer => field ??= GetNode<ColorRect>("GaussianBlurLayer");
@@ -28,16 +31,19 @@ public partial class ChoicePanel : Control
     };
     private readonly List<Control> _cards = new();
     private readonly List<Control> _activeChoiceCards = new();
-    private readonly Dictionary<Control, Vector2> _cardTargetPositions = new();
     private readonly List<Upgrade> _currentChoices = new();
     private readonly Dictionary<Control, Tween> _cardTweens = new();
     private readonly Dictionary<Control, int> _choiceIndexesByCard = new();
     private Tween _backgroundTween;
     private TaskCompletionSource<Upgrade> _choiceCompletionSource;
-    private bool _layoutCaptured;
     private bool _isOpen;
     private bool _isChoosing;
     private bool _choiceSelected;
+
+    private static void Log(string message)
+    {
+        GD.Print(LogPrefix + message);
+    }
 
     private async Task FrameDelay(int frame = 2)
     {
@@ -54,7 +60,7 @@ public partial class ChoicePanel : Control
         SetBackgroundAlpha(0.0f);
 
         await FrameDelay();
-        CaptureCardLayout();
+        PrepareCardLayout(GetAnimatedCards());
 
         if (StartHidden)
         {
@@ -80,7 +86,7 @@ public partial class ChoicePanel : Control
         {
             return null;
         }
-        GD.Print($"Presenting {choices.Count} upgrade choices to the player.");
+        // Log($"Presenting {choices.Count} upgrade choices to the player.");
         _choiceCompletionSource = new TaskCompletionSource<Upgrade>();
         _isChoosing = true;
         _choiceSelected = false;
@@ -89,9 +95,11 @@ public partial class ChoicePanel : Control
         await RelayoutCardsAsync();
         EnableInputBlock();
         await ShowPanelAsync();
-
+        // Log($"Showing upgrade choices to the player.");
         Upgrade selectedUpgrade = await _choiceCompletionSource.Task;
+        // Log($"Player selected upgrade: {selectedUpgrade.Name}");
         await ClosePanelAsync();
+        // Log($"Disabling input block after choice selection.");
         DisableInputBlock();
 
         _isChoosing = false;
@@ -102,7 +110,7 @@ public partial class ChoicePanel : Control
 
     public async Task ShowPanelAsync()
     {
-        await EnsureLayoutCapturedAsync();
+        await EnsureCardLayoutReadyAsync();
         StopActiveTween();
 
         Visible = true;
@@ -123,7 +131,7 @@ public partial class ChoicePanel : Control
         for (int i = 0; i < animatedCards.Count; i++)
         {
             Control card = animatedCards[i];
-            Vector2 target = _cardTargetPositions[card];
+            Vector2 target = GetCardShowPosition(animatedCards, i);
             float delay = BackgroundFadeDuration + i * CardStagger;
 
             _backgroundTween.TweenProperty(card, "global_position", target, CardFlyDuration)
@@ -133,6 +141,7 @@ public partial class ChoicePanel : Control
         }
 
         await ToSignal(_backgroundTween, Tween.SignalName.Finished);
+        // Log("Finished show tween. Cards are at " + string.Join(", ", animatedCards.ConvertAll(c => c.GlobalPosition.ToString())));
         _isOpen = true;
         _backgroundTween = null;
     }
@@ -147,7 +156,7 @@ public partial class ChoicePanel : Control
 
     public async Task ClosePanelAsync()
     {
-        await EnsureLayoutCapturedAsync();
+        await EnsureCardLayoutReadyAsync();
         StopActiveTween();
 
         _backgroundTween = CreateTween();
@@ -163,7 +172,7 @@ public partial class ChoicePanel : Control
         for (int i = 0; i < animatedCards.Count; i++)
         {
             Control card = animatedCards[i];
-            Vector2 target = _cardTargetPositions[card] + Vector2.Down * CardFlyDistance;
+            Vector2 target = GetCardClosePosition(animatedCards, i);
             float delay = i * CardStagger;
 
             _backgroundTween.TweenProperty(card, "global_position", target, CardFlyDuration)
@@ -203,41 +212,94 @@ public partial class ChoicePanel : Control
         }
     }
 
-    private void CaptureCardLayout()
+    private void PrepareCardLayout(IReadOnlyList<Control> cards)
     {
-        _cardTargetPositions.Clear();
-
-        foreach (Control card in GetAnimatedCards())
+        for (int i = 0; i < cards.Count; i++)
         {
-            Vector2 target = card.GlobalPosition;
+            Control card = cards[i];
+            Vector2 target = GetCardShowPosition(cards, i);
             card.TopLevel = true;
             card.GlobalPosition = target;
             card.PivotOffset = card.Size * 0.5f;
             card.ZIndex = 100;
-            _cardTargetPositions[card] = target;
         }
-
-        _layoutCaptured = true;
     }
 
-    private async Task EnsureLayoutCapturedAsync()
+    private async Task EnsureCardLayoutReadyAsync()
     {
-        if (_layoutCaptured)
+        foreach (Control card in GetAnimatedCards())
         {
-            return;
+            if (card.Size == Vector2.Zero)
+            {
+                await FrameDelay();
+                return;
+            }
+        }
+    }
+
+    private Vector2 GetCardShowPosition(IReadOnlyList<Control> cards, int cardIndex)
+    {
+        Rect2 panelRect = GetGlobalRect();
+        float totalWidth = GetTotalCardsWidth(cards);
+        float maxHeight = GetMaxCardHeight(cards);
+        Vector2 cardSize = GetCardLayoutSize(cards[cardIndex]);
+        float x = panelRect.Position.X + (panelRect.Size.X - totalWidth) * 0.5f;
+
+        for (int i = 0; i < cardIndex; i++)
+        {
+            x += GetCardLayoutSize(cards[i]).X + CardSeparation;
         }
 
-        await FrameDelay();
-        CaptureCardLayout();
+        float groupTop = panelRect.Position.Y + (panelRect.Size.Y - maxHeight) * 0.5f;
+        float y = groupTop + (maxHeight - cardSize.Y) * 0.5f;
+        return new Vector2(x, y);
+    }
+
+    private Vector2 GetCardClosePosition(IReadOnlyList<Control> cards, int cardIndex)
+    {
+        return GetCardShowPosition(cards, cardIndex) + Vector2.Down * CardFlyDistance;
+    }
+
+    private float GetTotalCardsWidth(IReadOnlyList<Control> cards)
+    {
+        if (cards.Count == 0)
+        {
+            return 0f;
+        }
+
+        float width = CardSeparation * (cards.Count - 1);
+        foreach (Control card in cards)
+        {
+            width += GetCardLayoutSize(card).X;
+        }
+
+        return width;
+    }
+
+    private static float GetMaxCardHeight(IReadOnlyList<Control> cards)
+    {
+        float maxHeight = 0f;
+        foreach (Control card in cards)
+        {
+            maxHeight = Math.Max(maxHeight, GetCardLayoutSize(card).Y);
+        }
+
+        return maxHeight;
+    }
+
+    private static Vector2 GetCardLayoutSize(Control card)
+    {
+        return card.Size == Vector2.Zero ? card.CustomMinimumSize : card.Size;
     }
 
     private void PrepareCardsForShow()
     {
-        foreach (Control card in GetAnimatedCards())
+        List<Control> animatedCards = GetAnimatedCards();
+        for (int i = 0; i < animatedCards.Count; i++)
         {
-            Vector2 target = _cardTargetPositions[card];
+            Control card = animatedCards[i];
             card.TopLevel = true;
-            card.GlobalPosition = target + Vector2.Down * CardFlyDistance;
+            card.GlobalPosition = GetCardClosePosition(animatedCards, i);
             card.PivotOffset = card.Size * 0.5f;
             card.ZIndex = 100;
         }
@@ -277,9 +339,8 @@ public partial class ChoicePanel : Control
 
     private async Task RelayoutCardsAsync()
     {
-        _layoutCaptured = false;
         await FrameDelay();
-        CaptureCardLayout();
+        PrepareCardLayout(GetAnimatedCards());
     }
 
     private void SetCardContent(Control card, Upgrade upgrade)
@@ -292,7 +353,7 @@ public partial class ChoicePanel : Control
         if (nameLabel != null)
         {
             nameLabel.Text = upgrade.Name;
-            GD.Print($"Setting card name to: {upgrade.Name}");
+            // Log($"Setting card name to: {upgrade.Name}");
         }
 
         if (descriptionLabel != null)
@@ -317,13 +378,11 @@ public partial class ChoicePanel : Control
     {
         SetBackgroundAlpha(0.0f);
 
-        foreach (Control card in _cards)
+        for (int i = 0; i < _cards.Count; i++)
         {
-            Vector2 target = _cardTargetPositions.TryGetValue(card, out Vector2 storedPosition)
-                ? storedPosition
-                : card.GlobalPosition;
+            Control card = _cards[i];
             card.TopLevel = true;
-            card.GlobalPosition = target + Vector2.Down * CardFlyDistance;
+            card.GlobalPosition = GetCardClosePosition(_cards, i);
             card.ZIndex = 0;
             ResetCardVisual(card);
         }
@@ -413,7 +472,7 @@ public partial class ChoicePanel : Control
         {
             return;
         }
-        GD.Print("Mouse entered card: " + card.Name);
+        // Log("Mouse entered card: " + card.Name);
         TweenCardScale(card, Vector2.One * CardHoverScale, CardHoverDuration);
     }
 
@@ -423,7 +482,7 @@ public partial class ChoicePanel : Control
         {
             return;
         }
-        GD.Print("Mouse exited card: " + card.Name);
+        // Log("Mouse exited card: " + card.Name);
         TweenCardScale(card, Vector2.One, CardHoverDuration);
     }
 
@@ -474,7 +533,7 @@ public partial class ChoicePanel : Control
         {
             return;
         }
-        GD.Print("Choice card clicked: " + _currentChoices[choiceIndex].Name);
+        // Log("Choice card clicked: " + _currentChoices[choiceIndex].Name);
         _choiceSelected = true;
         await PlayCardSelectedAsync(card);
         _choiceCompletionSource.SetResult(_currentChoices[choiceIndex]);

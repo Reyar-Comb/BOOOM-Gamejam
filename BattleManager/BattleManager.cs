@@ -116,7 +116,7 @@ public partial class BattleManager : Node
 		}
 		PanelNavigator.SetGameData(_gameData);
 		PanelNavigator.SetMapData(_mapData);
-
+		InitAlertBorder();
 		StartWave();
 	}
 
@@ -523,5 +523,11 @@ public partial class BattleManager : Node
 			}
 		}
 
+	}
+
+	public void InitAlertBorder()
+	{
+		AlertBorder alertBorder = GetTree().Root.GetNode<AlertBorder>("MainGame/CanvasLayer/AlertBorder");
+		alertBorder.GameData = _gameData;
 	}
 }

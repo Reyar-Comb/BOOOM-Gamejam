@@ -4,6 +4,8 @@
 [ext_resource type="PackedScene" uid="uid://d0xq4j2ohsk2q" path="res://Main/GameScene/GameScene.tscn" id="1_k72b0"]
 [ext_resource type="Script" uid="uid://dxmg6qq286ydp" path="res://Main/MainGame/SubView/sub_viewport_container.gd" id="2_i30qx"]
 [ext_resource type="Shader" uid="uid://0nm2jqery7f5" path="res://Shaders/ScanningLine.gdshader" id="4_i30qx"]
+[ext_resource type="Shader" uid="uid://bnphvjwxdwlee" path="res://Shaders/AlertBorder.gdshader" id="5_57a1t"]
+[ext_resource type="Script" uid="uid://dciy3eckmbbh3" path="res://Main/AlertBorder/AlertBorder.cs" id="5_iyuwi"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_byatl"]
 shader = ExtResource("1_byatl")
@@ -21,6 +23,19 @@ shader_parameter/dot_density = 128.3870056233825
 shader_parameter/dot_size = 0.41300001798756
 shader_parameter/base_alpha = 0.0
 shader_parameter/global_alpha = 0.502000023845
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_bv4vy"]
+shader = ExtResource("5_57a1t")
+shader_parameter/border_width = 0.06
+shader_parameter/border_softness = 0.04
+shader_parameter/glow_width = 0.12
+shader_parameter/glow_softness = 0.08
+shader_parameter/blink_speed = 2.5
+shader_parameter/min_alpha = 0.12
+shader_parameter/max_alpha = 0.7
+shader_parameter/border_color = Color(0.9, 0.05, 0.05, 1)
+shader_parameter/glow_color = Color(1, 0.15, 0.1, 1)
+shader_parameter/corner_radius = 0.02
 
 [node name="MainGame" type="Node2D" unique_id=67133812]
 
@@ -56,6 +71,19 @@ grow_vertical = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 mouse_filter = 2
+
+[node name="AlertBorder" type="ColorRect" parent="CanvasLayer" unique_id=1664355788]
+z_index = 20
+material = SubResource("ShaderMaterial_bv4vy")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+mouse_filter = 2
+script = ExtResource("5_iyuwi")
 
 [editable path="CanvasLayer/SubViewportContainer/SubViewport/GameScene"]
 [editable path="CanvasLayer/SubViewportContainer/SubViewport/GameScene/MarginContainer/HBoxContainer/MarginContainer2/VBoxContainer/WindowPanel2"]

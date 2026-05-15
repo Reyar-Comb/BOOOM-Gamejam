@@ -141,6 +141,15 @@ public partial class VarManager : Node
         EmitSignal(SignalName.VarListUpdated);
         UpdateDynamicRegionStates();
         var.NotifyRegionEntryIfNeeded(Grid.WorldToGrid(var.Stats.Position));
+
+        // if (var.Stats.VarTeam == VarStats.Team.Friendly)
+        // {
+        //     var.Stats.AttackDamage = 10000;
+        //     var.Stats.MaxHealth = 10000;
+        //     var.Stats.CurrentHealth = 10000;
+        //     var.Stats.MoveSpeed = 800;
+        //     var.Stats.AttackFrameInterval = 0;
+        // }
     }
 
     public void ClearAllVars()

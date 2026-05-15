@@ -110,16 +110,22 @@ public partial class ChoicePanel : Control
         }
         ), 0f, 1f, BackgroundFadeDuration);
 
-        for (int i = 0; i < _cards.Count; i++)
+        int visibleIndex = 0;
+        foreach (Control card in _cards)
         {
-            Control card = _cards[i];
+            if (!card.Visible)
+            {
+                continue;
+            }
+
             Vector2 target = _cardTargetPositions[card];
-            float delay = BackgroundFadeDuration + i * CardStagger;
+            float delay = BackgroundFadeDuration + visibleIndex * CardStagger;
 
             _activeTween.TweenProperty(card, "global_position", target, CardFlyDuration)
                 .SetDelay(delay)
                 .SetTrans(Tween.TransitionType.Cubic)
                 .SetEase(Tween.EaseType.Out);
+            visibleIndex++;
         }
 
         await ToSignal(_activeTween, Tween.SignalName.Finished);
@@ -148,16 +154,22 @@ public partial class ChoicePanel : Control
         }
         ), 1f, 0f, BackgroundFadeDuration);
 
-        for (int i = 0; i < _cards.Count; i++)
+        int visibleIndex = 0;
+        foreach (Control card in _cards)
         {
-            Control card = _cards[i];
+            if (!card.Visible)
+            {
+                continue;
+            }
+
             Vector2 target = _cardTargetPositions[card] + Vector2.Down * CardFlyDistance;
-            float delay = i * CardStagger;
+            float delay = visibleIndex * CardStagger;
 
             _activeTween.TweenProperty(card, "global_position", target, CardFlyDuration)
                 .SetDelay(delay)
                 .SetTrans(Tween.TransitionType.Cubic)
                 .SetEase(Tween.EaseType.In);
+            visibleIndex++;
         }
 
         await ToSignal(_activeTween, Tween.SignalName.Finished);
@@ -172,7 +184,7 @@ public partial class ChoicePanel : Control
 
         foreach (Node child in CardsContainer.GetChildren())
         {
-            if (child is Control card && card.Visible)
+            if (child is Control card)
             {
                 _cards.Add(card);
             }
@@ -199,6 +211,11 @@ public partial class ChoicePanel : Control
 
         foreach (Control card in _cards)
         {
+            if (!card.Visible)
+            {
+                continue;
+            }
+
             Vector2 target = card.GlobalPosition;
             card.TopLevel = true;
             card.GlobalPosition = target;
@@ -225,6 +242,11 @@ public partial class ChoicePanel : Control
     {
         foreach (Control card in _cards)
         {
+            if (!card.Visible)
+            {
+                continue;
+            }
+
             Vector2 target = _cardTargetPositions[card];
             card.TopLevel = true;
             card.GlobalPosition = target + Vector2.Down * CardFlyDistance;

@@ -190,4 +190,8 @@ internal sealed partial class VarPieceRenderer : Control
             QueueRedraw();
         }
     }
+    public void RemoveAll()
+    {
+        _pieces.Clear();
+    }
 }

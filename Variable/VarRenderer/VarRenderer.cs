@@ -94,7 +94,14 @@ public partial class VarRenderer : Control, IVarRenderer
             QueueRenderersRedraw();
         }
     }
-
+    public void RestartReveal()
+    {
+        _mapRenderer.RestartReveal();
+    }
+    public void ClearPiece()
+    {
+        _varPieceRenderer.RemoveAll();
+    }
     public async void Initialize(MapData mapData)
     {
         _mapData = mapData;

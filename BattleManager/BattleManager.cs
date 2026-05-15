@@ -29,7 +29,7 @@ public enum BattleState
 
 public partial class BattleManager : Node
 {
-	private const int VarUnlockChoiceWaveLimit = 2;
+	private const int VarUnlockChoiceWaveLimit = 5;
 
 	public static BattleManager Instance { get; private set; } = null!;
 	[Export] public int TickRate = 20;
@@ -169,6 +169,7 @@ public partial class BattleManager : Node
 		State = BattleState.Choice;
 		await ChooseUpgrades();
 
+		VarRenderer.RestartReveal();
 		StartWave();
 		_isWaveFinished = false;
 		_isWaveTransitioning = false;
@@ -255,6 +256,7 @@ public partial class BattleManager : Node
 		ConsoleManager?.UnsubscribeAllVarEvents();
 		VarManager?.ClearAllVars();
 		VarRenderer?.ClearVars();
+		VarRenderer?.ClearPiece();
 		_gameData.Reset();
 		TokenManager?.Reset();
 	}

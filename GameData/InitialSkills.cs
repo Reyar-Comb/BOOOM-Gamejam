@@ -4,13 +4,13 @@ using System.Collections.Generic;
 [GlobalClass]
 public partial class InitialSkills : Resource
 {
-    [Export] public bool EffectiveFeedback { get; set; } = false;
+    [Export] public bool EfficientFeedback { get; set; } = false;
     [Export] public bool FastIteration { get; set; } = false;
     [Export] public bool GreaterRepairing { get; set; } = false;
     [Export] public bool GreaterSafety { get; set; } = false;
     [Export] public bool GreaterStability { get; set; } = false;
 
-    [Export] public bool EffectiveCreation { get; set; } = false;
+    [Export] public bool EfficientCreation { get; set; } = false;
     [Export] public bool EfficientMarketing { get; set; } = false;
     [Export] public bool PersonalizedRecommendation { get; set; } = false;
     [Export] public bool RepairerFloatingPoint { get; set; } = false;
@@ -29,13 +29,13 @@ public partial class InitialSkills : Resource
 
     public IEnumerable<Skill> CreateSkills()
     {
-        if (EffectiveFeedback) yield return new EffectiveFeedback();
+        if (EfficientFeedback) yield return new EfficientFeedback();
         if (FastIteration) yield return new FastIteration();
         if (GreaterRepairing) yield return new GreaterRepairing();
         if (GreaterSafety) yield return new GreaterSafety();
         if (GreaterStability) yield return new GreaterStability();
 
-        if (EffectiveCreation) yield return new EffectiveCreation();
+        if (EfficientCreation) yield return new EfficientCreation();
         if (EfficientMarketing) yield return new EfficientMarketing();
         if (PersonalizedRecommendation) yield return new PersonalizedRecommendation();
         if (RepairerFloatingPoint) yield return new RepairerFloatingPoint();

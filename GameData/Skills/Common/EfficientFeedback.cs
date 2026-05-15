@@ -1,7 +1,7 @@
 using Godot;
 using System;
 
-public class EffectiveFeedback : Skill
+public class EfficientFeedback : Skill
 {
     public override void Apply(GameData data, int stack = 1)
     {

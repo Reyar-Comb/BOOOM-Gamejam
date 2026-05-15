@@ -5,8 +5,8 @@
 
 [resource]
 script = ExtResource("1")
-Name = "friend-of-classes"
-Description = "Vars gain fixed positive stats when entering a new region for the first time."
+Name = "跨 class 强化"
+Description = "变量首次进入一个新的 class 区域时，生命值 +10、攻击力 +2、防御力 +1、移动速度 +1。"
 Icon = ExtResource("1_ly8ga")
 Rarity = 2
 Values = Dictionary[String, int]({

@@ -5,8 +5,8 @@
 
 [resource]
 script = ExtResource("1")
-Name = "accurate-float"
-Description = "Float vars deal +3 damage when attacking a target on the same x or y axis."
+Name = "Float 精确打击"
+Description = "Float 变量攻击与自身处于同一横轴或纵轴的敌人时，本次伤害 +3。"
 Icon = ExtResource("1_gwek3")
 Rarity = 2
 Values = Dictionary[String, int]({

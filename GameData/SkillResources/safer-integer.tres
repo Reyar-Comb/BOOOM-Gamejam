@@ -5,8 +5,8 @@
 
 [resource]
 script = ExtResource("1")
-Name = "safer-integer"
-Description = "Increases defense of created integer vars."
+Name = "整型强化"
+Description = "创建 Char、Int 或 Long 变量时，该变量防御力 +3。"
 Icon = ExtResource("1_p8frs")
 Rarity = 1
 Values = Dictionary[String, int]({

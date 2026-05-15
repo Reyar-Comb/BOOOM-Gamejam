@@ -5,8 +5,8 @@
 
 [resource]
 script = ExtResource("1")
-Name = "fast-iteration"
-Description = "Increases move speed of created vars."
+Name = "快速遍历"
+Description = "创建变量时，该变量移动速度 +2。"
 Icon = ExtResource("1_l8r21")
 Values = Dictionary[String, int]({
 "MoveSpeedBonus": 2

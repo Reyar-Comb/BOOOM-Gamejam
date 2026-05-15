@@ -5,8 +5,8 @@
 
 [resource]
 script = ExtResource("1")
-Name = "repairer-floating-point"
-Description = "Increases attack of created floating-point vars."
+Name = "浮点强化"
+Description = "创建 Float、Double 或 LongDouble 变量时，该变量攻击力 +4。"
 Icon = ExtResource("1_uiqaj")
 Rarity = 1
 Values = Dictionary[String, int]({

@@ -3,7 +3,6 @@
 [ext_resource type="Shader" uid="uid://ql424av8n4oq" path="res://Shaders/Blur2.gdshader" id="2_blur"]
 [ext_resource type="Script" uid="uid://xbc42c0xq0hy" path="res://Main/ChoicePanel/ChoicePanel.cs" id="2_script"]
 [ext_resource type="StyleBox" uid="uid://dkysgv0s0kpbw" path="res://Main/ChoicePanel/CardStyleBoxes/CardStyleBoxCommon.tres" id="3_l7tuc"]
-[ext_resource type="FontFile" uid="uid://bnl5ekwhqxwkt" path="res://assets/Fonts/Hack-Bold.ttf" id="4_bold"]
 [ext_resource type="FontFile" uid="uid://cbst7pqnmxosu" path="res://assets/Fonts/Hack-Regular.ttf" id="5_regular"]
 [ext_resource type="Texture2D" uid="uid://dr1v2f27hialu" path="res://icon.svg" id="5_vn4c3"]
 
@@ -109,7 +108,7 @@ mouse_filter = 2
 [node name="IconPlaceholder" type="Label" parent="SafeArea/CardCenter/Cards/SkillCard1/MarginContainer/Content/IconSlot/IconCenter" unique_id=1689214920]
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 1, 1, 0.45)
-theme_override_fonts/font = ExtResource("4_bold")
+theme_override_fonts/font = ExtResource("5_regular")
 theme_override_font_sizes/font_size = 32
 text = "ICON"
 horizontal_alignment = 1
@@ -127,7 +126,7 @@ stretch_mode = 5
 custom_minimum_size = Vector2(0, 56)
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 1, 1, 1)
-theme_override_fonts/font = ExtResource("4_bold")
+theme_override_fonts/font = ExtResource("5_regular")
 theme_override_font_sizes/font_size = 32
 text = "greater-stability"
 horizontal_alignment = 1
@@ -175,7 +174,7 @@ mouse_filter = 2
 [node name="IconPlaceholder" type="Label" parent="SafeArea/CardCenter/Cards/SkillCard2/MarginContainer/Content/IconSlot/IconCenter" unique_id=1882771478]
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 1, 1, 0.45)
-theme_override_fonts/font = ExtResource("4_bold")
+theme_override_fonts/font = ExtResource("5_regular")
 theme_override_font_sizes/font_size = 32
 text = "ICON"
 horizontal_alignment = 1
@@ -193,7 +192,7 @@ stretch_mode = 5
 custom_minimum_size = Vector2(0, 56)
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 1, 1, 1)
-theme_override_fonts/font = ExtResource("4_bold")
+theme_override_fonts/font = ExtResource("5_regular")
 theme_override_font_sizes/font_size = 32
 text = "fast-iteration"
 horizontal_alignment = 1
@@ -241,7 +240,7 @@ mouse_filter = 2
 [node name="IconPlaceholder" type="Label" parent="SafeArea/CardCenter/Cards/SkillCard3/MarginContainer/Content/IconSlot/IconCenter" unique_id=2072086710]
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 1, 1, 0.45)
-theme_override_fonts/font = ExtResource("4_bold")
+theme_override_fonts/font = ExtResource("5_regular")
 theme_override_font_sizes/font_size = 32
 text = "ICON"
 horizontal_alignment = 1
@@ -259,7 +258,7 @@ stretch_mode = 5
 custom_minimum_size = Vector2(0, 56)
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 1, 1, 1)
-theme_override_fonts/font = ExtResource("4_bold")
+theme_override_fonts/font = ExtResource("5_regular")
 theme_override_font_sizes/font_size = 32
 text = "effective-feedback"
 horizontal_alignment = 1
@@ -309,7 +308,7 @@ mouse_filter = 2
 [node name="IconPlaceholder" type="Label" parent="SafeArea/CardCenter/Cards/UnitChoiceCard/MarginContainer/Content/IconSlot/IconCenter" unique_id=2074429349]
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 1, 1, 0.45)
-theme_override_fonts/font = ExtResource("4_bold")
+theme_override_fonts/font = ExtResource("5_regular")
 theme_override_font_sizes/font_size = 26
 text = "UNIT"
 horizontal_alignment = 1
@@ -327,7 +326,7 @@ stretch_mode = 5
 custom_minimum_size = Vector2(0, 48)
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 1, 1, 1)
-theme_override_fonts/font = ExtResource("4_bold")
+theme_override_fonts/font = ExtResource("5_regular")
 theme_override_font_sizes/font_size = 26
 text = "New Var Type"
 horizontal_alignment = 1

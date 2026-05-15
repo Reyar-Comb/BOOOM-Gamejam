@@ -5,8 +5,8 @@
 
 [resource]
 script = ExtResource("2_otdho")
-Name = "efficient-creation"
-Description = "Reduces token cost when creating vars by a fixed amount."
+Name = "高效创建"
+Description = "创建变量时，Token 消耗 -2，最低不会低于 0。"
 Icon = ExtResource("1_40sh6")
 Rarity = 1
 Values = Dictionary[String, int]({

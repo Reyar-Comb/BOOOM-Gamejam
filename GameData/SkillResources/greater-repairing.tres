@@ -5,8 +5,8 @@
 
 [resource]
 script = ExtResource("1")
-Name = "greater-repairing"
-Description = "Increases attack of created vars."
+Name = "修复力提升"
+Description = "创建变量时，该变量攻击力 +3。"
 Icon = ExtResource("1_h3bi5")
 Values = Dictionary[String, int]({
 "AttackBonus": 3

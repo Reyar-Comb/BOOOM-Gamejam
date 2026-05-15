@@ -5,8 +5,8 @@
 
 [resource]
 script = ExtResource("1")
-Name = "drone-bool"
-Description = "Bool vars gain tokens when they detect new enemies, but cost more tokens to create."
+Name = "Bool 侦察"
+Description = "Bool 变量每首次探测到一个敌人，获得 3 Token；创建 Bool 变量的 Token 消耗 +5。"
 Icon = ExtResource("1_cfdry")
 Rarity = 2
 Values = Dictionary[String, int]({

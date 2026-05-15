@@ -5,8 +5,8 @@
 
 [resource]
 script = ExtResource("1")
-Name = "singleton-long-double"
-Description = "If you create a LongDouble var as the first var in a wave, it gains large fixed health and attack bonuses but defense is set to 0. Doing this blocks future Float, Double, and LongDouble creation."
+Name = "LongDouble 超长续航"
+Description = "若本波次第一个创建的变量是 LongDouble，该变量最大生命值 +1800、攻击力 +270，防御力变为 0；触发后本波次无法再创建 Float、Double 或 LongDouble 变量。"
 Icon = ExtResource("1_628n3")
 Rarity = 2
 Values = Dictionary[String, int]({

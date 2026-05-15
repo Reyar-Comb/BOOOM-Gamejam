@@ -5,8 +5,8 @@
 
 [resource]
 script = ExtResource("1")
-Name = "garbage-collector"
-Description = "Refunds a fixed amount of tokens when a var dies."
+Name = "垃圾回收"
+Description = "场上变量死亡时，返还 3 Token。"
 Icon = ExtResource("1_n0h1v")
 Rarity = 2
 Values = Dictionary[String, int]({

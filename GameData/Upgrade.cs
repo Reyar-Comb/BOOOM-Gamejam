@@ -45,8 +45,8 @@ public class VarTypeUnlockUpgrade : Upgrade
         VarType = varType;
     }
 
-    public override string Name => $"{VarType} Unlock";
-    public override string Description => $"Unlock {VarType} permanently.";
+    public override string Name => $"解锁 {VarType}";
+    public override string Description => $"永久解锁 {VarType} 类型作为可创建变量。";
     public override Texture2D Icon => VarTypeIcons.TryGetValue(VarType, out var icon) ? icon : null;
 
     public override void Apply(GameData data)

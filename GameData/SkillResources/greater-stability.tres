@@ -5,8 +5,8 @@
 
 [resource]
 script = ExtResource("1")
-Name = "greater-stability"
-Description = "Increases health of created vars."
+Name = "稳定性提升"
+Description = "创建变量时，该变量最大生命值 +10，并同步提高当前生命值。"
 Icon = ExtResource("1_un43l")
 Values = Dictionary[String, int]({
 "HealthBonus": 10

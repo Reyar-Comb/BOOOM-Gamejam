@@ -5,8 +5,8 @@
 
 [resource]
 script = ExtResource("1")
-Name = "personalized-recommendation"
-Description = "Reduces patience consumed when requesting tokens from users by a fixed amount."
+Name = "个性化推荐"
+Description = "向用户索取 Token 时，消耗的耐心 -2。"
 Icon = ExtResource("1_o7ef3")
 Rarity = 1
 Values = Dictionary[String, int]({

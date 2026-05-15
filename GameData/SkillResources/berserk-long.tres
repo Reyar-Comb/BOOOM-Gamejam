@@ -5,7 +5,7 @@
 
 [resource]
 script = ExtResource("1")
-Name = "berserk-long"
-Description = "Long vars double attack and halve defense while exactly one enemy is in detect range."
+Name = "Long 爆发"
+Description = "Long 变量的探测范围内仅有一个敌人时，攻击力翻倍，防御力减半。"
 Icon = ExtResource("1_8gifh")
 Rarity = 2

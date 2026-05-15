@@ -63,7 +63,7 @@ public partial class Var : RefCounted, ICleanable
         Stats.Defense += data.NumericData.Get("DefenseBonus");
         Stats.MoveSpeed += data.NumericData.Get("MoveSpeedBonus");
 
-        if (Stats.Type is VarStats.VarType.Int or VarStats.VarType.Long)
+        if (Stats.Type is VarStats.VarType.Int or VarStats.VarType.Long or VarStats.VarType.Char)
         {
             Stats.Defense += data.NumericData.Get("IntegerDefenseBonus");
         }

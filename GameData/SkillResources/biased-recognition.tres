@@ -5,8 +5,8 @@
 
 [resource]
 script = ExtResource("1")
-Name = "biased-recognition"
-Description = "Greatly reduces token costs for every operation at the start of each wave, but repeated use of the same operation increases its cost."
+Name = "认知偏差"
+Description = "每波次开始时，所有操作的 Token 消耗 -10；每次实际执行某类操作后，该类操作的减免减少 1，之后可能转为额外消耗。"
 Icon = ExtResource("1_td2s5")
 Rarity = 2
 Values = Dictionary[String, int]({

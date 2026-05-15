@@ -5,7 +5,7 @@
 
 [resource]
 script = ExtResource("1")
-Name = "sniper-double"
-Description = "Double vars can attack enemies in detect range when they share the same x or y axis."
+Name = "Double 长途打击"
+Description = "Double 变量与敌人处于同一横轴或纵轴时，可无视攻击范围限制，直接攻击探测范围内的该敌人。"
 Icon = ExtResource("1_vhb1l")
 Rarity = 2

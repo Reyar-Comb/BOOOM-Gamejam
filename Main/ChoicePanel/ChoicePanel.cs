@@ -409,7 +409,7 @@ public partial class ChoicePanel : Control
 
     private void OnCardMouseEntered(Control card)
     {
-        if (!_isChoosing || _choiceSelected || !card.Visible)
+        if (!_isChoosing || _choiceSelected || !card.Visible || !_isOpen)
         {
             return;
         }
@@ -419,7 +419,7 @@ public partial class ChoicePanel : Control
 
     private void OnCardMouseExited(Control card)
     {
-        if (!_isChoosing || _choiceSelected || !card.Visible)
+        if (!_isChoosing || _choiceSelected || !card.Visible || !_isOpen)
         {
             return;
         }

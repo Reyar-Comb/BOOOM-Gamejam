@@ -5,7 +5,8 @@
 
 [resource]
 script = ExtResource("1")
-Name = "crowd-of-char"
+Name = "Char 人海战术"
+Description = "结算攻击时，目标每被一个 Char 变量参与攻击，本次伤害 +1。"
 Icon = ExtResource("1_g0ybm")
 Rarity = 2
 Values = Dictionary[String, int]({

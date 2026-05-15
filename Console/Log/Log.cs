@@ -127,7 +127,7 @@ public class LocationAck : Log
 	public LocationAck(Var targetVar) : base(LogType.Info, targetVar.Stats.Name)
 	{
 		SetReportedWorldPosition(targetVar.Stats.Position);
-		Message = $"Current Location: {ReportedCell}";
+		Message = $"当前坐标：{ReportedCell}";
 	}
 
 	protected override string FormatMessage()
@@ -210,7 +210,7 @@ public class DetectedWarning : Log
 	{
 		SetReportedWorldPosition(detectInfo.DetectedVar.Stats.Position);
 		Objective = detectInfo.DetectedVar.Stats.Name;
-		Message = $"发现 {detectInfo.DetectedVar.Stats.Type} 类敌人于 {ReportedCell} 处！";
+		Message = $"发现 {detectInfo.DetectedVar.Stats.Type} 类型异常变量于 {ReportedCell} 处！";
 	}
 
 	protected override string FormatMessage()
@@ -223,7 +223,7 @@ public class OutOfDetectWarning : Log
 {
 	public OutOfDetectWarning(Var targetVar, Var lostTarget) : base(LogType.Warning, targetVar.Stats.Name)
 	{
-		Message = $"Lost detection of {lostTarget.Stats.Name}";
+		Message = $"{lostTarget.Stats.Name} 已离开检测范围！";
 	}
 
 	protected override string FormatMessage()

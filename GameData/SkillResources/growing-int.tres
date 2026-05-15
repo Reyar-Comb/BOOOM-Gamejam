@@ -1,11 +1,13 @@
 [gd_resource type="Resource" script_class="SkillResource" format=3 uid="uid://ulke0f2qcedh"]
 
 [ext_resource type="Script" uid="uid://uv786iry0jub" path="res://GameData/SkillResource.cs" id="1"]
+[ext_resource type="Texture2D" uid="uid://dlt3anvku06qg" path="res://assets/Image/SkillIcons/growing-int.png" id="1_kinsj"]
 
 [resource]
 script = ExtResource("1")
 Name = "growing-int"
 Description = "Each created Int randomly increases health, attack, or defense for future Int vars."
+Icon = ExtResource("1_kinsj")
 Rarity = 2
 Values = Dictionary[String, int]({
 "AttackBonusPerGrowth": 1,

@@ -1,11 +1,13 @@
 [gd_resource type="Resource" script_class="SkillResource" format=3 uid="uid://dn8y4ix77rjek"]
 
-[ext_resource type="Script" uid="uid://uv786iry0jub" path="res://GameData/SkillResource.cs" id="1"]
+[ext_resource type="Texture2D" uid="uid://cqlmlix8mwa2h" path="res://assets/Image/SkillIcons/efficient-feedback.png" id="1_xglt2"]
+[ext_resource type="Script" uid="uid://uv786iry0jub" path="res://GameData/SkillResource.cs" id="2_typig"]
 
 [resource]
-script = ExtResource("1")
+script = ExtResource("2_typig")
 Name = "efficient-feedback"
 Description = "Reduces token cost when querying or commanding vars by a fixed amount."
+Icon = ExtResource("1_xglt2")
 Values = Dictionary[String, int]({
 "CommandTokenCostReduction": 1
 })

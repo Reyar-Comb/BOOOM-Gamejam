@@ -1,13 +1,15 @@
 [gd_resource type="Resource" script_class="SkillResource" format=3 uid="uid://b3doahvfhlvsr"]
 
 [ext_resource type="Script" uid="uid://uv786iry0jub" path="res://GameData/SkillResource.cs" id="1"]
+[ext_resource type="Texture2D" uid="uid://cbcgufdda8wf3" path="res://assets/Image/SkillIcons/drone-bool.png" id="1_cfdry"]
 
 [resource]
 script = ExtResource("1")
 Name = "drone-bool"
 Description = "Bool vars gain tokens when they detect new enemies, but cost more tokens to create."
+Icon = ExtResource("1_cfdry")
 Rarity = 2
 Values = Dictionary[String, int]({
-"TokenGainPerNewEnemyDetected": 3,
-"BoolCreationCostIncrease": 5
+"BoolCreationCostIncrease": 5,
+"TokenGainPerNewEnemyDetected": 3
 })

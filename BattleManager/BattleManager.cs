@@ -116,7 +116,7 @@ public partial class BattleManager : Node
 		}
 		PanelNavigator.SetGameData(_gameData);
 		PanelNavigator.SetMapData(_mapData);
-
+		InitAlertBorder();
 		StartWave();
 	}
 
@@ -331,9 +331,9 @@ public partial class BattleManager : Node
 
 	private Color GetRenderColor(VarStats.VarType type, VarStats.Team team)
 	{
-		if (type == VarStats.VarType.Dummy)
+		if (type == VarStats.VarType.Bug)
 		{
-			return _colorData.Get("RenderDummyVar");
+			return _colorData.Get("RenderBugVar");
 		}
 		if (team == VarStats.Team.Friendly)
 		{
@@ -403,7 +403,7 @@ public partial class BattleManager : Node
 	}
 	private void OnEnemyDie(Var enemy)
 	{
-		if (enemy.Stats.Type != VarStats.VarType.Dummy) return;
+		if (enemy.Stats.Type != VarStats.VarType.Bug) return;
 
 		_isWaveFinished = true;
 	}
@@ -433,7 +433,7 @@ public partial class BattleManager : Node
 			Vector2I position = _mapData.GetRandomPositionInRegion(GetRandomSpawnRegionId(config));
 			RegisterVar(type, position, VarStats.Team.Hostile);
 		}
-		SpawnEnemy(VarStats.VarType.Dummy, _mapData.GetRandomPositionInRegion(MapData.EnemyBaseRegionId));
+		SpawnEnemy(VarStats.VarType.Bug, _mapData.GetRandomPositionInRegion(MapData.EnemyBaseRegionId));
 	}
 	public void MoveVar(Var var, Vector2I newPosition, bool isHovering = false)
 	{
@@ -523,5 +523,11 @@ public partial class BattleManager : Node
 			}
 		}
 
+	}
+
+	public void InitAlertBorder()
+	{
+		AlertBorder alertBorder = GetTree().Root.GetNode<AlertBorder>("MainGame/CanvasLayer/AlertBorder");
+		alertBorder.GameData = _gameData;
 	}
 }

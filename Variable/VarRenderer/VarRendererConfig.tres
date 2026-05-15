@@ -15,11 +15,18 @@ script = ExtResource("1_config")
 DrawBackground = true
 BackgroundColor = Color(0.078431375, 0.09019608, 0.10980392, 0.69411767)
 RenderGrid = true
+<<<<<<< HEAD
 DummyDeathRippleDuration = 1.6
 DummyDeathRippleRadius = 48.0
 DummyDeathRippleRingWidth = 10.0
 DummyDeathRippleOriginFlashPortion = 0.6
 RenderVarBody = false
+=======
+BugDeathRippleDuration = 1.6
+BugDeathRippleRadius = 48.0
+BugDeathRippleRingWidth = 10.0
+BugDeathRippleOriginFlashPortion = 0.6
+>>>>>>> c1354373d922727fc7aa333ffbc552eeb3c06842
 Zoom = 0.25
 VarTypeTextures = Dictionary[int, Texture2D]({
 0: ExtResource("1_ll8lk"),

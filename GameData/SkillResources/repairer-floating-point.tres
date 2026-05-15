@@ -1,11 +1,13 @@
 [gd_resource type="Resource" script_class="SkillResource" format=3 uid="uid://vbcl144xdpy4"]
 
 [ext_resource type="Script" uid="uid://uv786iry0jub" path="res://GameData/SkillResource.cs" id="1"]
+[ext_resource type="Texture2D" uid="uid://q0w2dambst1d" path="res://assets/Image/SkillIcons/repairer-floating-point.png" id="1_uiqaj"]
 
 [resource]
 script = ExtResource("1")
 Name = "repairer-floating-point"
 Description = "Increases attack of created floating-point vars."
+Icon = ExtResource("1_uiqaj")
 Rarity = 1
 Values = Dictionary[String, int]({
 "FloatingPointAttackBonus": 4

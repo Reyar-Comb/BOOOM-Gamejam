@@ -162,9 +162,9 @@ internal sealed partial class VarPieceRenderer : Control
                 VarStats.Team.Hostile => _config.EnemyPieceColor,
                 _ => Colors.White
             };
-            if (var.Stats.Type == VarStats.VarType.Dummy)
+            if (var.Stats.Type == VarStats.VarType.Bug)
             {
-                color = _config.DummyPieceColor;
+                color = _config.BugPieceColor;
             }
 
             _pieces[var] = new Piece

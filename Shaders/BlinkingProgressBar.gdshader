@@ -13,8 +13,13 @@ uniform float target : hint_range(0.0, 1.0) = 0.5;
 
 // 背景色
 uniform vec4 bg_color : source_color = vec4(0.6, 0.6, 0.6, 0.38);
-// 基础填充色（当前余量）
-uniform vec4 base_color : source_color = vec4(0.0, 1.0, 0.0, 0.56);
+// ---- 三阶段动态基础色 ----
+// 高值段颜色（progress >= 0.7 时使用，默认绿）
+uniform vec4 color_high : source_color = vec4(0.0, 1.0, 0.0, 0.56);
+// 中值段颜色（0.3 <= progress < 0.7 时使用，默认黄）
+uniform vec4 color_mid : source_color = vec4(1.0, 0.92, 0.0, 0.56);
+// 低值段颜色（progress < 0.3 时使用，默认红）
+uniform vec4 color_low : source_color = vec4(1.0, 0.0, 0.0, 0.56);
 // 闪烁段颜色（半透明）
 uniform vec4 ghost_color : source_color = vec4(1.0, 0.3, 0.3, 0.6);
 // 扣费用完时的警告色（target = 0 时整个剩余进度条闪烁此色）
@@ -83,7 +88,12 @@ void fragment()
 			}
 			else
 			{
-				color = base_color;
+				// 根据 progress 动态选择基础色：>=0.7 绿，0.3~0.7 黄，<0.3 红
+				float t_high = smoothstep(0.65, 0.75, progress);
+				float t_low  = smoothstep(0.25, 0.35, progress);
+				vec4 dynamic_base = mix(color_low, color_mid, t_low);
+				dynamic_base = mix(dynamic_base, color_high, t_high);
+				color = dynamic_base;
 			}
 		}
 

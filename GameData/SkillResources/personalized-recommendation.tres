@@ -1,11 +1,13 @@
 [gd_resource type="Resource" script_class="SkillResource" format=3 uid="uid://y6itgm5rv5uo"]
 
 [ext_resource type="Script" uid="uid://uv786iry0jub" path="res://GameData/SkillResource.cs" id="1"]
+[ext_resource type="Texture2D" uid="uid://cx2iiy7hvxwri" path="res://assets/Image/SkillIcons/personanlized-recommendation.png" id="1_o7ef3"]
 
 [resource]
 script = ExtResource("1")
 Name = "personalized-recommendation"
 Description = "Reduces patience consumed when requesting tokens from users by a fixed amount."
+Icon = ExtResource("1_o7ef3")
 Rarity = 1
 Values = Dictionary[String, int]({
 "TokenRequestPatienceCostReduction": 2

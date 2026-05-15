@@ -1,11 +1,13 @@
 [gd_resource type="Resource" script_class="SkillResource" format=3 uid="uid://c7i5uitxy2xft"]
 
 [ext_resource type="Script" uid="uid://uv786iry0jub" path="res://GameData/SkillResource.cs" id="1"]
+[ext_resource type="Texture2D" uid="uid://duj0300mp4t61" path="res://assets/Image/SkillIcons/safer-integer.png" id="1_p8frs"]
 
 [resource]
 script = ExtResource("1")
 Name = "safer-integer"
 Description = "Increases defense of created integer vars."
+Icon = ExtResource("1_p8frs")
 Rarity = 1
 Values = Dictionary[String, int]({
 "IntegerDefenseBonus": 3

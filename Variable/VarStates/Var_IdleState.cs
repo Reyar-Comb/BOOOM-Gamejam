@@ -35,10 +35,10 @@ public partial class Var_IdleState : STNode
 
     private float EnemyRandomMoveInterval => _blackboard.Get<float>("EnemyRandomMoveInterval");
 
-    private bool IsDummyAttacked
+    private bool IsBugAttacked
     {
-        get => _blackboard.Get<bool>("IsDummyAttacked");
-        set => _blackboard.Set("IsDummyAttacked", value);
+        get => _blackboard.Get<bool>("IsBugAttacked");
+        set => _blackboard.Set("IsBugAttacked", value);
     }
     private float EnemyRandomMoveTimeRemaining
     {
@@ -46,25 +46,25 @@ public partial class Var_IdleState : STNode
         set => _blackboard.Set("EnemyRandomMoveTimeRemaining", value);
     }
 
-    private bool _stopMovingToDummy = false;
+    private bool _stopMovingToBug = false;
     protected override void OnPhysicsUpdate(double delta)
     {
         Vector2I selfCell = Grid.WorldToGrid(Self.Stats.Position);
-        Vector2I dummyCell = _blackboard.Get<Vector2I>("DummyCell");
+        Vector2I bugCell = _blackboard.Get<Vector2I>("BugCell");
         float dist = 0f;
-        if (!_stopMovingToDummy) dist = Self.Stats.Position.DistanceTo(Grid.GridToWorld(dummyCell));
+        if (!_stopMovingToBug) dist = Self.Stats.Position.DistanceTo(Grid.GridToWorld(bugCell));
 
-        if (IsDummyAttacked &&
-        (dist < Grid.CellSize || Mathf.IsEqualApprox(dist, Grid.CellSize)) && !_stopMovingToDummy)
+        if (IsBugAttacked &&
+        (dist < Grid.CellSize || Mathf.IsEqualApprox(dist, Grid.CellSize)) && !_stopMovingToBug)
         {
-            _stopMovingToDummy = true;
+            _stopMovingToBug = true;
         }
 
-        if (IsDummyAttacked && (CurrentPath == null || CurrentPath.Count == 0) && !_stopMovingToDummy)
+        if (IsBugAttacked && (CurrentPath == null || CurrentPath.Count == 0) && !_stopMovingToBug)
         {
-            GD.Print("Move to dummy");
+            GD.Print("Move to bug");
             int region = MapData.GetRegion(selfCell.X, selfCell.Y);
-            List<Vector2I> path = Pathfinder.Run(selfCell, dummyCell, region);
+            List<Vector2I> path = Pathfinder.Run(selfCell, bugCell, region);
             if (path.Count != 0) path.RemoveAt(path.Count - 1);
             Self.SetPath(path);
             return;
@@ -130,7 +130,7 @@ public partial class Var_IdleState : STNode
     private bool ShouldRandomMove()
     {
         return Self.Stats.VarTeam == VarStats.Team.Hostile
-            && (!_blackboard.Get<bool>("IsDummyAttacked") || _stopMovingToDummy)
+            && (!_blackboard.Get<bool>("IsBugAttacked") || _stopMovingToBug)
             && CurrentAttackTarget == null
             && !HasPendingMove
             // && (CurrentPath == null || CurrentPath.Count == 0)

@@ -1,11 +1,13 @@
 [gd_resource type="Resource" script_class="SkillResource" format=3 uid="uid://do0xf2i0q11o"]
 
 [ext_resource type="Script" uid="uid://uv786iry0jub" path="res://GameData/SkillResource.cs" id="1"]
+[ext_resource type="Texture2D" uid="uid://eko5q7swwxte" path="res://assets/Image/SkillIcons/fast-iteration.png" id="1_l8r21"]
 
 [resource]
 script = ExtResource("1")
 Name = "fast-iteration"
 Description = "Increases move speed of created vars."
+Icon = ExtResource("1_l8r21")
 Values = Dictionary[String, int]({
 "MoveSpeedBonus": 2
 })

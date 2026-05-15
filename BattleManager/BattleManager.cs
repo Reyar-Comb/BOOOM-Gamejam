@@ -52,6 +52,8 @@ public partial class BattleManager : Node
 
 	[Export] public ChoicePanel ChoicePanel { get; private set; } = null!;
 
+	[Export] public DeletePanel DeletePanel { get; private set; } = null!;
+
 	[Export] public InitialSkills InitialSkills { get; private set; } = null!;
 
 	[Export] public SkillCardList SkillCardList { get; private set; } = null!;
@@ -306,6 +308,13 @@ public partial class BattleManager : Node
 	}
 	private async Task ChooseUpgrades()
 	{
+		bool isSkillFull = _gameData.SkillManager.OwnedSkills.Count == 5;
+		List<Skill> skillsToRemove = null;
+		if (isSkillFull)
+		{
+			skillsToRemove = _gameData.SkillManager.OwnedSkills;
+		}
+
 		await WaitSeconds(SkillChoiceDelay);
 
 		List<Upgrade> choices = CurrentWave <= VarUnlockChoiceWaveLimit
@@ -330,6 +339,17 @@ public partial class BattleManager : Node
 		}
 
 		upgrade.Apply(_gameData);
+
+		if (isSkillFull)
+		{
+			await WaitSeconds(SkillChoiceDelay);
+			Skill skillToDelete = await DeletePanel.ChooseSkillToDeleteAsync(skillsToRemove);
+			if (skillToDelete != null)
+			{
+				_gameData.SkillManager.OwnedSkills.Remove(skillToDelete);
+				GD.Print($"Deleted skill: {skillToDelete.Name}");
+			}
+		}
 		GD.Print($"Wave finished. Applied upgrade: {upgrade.Name}");
 	}
 

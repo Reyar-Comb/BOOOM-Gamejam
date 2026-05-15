@@ -1,0 +1,426 @@
+[gd_scene format=3 uid="uid://bj1tfgf84h0vb"]
+
+[ext_resource type="Script" uid="uid://cb0e1c3mfhm1v" path="res://Main/DeletePanel/DeletePanel.cs" id="1_em3ar"]
+[ext_resource type="Shader" uid="uid://ql424av8n4oq" path="res://Shaders/Blur2.gdshader" id="2_6r8in"]
+[ext_resource type="StyleBox" uid="uid://dkysgv0s0kpbw" path="res://Main/ChoicePanel/CardStyleBoxes/CardStyleBoxCommon.tres" id="3_1r5d7"]
+[ext_resource type="FontFile" uid="uid://cbst7pqnmxosu" path="res://assets/Fonts/Hack-Regular.ttf" id="4_dpeey"]
+[ext_resource type="Texture2D" uid="uid://dr1v2f27hialu" path="res://icon.svg" id="5_775t8"]
+[ext_resource type="FontFile" uid="uid://bnl5ekwhqxwkt" path="res://assets/Fonts/Hack-Bold.ttf" id="6_6r8in"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_wdkvm"]
+shader = ExtResource("2_6r8in")
+shader_parameter/blur_type = 0
+shader_parameter/blur_amount = 12
+shader_parameter/blur_radius = 1.0
+shader_parameter/blur_direction = Vector2(1, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_i0b5m"]
+bg_color = Color(0, 0, 0, 0.22)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(1, 1, 1, 0.32)
+corner_radius_top_left = 16
+corner_radius_top_right = 16
+corner_radius_bottom_right = 16
+corner_radius_bottom_left = 16
+corner_detail = 10
+
+[node name="DeletePanel" type="Control" unique_id=54318289]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+mouse_filter = 2
+script = ExtResource("1_em3ar")
+
+[node name="GaussianBlurLayer" type="ColorRect" parent="." unique_id=1315657348]
+material = SubResource("ShaderMaterial_wdkvm")
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="DimLayer" type="ColorRect" parent="." unique_id=913779555]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0, 0, 0, 0.42)
+
+[node name="TitleLabel" type="Label" parent="." unique_id=650102049]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_fonts/font = ExtResource("6_6r8in")
+theme_override_font_sizes/font_size = 60
+text = "
+选择一个Skill丢弃"
+horizontal_alignment = 1
+
+[node name="SafeArea" type="MarginContainer" parent="." unique_id=1969708065]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_constants/margin_left = 120
+theme_override_constants/margin_top = 96
+theme_override_constants/margin_right = 120
+theme_override_constants/margin_bottom = 96
+
+[node name="CardCenter" type="CenterContainer" parent="SafeArea" unique_id=454329452]
+layout_mode = 2
+mouse_filter = 2
+
+[node name="Cards" type="HBoxContainer" parent="SafeArea/CardCenter" unique_id=1793488375]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 42
+alignment = 1
+
+[node name="SkillCard1" type="PanelContainer" parent="SafeArea/CardCenter/Cards" unique_id=444863971]
+custom_minimum_size = Vector2(325, 520)
+layout_mode = 2
+theme_override_styles/panel = ExtResource("3_1r5d7")
+
+[node name="MarginContainer" type="MarginContainer" parent="SafeArea/CardCenter/Cards/SkillCard1" unique_id=1035506222]
+layout_mode = 2
+theme_override_constants/margin_left = 30
+theme_override_constants/margin_top = 30
+theme_override_constants/margin_right = 30
+theme_override_constants/margin_bottom = 30
+
+[node name="Content" type="VBoxContainer" parent="SafeArea/CardCenter/Cards/SkillCard1/MarginContainer" unique_id=2053383134]
+layout_mode = 2
+theme_override_constants/separation = 22
+
+[node name="IconSlot" type="PanelContainer" parent="SafeArea/CardCenter/Cards/SkillCard1/MarginContainer/Content" unique_id=2085752314]
+custom_minimum_size = Vector2(0, 210)
+layout_mode = 2
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_i0b5m")
+
+[node name="IconCenter" type="CenterContainer" parent="SafeArea/CardCenter/Cards/SkillCard1/MarginContainer/Content/IconSlot" unique_id=1642648087]
+layout_mode = 2
+mouse_filter = 2
+
+[node name="IconPlaceholder" type="Label" parent="SafeArea/CardCenter/Cards/SkillCard1/MarginContainer/Content/IconSlot/IconCenter" unique_id=2106930647]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 1, 0.45)
+theme_override_fonts/font = ExtResource("4_dpeey")
+theme_override_font_sizes/font_size = 32
+text = "ICON"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="IconTexture" type="TextureRect" parent="SafeArea/CardCenter/Cards/SkillCard1/MarginContainer/Content/IconSlot/IconCenter" unique_id=532840792]
+custom_minimum_size = Vector2(132, 132)
+layout_mode = 2
+mouse_filter = 2
+texture = ExtResource("5_775t8")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="NameLabel" type="Label" parent="SafeArea/CardCenter/Cards/SkillCard1/MarginContainer/Content" unique_id=1939636510]
+custom_minimum_size = Vector2(0, 56)
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_fonts/font = ExtResource("4_dpeey")
+theme_override_font_sizes/font_size = 28
+text = "greater-stability"
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 3
+
+[node name="DescriptionLabel" type="Label" parent="SafeArea/CardCenter/Cards/SkillCard1/MarginContainer/Content" unique_id=296106354]
+custom_minimum_size = Vector2(0, 145)
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_colors/font_color = Color(1, 1, 1, 0.78)
+theme_override_fonts/font = ExtResource("4_dpeey")
+theme_override_font_sizes/font_size = 20
+text = "Increases health of created vars."
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 3
+
+[node name="SkillCard2" type="PanelContainer" parent="SafeArea/CardCenter/Cards" unique_id=604855593]
+custom_minimum_size = Vector2(325, 520)
+layout_mode = 2
+theme_override_styles/panel = ExtResource("3_1r5d7")
+
+[node name="MarginContainer" type="MarginContainer" parent="SafeArea/CardCenter/Cards/SkillCard2" unique_id=185250980]
+layout_mode = 2
+theme_override_constants/margin_left = 30
+theme_override_constants/margin_top = 30
+theme_override_constants/margin_right = 30
+theme_override_constants/margin_bottom = 30
+
+[node name="Content" type="VBoxContainer" parent="SafeArea/CardCenter/Cards/SkillCard2/MarginContainer" unique_id=1478852941]
+layout_mode = 2
+theme_override_constants/separation = 22
+
+[node name="IconSlot" type="PanelContainer" parent="SafeArea/CardCenter/Cards/SkillCard2/MarginContainer/Content" unique_id=1504747013]
+custom_minimum_size = Vector2(0, 210)
+layout_mode = 2
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_i0b5m")
+
+[node name="IconCenter" type="CenterContainer" parent="SafeArea/CardCenter/Cards/SkillCard2/MarginContainer/Content/IconSlot" unique_id=608653229]
+layout_mode = 2
+mouse_filter = 2
+
+[node name="IconPlaceholder" type="Label" parent="SafeArea/CardCenter/Cards/SkillCard2/MarginContainer/Content/IconSlot/IconCenter" unique_id=1585394620]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 1, 0.45)
+theme_override_fonts/font = ExtResource("4_dpeey")
+theme_override_font_sizes/font_size = 32
+text = "ICON"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="IconTexture" type="TextureRect" parent="SafeArea/CardCenter/Cards/SkillCard2/MarginContainer/Content/IconSlot/IconCenter" unique_id=1205890433]
+custom_minimum_size = Vector2(132, 132)
+layout_mode = 2
+mouse_filter = 2
+texture = ExtResource("5_775t8")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="NameLabel" type="Label" parent="SafeArea/CardCenter/Cards/SkillCard2/MarginContainer/Content" unique_id=694856835]
+custom_minimum_size = Vector2(0, 56)
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_fonts/font = ExtResource("4_dpeey")
+theme_override_font_sizes/font_size = 28
+text = "greater-stability"
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 3
+
+[node name="DescriptionLabel" type="Label" parent="SafeArea/CardCenter/Cards/SkillCard2/MarginContainer/Content" unique_id=1058635954]
+custom_minimum_size = Vector2(0, 145)
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_colors/font_color = Color(1, 1, 1, 0.78)
+theme_override_fonts/font = ExtResource("4_dpeey")
+theme_override_font_sizes/font_size = 20
+text = "Increases health of created vars."
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 3
+
+[node name="SkillCard3" type="PanelContainer" parent="SafeArea/CardCenter/Cards" unique_id=596450946]
+custom_minimum_size = Vector2(325, 520)
+layout_mode = 2
+theme_override_styles/panel = ExtResource("3_1r5d7")
+
+[node name="MarginContainer" type="MarginContainer" parent="SafeArea/CardCenter/Cards/SkillCard3" unique_id=1178253573]
+layout_mode = 2
+theme_override_constants/margin_left = 30
+theme_override_constants/margin_top = 30
+theme_override_constants/margin_right = 30
+theme_override_constants/margin_bottom = 30
+
+[node name="Content" type="VBoxContainer" parent="SafeArea/CardCenter/Cards/SkillCard3/MarginContainer" unique_id=836086153]
+layout_mode = 2
+theme_override_constants/separation = 22
+
+[node name="IconSlot" type="PanelContainer" parent="SafeArea/CardCenter/Cards/SkillCard3/MarginContainer/Content" unique_id=1621694290]
+custom_minimum_size = Vector2(0, 210)
+layout_mode = 2
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_i0b5m")
+
+[node name="IconCenter" type="CenterContainer" parent="SafeArea/CardCenter/Cards/SkillCard3/MarginContainer/Content/IconSlot" unique_id=1961902857]
+layout_mode = 2
+mouse_filter = 2
+
+[node name="IconPlaceholder" type="Label" parent="SafeArea/CardCenter/Cards/SkillCard3/MarginContainer/Content/IconSlot/IconCenter" unique_id=1913038628]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 1, 0.45)
+theme_override_fonts/font = ExtResource("4_dpeey")
+theme_override_font_sizes/font_size = 32
+text = "ICON"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="IconTexture" type="TextureRect" parent="SafeArea/CardCenter/Cards/SkillCard3/MarginContainer/Content/IconSlot/IconCenter" unique_id=620799214]
+custom_minimum_size = Vector2(132, 132)
+layout_mode = 2
+mouse_filter = 2
+texture = ExtResource("5_775t8")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="NameLabel" type="Label" parent="SafeArea/CardCenter/Cards/SkillCard3/MarginContainer/Content" unique_id=1762472140]
+custom_minimum_size = Vector2(0, 56)
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_fonts/font = ExtResource("4_dpeey")
+theme_override_font_sizes/font_size = 28
+text = "greater-stability"
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 3
+
+[node name="DescriptionLabel" type="Label" parent="SafeArea/CardCenter/Cards/SkillCard3/MarginContainer/Content" unique_id=47723565]
+custom_minimum_size = Vector2(0, 145)
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_colors/font_color = Color(1, 1, 1, 0.78)
+theme_override_fonts/font = ExtResource("4_dpeey")
+theme_override_font_sizes/font_size = 20
+text = "Increases health of created vars."
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 3
+
+[node name="SkillCard4" type="PanelContainer" parent="SafeArea/CardCenter/Cards" unique_id=883549175]
+custom_minimum_size = Vector2(325, 520)
+layout_mode = 2
+theme_override_styles/panel = ExtResource("3_1r5d7")
+
+[node name="MarginContainer" type="MarginContainer" parent="SafeArea/CardCenter/Cards/SkillCard4" unique_id=78394238]
+layout_mode = 2
+theme_override_constants/margin_left = 30
+theme_override_constants/margin_top = 30
+theme_override_constants/margin_right = 30
+theme_override_constants/margin_bottom = 30
+
+[node name="Content" type="VBoxContainer" parent="SafeArea/CardCenter/Cards/SkillCard4/MarginContainer" unique_id=1414708669]
+layout_mode = 2
+theme_override_constants/separation = 22
+
+[node name="IconSlot" type="PanelContainer" parent="SafeArea/CardCenter/Cards/SkillCard4/MarginContainer/Content" unique_id=1445436027]
+custom_minimum_size = Vector2(0, 210)
+layout_mode = 2
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_i0b5m")
+
+[node name="IconCenter" type="CenterContainer" parent="SafeArea/CardCenter/Cards/SkillCard4/MarginContainer/Content/IconSlot" unique_id=543073068]
+layout_mode = 2
+mouse_filter = 2
+
+[node name="IconPlaceholder" type="Label" parent="SafeArea/CardCenter/Cards/SkillCard4/MarginContainer/Content/IconSlot/IconCenter" unique_id=1114074077]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 1, 0.45)
+theme_override_fonts/font = ExtResource("4_dpeey")
+theme_override_font_sizes/font_size = 32
+text = "ICON"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="IconTexture" type="TextureRect" parent="SafeArea/CardCenter/Cards/SkillCard4/MarginContainer/Content/IconSlot/IconCenter" unique_id=304844713]
+custom_minimum_size = Vector2(132, 132)
+layout_mode = 2
+mouse_filter = 2
+texture = ExtResource("5_775t8")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="NameLabel" type="Label" parent="SafeArea/CardCenter/Cards/SkillCard4/MarginContainer/Content" unique_id=834470443]
+custom_minimum_size = Vector2(0, 56)
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_fonts/font = ExtResource("4_dpeey")
+theme_override_font_sizes/font_size = 28
+text = "greater-stability"
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 3
+
+[node name="DescriptionLabel" type="Label" parent="SafeArea/CardCenter/Cards/SkillCard4/MarginContainer/Content" unique_id=1367617032]
+custom_minimum_size = Vector2(0, 145)
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_colors/font_color = Color(1, 1, 1, 0.78)
+theme_override_fonts/font = ExtResource("4_dpeey")
+theme_override_font_sizes/font_size = 20
+text = "Increases health of created vars."
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 3
+
+[node name="SkillCard5" type="PanelContainer" parent="SafeArea/CardCenter/Cards" unique_id=1302615253]
+custom_minimum_size = Vector2(325, 520)
+layout_mode = 2
+theme_override_styles/panel = ExtResource("3_1r5d7")
+
+[node name="MarginContainer" type="MarginContainer" parent="SafeArea/CardCenter/Cards/SkillCard5" unique_id=195304406]
+layout_mode = 2
+theme_override_constants/margin_left = 30
+theme_override_constants/margin_top = 30
+theme_override_constants/margin_right = 30
+theme_override_constants/margin_bottom = 30
+
+[node name="Content" type="VBoxContainer" parent="SafeArea/CardCenter/Cards/SkillCard5/MarginContainer" unique_id=1319574549]
+layout_mode = 2
+theme_override_constants/separation = 22
+
+[node name="IconSlot" type="PanelContainer" parent="SafeArea/CardCenter/Cards/SkillCard5/MarginContainer/Content" unique_id=1606274411]
+custom_minimum_size = Vector2(0, 210)
+layout_mode = 2
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_i0b5m")
+
+[node name="IconCenter" type="CenterContainer" parent="SafeArea/CardCenter/Cards/SkillCard5/MarginContainer/Content/IconSlot" unique_id=1247252537]
+layout_mode = 2
+mouse_filter = 2
+
+[node name="IconPlaceholder" type="Label" parent="SafeArea/CardCenter/Cards/SkillCard5/MarginContainer/Content/IconSlot/IconCenter" unique_id=532833707]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 1, 0.45)
+theme_override_fonts/font = ExtResource("4_dpeey")
+theme_override_font_sizes/font_size = 32
+text = "ICON"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="IconTexture" type="TextureRect" parent="SafeArea/CardCenter/Cards/SkillCard5/MarginContainer/Content/IconSlot/IconCenter" unique_id=943368357]
+custom_minimum_size = Vector2(132, 132)
+layout_mode = 2
+mouse_filter = 2
+texture = ExtResource("5_775t8")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="NameLabel" type="Label" parent="SafeArea/CardCenter/Cards/SkillCard5/MarginContainer/Content" unique_id=1651643845]
+custom_minimum_size = Vector2(0, 56)
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_fonts/font = ExtResource("4_dpeey")
+theme_override_font_sizes/font_size = 28
+text = "greater-stability"
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 3
+
+[node name="DescriptionLabel" type="Label" parent="SafeArea/CardCenter/Cards/SkillCard5/MarginContainer/Content" unique_id=5833077]
+custom_minimum_size = Vector2(0, 145)
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_colors/font_color = Color(1, 1, 1, 0.78)
+theme_override_fonts/font = ExtResource("4_dpeey")
+theme_override_font_sizes/font_size = 20
+text = "Increases health of created vars."
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 3

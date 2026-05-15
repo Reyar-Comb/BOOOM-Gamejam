@@ -188,7 +188,7 @@ public partial class Var : RefCounted, ICleanable
         // directionFactor is in [1, 2], 1 if attacked from front, 2 if from back.
         // Vector2 facingDirection = Stats.Direction;
         // float directionFactor = atkInfo.GetFromDirection(Stats.Position).Dot(facingDirection) * -0.5f + 1.5f;
-        // if (Stats.Type == VarStats.VarType.Dummy)
+        // if (Stats.Type == VarStats.VarType.Bug)
         // {
         //     directionFactor = 1f;
         // }
@@ -204,7 +204,7 @@ public partial class Var : RefCounted, ICleanable
         Stats.CurrentHealth -= finalDamage;
         if (IsDead) return;
 
-        if (_blackboard.Get<Var>("CurrentAttackTarget") == null && Stats.Type != VarStats.VarType.Bool && Stats.Type != VarStats.VarType.Dummy)
+        if (_blackboard.Get<Var>("CurrentAttackTarget") == null && Stats.Type != VarStats.VarType.Bool && Stats.Type != VarStats.VarType.Bug)
         {
             MoveTo(atkInfo.Source.Stats.Position);
         }
@@ -216,10 +216,10 @@ public partial class Var : RefCounted, ICleanable
             return;
         }
 
-        if (fromType == VarStats.VarType.Dummy)
+        if (fromType == VarStats.VarType.Bug)
         {
-            _blackboard.Set("IsDummyAttacked", true);
-            _blackboard.Set("DummyCell", fromCell);
+            _blackboard.Set("IsBugAttacked", true);
+            _blackboard.Set("BugCell", fromCell);
         }
     }
     public void BeginAttacking(Var target)
@@ -314,8 +314,8 @@ public partial class Var : RefCounted, ICleanable
         _blackboard.Set("CurrentAttackTarget", (Var)null);
         _blackboard.Set("Self", this);
         _blackboard.Set("IsAttacked", false);
-        _blackboard.Set("IsDummyAttacked", false);
-        _blackboard.Set("DummyCell", Vector2I.Zero);
+        _blackboard.Set("IsBugAttacked", false);
+        _blackboard.Set("BugCell", Vector2I.Zero);
         _blackboard.Set("EnemyRandomMoveInterval", 2.0f);
         _blackboard.Set("EnemyRandomMoveTimeRemaining", 2.0f);
         _blackboard.Set("IsMoveCommandPath", false);   

@@ -251,7 +251,7 @@ public partial class VarRenderer : Control, IVarRenderer
             Var renderedVar = _renderedVars[index];
             if (renderedVar?.IsDead == true || renderedVar?.Stats == null)
             {
-                TryStartDummyDeathRipple(renderedVar);
+                TryStartBugDeathRipple(renderedVar);
                 _renderedVars.RemoveAt(index);
                 _renderStateTracker.Remove(renderedVar);
                 _varLayerRenderer.RemoveStyle(renderedVar);
@@ -297,14 +297,14 @@ public partial class VarRenderer : Control, IVarRenderer
             AcceptEvent();
         }
     }
-    private void TryStartDummyDeathRipple(Var var)
+    private void TryStartBugDeathRipple(Var var)
     {
-        if (var?.Stats?.Type != VarStats.VarType.Dummy)
+        if (var?.Stats?.Type != VarStats.VarType.Bug)
         {
             return;
         }
 
-        _rippleRenderer.AddDummyDeathRipple(Grid.WorldToGrid(var.Stats.Position));
+        _rippleRenderer.AddBugDeathRipple(Grid.WorldToGrid(var.Stats.Position));
     }
     private void TryStartClickRipple(InputEventMouseButton mouseButton)
     {

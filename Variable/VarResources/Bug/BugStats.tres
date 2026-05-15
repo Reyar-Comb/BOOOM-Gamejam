@@ -1,8 +1,8 @@
 [gd_resource type="Resource" script_class="VarStats" format=3 uid="uid://bfoo85k4fjv8q"]
 
-[ext_resource type="Resource" uid="uid://1nu404f0j5jd" path="res://Variable/VarResources/Dummy/DummyAtkRange.tres" id="1_2b5js"]
+[ext_resource type="Resource" uid="uid://1nu404f0j5jd" path="res://Variable/VarResources/Bug/BugAtkRange.tres" id="1_2b5js"]
 [ext_resource type="Script" uid="uid://d05ld37qbcgjs" path="res://Variable/VarStats.cs" id="1_j4bhg"]
-[ext_resource type="Resource" uid="uid://8ar0b7rcvl0h" path="res://Variable/VarResources/Dummy/DummyDetRange.tres" id="2_1hatr"]
+[ext_resource type="Resource" uid="uid://8ar0b7rcvl0h" path="res://Variable/VarResources/Bug/BugDetRange.tres" id="2_1hatr"]
 
 [resource]
 script = ExtResource("1_j4bhg")

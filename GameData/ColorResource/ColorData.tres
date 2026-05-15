@@ -17,7 +17,7 @@ Data = Dictionary[String, Color]({
 "LogInfoText": Color(0, 1, 0, 1),
 "LogTimeText": Color(1, 1, 1, 1),
 "LogWarningText": Color(1, 0.92, 0, 1),
-"RenderDummyVar": Color(0.74509805, 0.7411765, 0.99607843, 1),
+"RenderBugVar": Color(0.74509805, 0.7411765, 0.99607843, 1),
 "RenderFriendlyVar": Color(1, 0.27058825, 0, 1),
 "RenderHostileVar": Color(0, 0.7490196, 1, 1)
 })

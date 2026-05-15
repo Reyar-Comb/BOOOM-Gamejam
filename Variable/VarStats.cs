@@ -20,7 +20,7 @@ public partial class VarStats : Resource
         LongDouble,
         Char,
         Bool,
-        Dummy
+        Bug
     }
 
     public VarType Type { get; set; }

@@ -389,7 +389,7 @@ public partial class ConsoleView : Control
 
 		Var target = _testVars[^1];
 
-		// Need a "source" var for the attack. Use the second-to-last or create a dummy.
+		// Need a "source" var for the attack. Use the second-to-last or create a bug.
 		Var attacker;
 		if (_testVars.Count >= 2)
 		{
@@ -397,7 +397,7 @@ public partial class ConsoleView : Control
 		}
 		else
 		{
-			// Create a minimal dummy attacker
+			// Create a minimal bug attacker
 			attacker = new Var
 			{
 				Stats = new VarStats
@@ -432,7 +432,7 @@ public partial class ConsoleView : Control
 
 		Var target = _testVars[^1];
 
-		// Create a dummy detected var
+		// Create a bug detected var
 		Var detected = new Var
 		{
 			Stats = new VarStats

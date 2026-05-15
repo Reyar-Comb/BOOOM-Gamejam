@@ -153,16 +153,18 @@ public partial class VarManager : Node
         UpdateDynamicRegionStates();
         var.NotifyRegionEntryIfNeeded(Grid.WorldToGrid(var.Stats.Position));
 
-        if (var.Stats.VarTeam == VarStats.Team.Friendly)
-        {
-            var.Stats.AttackDamage = 10000;
-            var.Stats.MaxHealth = 10000;
-            var.Stats.CurrentHealth = 10000;
-            var.Stats.MoveSpeed = 800;
-            var.Stats.AttackFrameInterval = 0;
-        }
+        Cheat(var);
     }
+    private void Cheat(Var var)
+    {
+        if (var.Stats.VarTeam != VarStats.Team.Friendly) return;
 
+        var.Stats.AttackDamage = 10000;
+        var.Stats.MaxHealth = 10000;
+        var.Stats.CurrentHealth = 10000;
+        var.Stats.MoveSpeed = 800;
+        var.Stats.AttackFrameInterval = 0;
+    }
     public void ClearAllVars()
     {
         foreach (Var var in Vars)

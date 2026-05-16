@@ -19,6 +19,7 @@ BugDeathRippleDuration = 1.6
 BugDeathRippleRadius = 48.0
 BugDeathRippleRingWidth = 10.0
 BugDeathRippleOriginFlashPortion = 0.6
+RenderVarBody = false
 Zoom = 0.25
 VarTypeTextures = Dictionary[int, Texture2D]({
 0: ExtResource("1_ll8lk"),

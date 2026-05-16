@@ -104,6 +104,12 @@ texture = null
 visible = true
 texture = null
 
+[node name="ChoicePanel" parent="CanvasLayer/SubViewportContainer/SubViewport/GameScene/ChoicePanelLayer" parent_id_path=PackedInt32Array(1582491454, 686820624) index="0" unique_id=1654918493]
+modulate = Color(1, 1, 1, 0)
+
+[node name="DeletePanel" parent="CanvasLayer/SubViewportContainer/SubViewport/GameScene/ChoicePanelLayer" parent_id_path=PackedInt32Array(1582491454, 686820624) index="1" unique_id=54318289]
+modulate = Color(1, 1, 1, 0)
+
 [node name="ScanningLine" type="ColorRect" parent="CanvasLayer" unique_id=416830409]
 z_index = 10
 material = SubResource("ShaderMaterial_iyuwi")

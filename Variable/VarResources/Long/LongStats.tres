@@ -6,7 +6,7 @@
 
 [resource]
 script = ExtResource("1_6pg2y")
-MaxHealth = 100
+MaxHealth = 150
 AttackSpeedMult = 1.0
 AttackFrameInterval = 80
 MoveSpeed = 40.0

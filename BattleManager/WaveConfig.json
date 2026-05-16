@@ -1,9 +1,9 @@
 [
 	{
 		"wave": 1,
-		"commonSkillChance": 60,
-		"uncommonSkillChance": 30,
-		"rareSkillChance": 10,
+		"commonSkillChance": 100,
+		"uncommonSkillChance": 0,
+		"rareSkillChance": 0,
 		"enemyTypeProbabilities": {
 	  "Int": 0.20,
 	  "Float": 0.00,
@@ -19,9 +19,9 @@
   },
 	{
 		"wave": 2,
-		"commonSkillChance": 60,
-		"uncommonSkillChance": 30,
-		"rareSkillChance": 10,
+		"commonSkillChance": 100,
+		"uncommonSkillChance": 0,
+		"rareSkillChance": 0,
 		"enemyTypeProbabilities": {
 	  "Int": 0.25,
 	  "Float": 0.15,
@@ -37,9 +37,9 @@
   },
 	{
 		"wave": 3,
-		"commonSkillChance": 60,
+		"commonSkillChance": 70,
 		"uncommonSkillChance": 30,
-		"rareSkillChance": 10,
+		"rareSkillChance": 0,
 		"enemyTypeProbabilities": {
 	  "Int": 0.35,
 	  "Float": 0.15,
@@ -55,9 +55,9 @@
   },
 	{
 		"wave": 4,
-		"commonSkillChance": 60,
+		"commonSkillChance": 70,
 		"uncommonSkillChance": 30,
-		"rareSkillChance": 10,
+		"rareSkillChance": 0,
 		"enemyTypeProbabilities": {
 	  "Int": 0.40,
 	  "Float": 0.20,
@@ -74,8 +74,8 @@
 	{
 		"wave": 5,
 		"commonSkillChance": 60,
-		"uncommonSkillChance": 30,
-		"rareSkillChance": 10,
+		"uncommonSkillChance": 40,
+		"rareSkillChance": 0,
 		"enemyTypeProbabilities": {
 	  "Int": 0.50,
 	  "Float": 0.20,
@@ -91,9 +91,9 @@
   },
 	{
 		"wave": 6,
-		"commonSkillChance": 60,
-		"uncommonSkillChance": 30,
-		"rareSkillChance": 10,
+		"commonSkillChance": 0,
+		"uncommonSkillChance": 0,
+		"rareSkillChance": 100,
 		"enemyTypeProbabilities": {
 	  "Int": 0.50,
 	  "Float": 0.30,
@@ -127,9 +127,9 @@
   },
 	{
 		"wave": 8,
-		"commonSkillChance": 60,
+		"commonSkillChance": 50,
 		"uncommonSkillChance": 30,
-		"rareSkillChance": 10,
+		"rareSkillChance": 20,
 		"enemyTypeProbabilities": {
 	  "Int": 0.30,
 	  "Float": 0.20,
@@ -145,9 +145,9 @@
   },
 	{
 		"wave": 9,
-		"commonSkillChance": 60,
-		"uncommonSkillChance": 30,
-		"rareSkillChance": 10,
+		"commonSkillChance": 30,
+		"uncommonSkillChance": 40,
+		"rareSkillChance": 30,
 		"enemyTypeProbabilities": {
 	  "Int": 0.20,
 	  "Float": 0.20,
@@ -163,9 +163,9 @@
   },
 	{
 		"wave": 10,
-		"commonSkillChance": 60,
-		"uncommonSkillChance": 30,
-		"rareSkillChance": 10,
+		"commonSkillChance": 20,
+		"uncommonSkillChance": 50,
+		"rareSkillChance": 30,
 		"enemyTypeProbabilities": {
 	  "Int": 0.20,
 	  "Float": 0.20,
@@ -181,9 +181,9 @@
   },
 	{
 		"wave": 11,
-		"commonSkillChance": 60,
-		"uncommonSkillChance": 30,
-		"rareSkillChance": 10,
+		"commonSkillChance": 0,
+		"uncommonSkillChance": 0,
+		"rareSkillChance": 100,
 		"enemyTypeProbabilities": {
 	  "Int": 0.10,
 	  "Float": 0.20,
@@ -199,8 +199,8 @@
   },
 	{
 		"wave": 12,
-		"commonSkillChance": 60,
-		"uncommonSkillChance": 30,
+		"commonSkillChance": 50,
+		"uncommonSkillChance": 40,
 		"rareSkillChance": 10,
 		"enemyTypeProbabilities": {
 	  "Int": 0.10,
@@ -217,8 +217,8 @@
   },
 	{
 		"wave": 13,
-		"commonSkillChance": 60,
-		"uncommonSkillChance": 30,
+		"commonSkillChance": 50,
+		"uncommonSkillChance": 40,
 		"rareSkillChance": 10,
 		"enemyTypeProbabilities": {
 	  "Int": 0.10,
@@ -235,16 +235,16 @@
   },
 	{
 		"wave": 14,
-		"commonSkillChance": 60,
-		"uncommonSkillChance": 30,
+		"commonSkillChance": 50,
+		"uncommonSkillChance": 40,
 		"rareSkillChance": 10,
 		"enemyTypeProbabilities": {
 	  "Int": 0.10,
 	  "Float": 0.20,
-	  "Bool": 0.20,
+	  "Bool": 0.00,
 	  "Char": 0.00,
-	  "Long": 0.20,
-	  "Double": 0.20,
+	  "Long": 0.30,
+	  "Double": 0.30,
 	  "LongDouble": 0.20
 	},
 	"regionCount": 8,

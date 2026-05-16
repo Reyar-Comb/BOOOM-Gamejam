@@ -17,6 +17,42 @@ public partial class PPTScene : Control
 	/// <summary>是否可以循环翻页（最后一页翻到第一页）</summary>
 	[Export] public bool Loop { get; set; } = false;
 
+	// ========== Glitch 效果参数 ==========
+
+	[ExportGroup("Glitch 效果")]
+	[Export(PropertyHint.Range, "0,1")]
+	public float GlitchIntensity { get; set; } = 0.12f;
+
+	[Export(PropertyHint.Range, "0,0.02")]
+	public float GlitchRgbSplit { get; set; } = 0.005f;
+
+	[Export(PropertyHint.Range, "0,0.06")]
+	public float GlitchTearAmount { get; set; } = 0.014f;
+
+	[Export(PropertyHint.Range, "0.7,1")]
+	public float GlitchTearThreshold { get; set; } = 0.94f;
+
+	[Export(PropertyHint.Range, "0.001,0.04")]
+	public float GlitchTearWidth { get; set; } = 0.008f;
+
+	[Export(PropertyHint.Range, "0,0.04")]
+	public float GlitchBlockAmount { get; set; } = 0.007f;
+
+	[Export(PropertyHint.Range, "2,30")]
+	public float GlitchBlockSize { get; set; } = 12f;
+
+	[Export(PropertyHint.Range, "0.7,1")]
+	public float GlitchBlockThreshold { get; set; } = 0.95f;
+
+	[Export(PropertyHint.Range, "0.1,5")]
+	public float GlitchSpeed { get; set; } = 1f;
+
+	[Export(PropertyHint.Range, "1,60")]
+	public float GlitchNoiseScale { get; set; } = 25f;
+
+	[Export(PropertyHint.Range, "0,0.15")]
+	public float GlitchColorShift { get; set; } = 0.03f;
+
 	// ========== Signals ==========
 
 	/// <summary>用户请求退出 PPT 场景（按 Esc 或点击退出按钮时触发）</summary>
@@ -33,6 +69,7 @@ public partial class PPTScene : Control
 	private TextureRect _slideDisplay = null!;
 	private ColorRect _transitionOverlay = null!;
 	private ShaderMaterial _transitionMaterial = null!;
+	private ShaderMaterial _glitchMaterial = null!;
 	private Label _pageIndicator = null!;
 	private Label _hintLabel = null!;
 	private Control _uiLayer = null!;
@@ -50,7 +87,8 @@ public partial class PPTScene : Control
 	public override void _Ready()
 	{
 		SetupNodes();
-		SetupShader();
+		SetupTransitionShader();
+		SetupGlitchShader();
 
 		// 显示第一张幻灯片
 		if (Slides.Length > 0)
@@ -209,7 +247,7 @@ public partial class PPTScene : Control
 		_hintLabel = _uiLayer.GetNode<Label>("HintLabel");
 	}
 
-	private void SetupShader()
+	private void SetupTransitionShader()
 	{
 		_transitionMaterial = _transitionOverlay.Material as ShaderMaterial;
 		if (_transitionMaterial == null)
@@ -230,6 +268,41 @@ public partial class PPTScene : Control
 
 		// 初始化 shader 参数
 		_transitionMaterial.SetShaderParameter(ShaderProgress, 0.0f);
+	}
+
+	/// <summary>加载并应用 Glitch 覆盖 shader 到 SlideDisplay</summary>
+	private void SetupGlitchShader()
+	{
+		var shader = GD.Load<Shader>("res://Shaders/GlitchOverlay.gdshader");
+		if (shader == null)
+		{
+			GD.PushWarning("PPTScene: 找不到 GlitchOverlay.gdshader");
+			return;
+		}
+
+		_glitchMaterial = new ShaderMaterial();
+		_glitchMaterial.Shader = shader;
+		_slideDisplay.Material = _glitchMaterial;
+
+		ApplyGlitchParameters();
+	}
+
+	/// <summary>将 Inspector 中的 glitch 参数同步到 shader</summary>
+	public void ApplyGlitchParameters()
+	{
+		if (_glitchMaterial == null) return;
+
+		_glitchMaterial.SetShaderParameter("intensity", GlitchIntensity);
+		_glitchMaterial.SetShaderParameter("rgb_split", GlitchRgbSplit);
+		_glitchMaterial.SetShaderParameter("tear_amount", GlitchTearAmount);
+		_glitchMaterial.SetShaderParameter("tear_threshold", GlitchTearThreshold);
+		_glitchMaterial.SetShaderParameter("tear_width", GlitchTearWidth);
+		_glitchMaterial.SetShaderParameter("block_amount", GlitchBlockAmount);
+		_glitchMaterial.SetShaderParameter("block_size", GlitchBlockSize);
+		_glitchMaterial.SetShaderParameter("block_threshold", GlitchBlockThreshold);
+		_glitchMaterial.SetShaderParameter("speed", GlitchSpeed);
+		_glitchMaterial.SetShaderParameter("noise_scale", GlitchNoiseScale);
+		_glitchMaterial.SetShaderParameter("color_shift", GlitchColorShift);
 	}
 
 	/// <summary>立即显示某张幻灯片（无动画）</summary>

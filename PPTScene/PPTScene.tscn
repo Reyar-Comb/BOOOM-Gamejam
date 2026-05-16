@@ -16,6 +16,21 @@
 [ext_resource type="Texture2D" uid="uid://d134s6vu3pi2r" path="res://assets/Image/PPT/修Bug12.png" id="13_nqdq3"]
 [ext_resource type="Texture2D" uid="uid://bwwenqa7dxprc" path="res://assets/Image/PPT/Skill13.png" id="14_lnkli"]
 [ext_resource type="Texture2D" uid="uid://bridtbrunps11" path="res://assets/Image/StartMenu/Title.png" id="15_aqc0r"]
+[ext_resource type="Shader" uid="uid://dc37s3j7bdegm" path="res://Shaders/GlitchOverlay.gdshader" id="16_vflp6"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_c2tig"]
+shader = ExtResource("16_vflp6")
+shader_parameter/intensity = 0.12
+shader_parameter/rgb_split = 0.005
+shader_parameter/tear_amount = 0.014
+shader_parameter/tear_threshold = 0.94
+shader_parameter/tear_width = 0.008
+shader_parameter/block_amount = 0.007
+shader_parameter/block_size = 12.0
+shader_parameter/block_threshold = 0.95
+shader_parameter/speed = 1.0
+shader_parameter/noise_scale = 25.0
+shader_parameter/color_shift = 0.03
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_pageflip"]
 shader = ExtResource("2_shader")
@@ -33,6 +48,8 @@ size_flags_vertical = 3
 mouse_filter = 2
 script = ExtResource("1_bbxu2")
 Slides = [ExtResource("2_suxnw"), ExtResource("3_aqc0r"), ExtResource("4_vflp6"), ExtResource("5_c2tig"), ExtResource("6_q1x0j"), ExtResource("7_mobdj"), ExtResource("8_7fono"), ExtResource("9_2upwr"), ExtResource("10_h562t"), ExtResource("11_10art"), ExtResource("12_alg3i"), ExtResource("13_nqdq3"), ExtResource("14_lnkli")]
+GlitchIntensity = 0.19
+GlitchSpeed = 2.855
 
 [node name="TextureRect" type="TextureRect" parent="." unique_id=1556845460]
 visible = false
@@ -47,6 +64,7 @@ expand_mode = 5
 
 [node name="SlideDisplay" type="TextureRect" parent="." unique_id=952167001]
 modulate = Color(1, 1, 1, 0.7764706)
+material = SubResource("ShaderMaterial_c2tig")
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0

@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 public partial class StartMenu : Control
 {
     private const string GameScenePath = "res://Main/MainGame/MainGame.tscn";
+    private const string PPTScenePath = "res://PPTScene/PPTScene.tscn";
     private const float NormalScale = 1.0f;
     private const float HoverScale = 1.08f;
     private const float PressedScale = 0.96f;
@@ -117,7 +118,15 @@ public partial class StartMenu : Control
         TriggerBigRippleAtMouse();
         TweenPressedScale(StartButton);
         await DelaySeconds(0.35);
-        await SceneManager.Instance.ChangeSceneToFileAsync(GameScenePath);
+        if (!SceneManager.Instance.IsTutorialPlayed)
+        {
+            _ = AudioManager.Instance.FilterBGM(3);
+            await SceneManager.Instance.ChangeSceneToFileAsync(PPTScenePath);
+        }
+        else
+        {
+            await SceneManager.Instance.ChangeSceneToFileAsync(GameScenePath);
+        }
     }
 
     private void OnOptionPressed(InputEvent inputEvent = null)

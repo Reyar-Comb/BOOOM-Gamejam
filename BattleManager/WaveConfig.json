@@ -40,7 +40,7 @@
 	  "Double": 0.00,
 	  "LongDouble": 0.00
 	},
-	"regionCount": 8,
+	"regionCount": 9,
 	"enemyCount": 8,
 	"enemyBaseSpawnProbability": 0.4
   },
@@ -55,7 +55,7 @@
 	  "Double": 0.00,
 	  "LongDouble": 0.00
 	},
-	"regionCount": 8,
+	"regionCount": 9,
 	"enemyCount": 8,
 	"enemyBaseSpawnProbability": 0.4
   },
@@ -70,7 +70,7 @@
 	  "Double": 0.00,
 	  "LongDouble": 0.00
 	},
-	"regionCount": 7,
+	"regionCount": 8,
 	"enemyCount": 9,
 	"enemyBaseSpawnProbability": 0.4
   },
@@ -85,7 +85,7 @@
 	  "Double": 0.00,
 	  "LongDouble": 0.00
 	},
-	"regionCount": 6,
+	"regionCount": 8,
 	"enemyCount": 9,
 	"enemyBaseSpawnProbability": 0.4
   },
@@ -100,7 +100,7 @@
 	  "Double": 0.10,
 	  "LongDouble": 0.00
 	},
-	"regionCount": 6,
+	"regionCount": 8,
 	"enemyCount": 9,
 	"enemyBaseSpawnProbability": 0.4
   },
@@ -115,7 +115,7 @@
 	  "Double": 0.20,
 	  "LongDouble": 0.00
 	},
-	"regionCount": 5,
+	"regionCount": 8,
 	"enemyCount": 9,
 	"enemyBaseSpawnProbability": 0.4
   },
@@ -130,7 +130,7 @@
 	  "Double": 0.30,
 	  "LongDouble": 0.00
 	},
-	"regionCount": 5,
+	"regionCount": 8,
 	"enemyCount": 9,
 	"enemyBaseSpawnProbability": 0.4
   },
@@ -145,7 +145,7 @@
 	  "Double": 0.30,
 	  "LongDouble": 0.00
 	},
-	"regionCount": 5,
+	"regionCount": 8,
 	"enemyCount": 10,
 	"enemyBaseSpawnProbability": 0.4
   },
@@ -160,8 +160,8 @@
 	  "Double": 0.30,
 	  "LongDouble": 0.00
 	},
-	"regionCount": 5,
-	"enemyCount": 10,
+	"regionCount": 8,
+	"enemyCount": 11,
 	"enemyBaseSpawnProbability": 0.4
   },
   {
@@ -175,8 +175,8 @@
 	  "Double": 0.30,
 	  "LongDouble": 0.00
 	},
-	"regionCount": 5,
-	"enemyCount": 10,
+	"regionCount": 8,
+	"enemyCount": 11,
 	"enemyBaseSpawnProbability": 0.4
   },
   {
@@ -190,7 +190,7 @@
 	  "Double": 0.30,
 	  "LongDouble": 0.10
 	},
-	"regionCount": 5,
+	"regionCount": 8,
 	"enemyCount": 10,
 	"enemyBaseSpawnProbability": 0.4
   },
@@ -205,8 +205,8 @@
 	  "Double": 0.20,
 	  "LongDouble": 0.20
 	},
-	"regionCount": 5,
-	"enemyCount": 9,
+	"regionCount": 8,
+	"enemyCount": 10,
 	"enemyBaseSpawnProbability": 0.4
   },
   {
@@ -216,11 +216,11 @@
 	  "Float": 0.00,
 	  "Bool": 0.20,
 	  "Char": 0.00,
-	  "Long": 0.30,
+	  "Long": 0.20,
 	  "Double": 0.20,
-	  "LongDouble": 0.30
+	  "LongDouble": 0.40
 	},
-	"regionCount": 5,
+	"regionCount": 8,
 	"enemyCount": 9,
 	"enemyBaseSpawnProbability": 0.4
   }

@@ -6,8 +6,8 @@
 [resource]
 script = ExtResource("1")
 Name = "安全性提升"
-Description = "创建变量时，该变量防御力 +2。"
+Description = "创建变量时，该变量防御力 +1。"
 Icon = ExtResource("1_g73q2")
 Values = Dictionary[String, int]({
-"DefenseBonus": 2
+"DefenseBonus": 1
 })

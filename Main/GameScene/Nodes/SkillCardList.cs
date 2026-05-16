@@ -9,7 +9,13 @@ public partial class SkillCardList : VBoxContainer
 	public SkillManager SkillManager;
 	public override void _Ready()
 	{
-
+		foreach (var SkillCardIcon in SkillCardIcons)
+		{
+			SkillCardIcon.MouseEntered += () =>
+			{
+				AudioManager.Instance.PlaySFX("hover");
+			};
+		}
 	}
 
 

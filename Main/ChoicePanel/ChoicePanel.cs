@@ -453,6 +453,7 @@ public partial class ChoicePanel : Control
 			return;
 		}
 		GD.Print("Mouse entered card: " + card.Name);
+		AudioManager.Instance.PlaySFX("hover");
 		TweenCardScale(card, Vector2.One * CardHoverScale, CardHoverDuration);
 	}
 
@@ -514,6 +515,7 @@ public partial class ChoicePanel : Control
 			return;
 		}
 		GD.Print("Choice card clicked: " + _currentChoices[choiceIndex].Name);
+		AudioManager.Instance.PlaySFX("select_skill");
 		_choiceSelected = true;
 		await PlayCardSelectedAsync(card);
 		_choiceCompletionSource.SetResult(_currentChoices[choiceIndex]);

@@ -1,9 +1,25 @@
 [gd_scene format=3 uid="uid://cfq5i8kq1603k"]
 
 [ext_resource type="Script" uid="uid://b7ng8srxy7447" path="res://AudioManager/AudioManager.cs" id="1_hs254"]
-[ext_resource type="AudioStream" uid="uid://dkjwe7gctfx0d" path="res://assets/Audios/NullPointer.mp3" id="2_cic6f"]
+[ext_resource type="AudioStream" uid="uid://bafw3r763hu23" path="res://assets/Audios/hover.wav" id="2_cic6f"]
+[ext_resource type="AudioStream" uid="uid://dlsjjide8nu5j" path="res://assets/Audios/NullPointer.ogg" id="2_hs254"]
+[ext_resource type="AudioStream" uid="uid://db0h6ynjpy7x5" path="res://assets/Audios/wave_complete.wav" id="3_mvoev"]
+[ext_resource type="AudioStream" uid="uid://bvmsmi1n0eyng" path="res://assets/Audios/click_map.wav" id="4_4jfua"]
+[ext_resource type="AudioStream" uid="uid://rllp80jp7rfl" path="res://assets/Audios/click_button.wav" id="5_jcm40"]
+[ext_resource type="AudioStream" uid="uid://cw5t2mapyamay" path="res://assets/Audios/select_skill.wav" id="6_8vdif"]
+[ext_resource type="AudioStream" uid="uid://khgbut55nyss" path="res://assets/Audios/create_var.wav" id="7_8o4uj"]
+[ext_resource type="AudioStream" uid="uid://d24fwjkpw0thk" path="res://assets/Audios/log.wav" id="8_ho36g"]
 
 [node name="AudioManager" type="Node" unique_id=594414381]
 script = ExtResource("1_hs254")
-BGM = ExtResource("2_cic6f")
+SFXStreams = Dictionary[String, AudioStream]({
+"click_button": ExtResource("5_jcm40"),
+"click_map": ExtResource("4_4jfua"),
+"create_var": ExtResource("7_8o4uj"),
+"hover": ExtResource("2_cic6f"),
+"log": ExtResource("8_ho36g"),
+"select_skill": ExtResource("6_8vdif"),
+"wave_complete": ExtResource("3_mvoev")
+})
+BGM = ExtResource("2_hs254")
 BGMFilterFrequency = 700.0

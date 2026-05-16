@@ -460,6 +460,7 @@ public partial class DeletePanel : Control
 		{
 			return;
 		}
+		AudioManager.Instance.PlaySFX("hover");
 		GD.Print("Mouse entered card: " + card.Name);
 		TweenCardScale(card, Vector2.One * CardHoverScale, CardHoverDuration);
 	}
@@ -522,6 +523,7 @@ public partial class DeletePanel : Control
 			return;
 		}
 		GD.Print("Skill card clicked for deletion: " + _currentSkills[skillIndex].Name);
+		AudioManager.Instance.PlaySFX("select_skill");
 		_skillSelected = true;
 		await PlayCardSelectedAsync(card);
 		_skillCompletionSource.SetResult(_currentSkills[skillIndex]);

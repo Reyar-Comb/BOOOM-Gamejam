@@ -54,6 +54,7 @@ internal sealed partial class VarRippleRenderer : Control
             Color = _config.ClickRippleColor,
             OutlineColor = _config.ClickRippleOutlineColor,
         });
+        AudioManager.Instance.PlaySFX("click_map");
         QueueRedraw();
     }
 
@@ -75,6 +76,7 @@ internal sealed partial class VarRippleRenderer : Control
             Color = _config.BugDeathRippleColor,
             OutlineColor = _config.BugDeathRippleOutlineColor,
         });
+        AudioManager.Instance.PlaySFX("click_map");
         QueueRedraw();
     }
 
@@ -97,6 +99,7 @@ internal sealed partial class VarRippleRenderer : Control
             Color = color,
             OutlineColor = outlineColor,
         });
+        AudioManager.Instance.PlaySFX("click_map");
         QueueRedraw();
     }
 

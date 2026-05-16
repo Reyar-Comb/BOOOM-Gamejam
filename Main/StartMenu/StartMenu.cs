@@ -36,6 +36,10 @@ public partial class StartMenu : Control
         OptionButton.GuiInput += OnOptionPressed;
         QuitButton.GuiInput += OnQuitPressed;
 
+        StartButton.MouseEntered += () => AudioManager.Instance.PlaySFX("hover");
+        OptionButton.MouseEntered += () => AudioManager.Instance.PlaySFX("hover");
+        QuitButton.MouseEntered += () => AudioManager.Instance.PlaySFX("hover");
+
         await FrameDelay();
         BindHoverFeedback(StartButton);
         BindHoverFeedback(OptionButton);
@@ -94,6 +98,7 @@ public partial class StartMenu : Control
         }
 
         _isStarting = true;
+        AudioManager.Instance.PlaySFX("click_button");
         TriggerBigRippleAtMouse();
         TweenPressedScale(StartButton);
         await DelaySeconds(0.35);
@@ -111,6 +116,7 @@ public partial class StartMenu : Control
         {
             return;
         }
+        AudioManager.Instance.PlaySFX("click_button");
         TriggerClickRippleAtMouse();
         TweenPressedScale(OptionButton);
         OptionMenu.Open();
@@ -126,6 +132,7 @@ public partial class StartMenu : Control
         {
             return;
         }
+        AudioManager.Instance.PlaySFX("click_button");
         TriggerClickRippleAtMouse();
         TweenPressedScale(QuitButton);
         GetTree().Quit();

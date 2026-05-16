@@ -200,6 +200,7 @@ public partial class BattleManager : Node
 		State = BattleState.BeforeWaveEnd;
 		CompletedWaveCount = Math.Max(CompletedWaveCount, CurrentWave);
 		_ = AudioManager.Instance.FilterBGM();
+		AudioManager.Instance.PlaySFX("wave_complete");
 		await FinishWave();
 
 		if (CurrentWave >= VictoryWave)
@@ -229,6 +230,7 @@ public partial class BattleManager : Node
 
 	public void EndBattle(TokenManager.EndReason reason)
 	{
+		_ =AudioManager.Instance.FilterBGM(1f);
 		if (State == BattleState.End)
 		{
 			return;
@@ -249,7 +251,7 @@ public partial class BattleManager : Node
 		if (State == BattleState.Running)
 		{
 			State = BattleState.Paused;
-			_ = AudioManager.Instance.FilterBGM();
+			_ = AudioManager.Instance.FilterBGM(0.1f);
 		}
 		else if (State == BattleState.Paused)
 		{

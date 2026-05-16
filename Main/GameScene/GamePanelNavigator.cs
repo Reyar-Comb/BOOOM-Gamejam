@@ -86,6 +86,7 @@ public partial class GamePanelNavigator : PanelNavigator
 		AskForButton.MouseEntered += () =>
 		{
 			BattleManager.Instance.ExchangeToken(isHovering: true);
+			AudioManager.Instance.PlaySFX("hover");
 		};
 		AskForButton.MouseExited += () =>
 		{
@@ -94,6 +95,7 @@ public partial class GamePanelNavigator : PanelNavigator
 		AskForButton.Pressed += () =>
 		{
 			BattleManager.Instance.ExchangeToken();
+			AudioManager.Instance.PlaySFX("create_var");
 		};
 		
 		var placeBtn = FindInPanel<VarButton>("VarAddUnit", "VBoxContainer/PanelContainer/PlaceButton");
@@ -112,6 +114,7 @@ public partial class GamePanelNavigator : PanelNavigator
 					BattleManager.Instance.ConsoleManager?.AddLog(new CreateBlockedError(LastClickedGrid));
 					return;
 				}
+				AudioManager.Instance.PlaySFX("create_var");
 				BattleManager.Instance.RegisterVar(CurrentVarType.Value, LastClickedGrid);
 				GoToRoot();
 			},

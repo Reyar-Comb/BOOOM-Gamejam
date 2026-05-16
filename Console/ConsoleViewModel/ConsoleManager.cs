@@ -42,6 +42,7 @@ public partial class ConsoleManager : Node
 		Logs.Add(log);
 		// GD.Print($"Added log: {log.ToString()}");
 		LogCreated?.Invoke(log);
+		AudioManager.Instance.PlaySFX("log");
 		EmitSignal(SignalName.LogAdded, log.ToString());
 	}
 

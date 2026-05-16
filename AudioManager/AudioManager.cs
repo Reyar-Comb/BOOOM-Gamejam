@@ -44,6 +44,9 @@ public partial class AudioManager : Node
 			SFXPlayers.Add(sfxPlayer);
 		}
 
+		
+
+
 		PlayBGM();
 	}
 
@@ -75,20 +78,20 @@ public partial class AudioManager : Node
 		}
 	}
 
-	public async Task FilterBGM()
+	public async Task FilterBGM(float time = 1f)
 	{
 		Tween tween = CreateTween();
 		AudioServer.SetBusBypassEffects(AudioServer.GetBusIndex("BGM"), false);
 		AudioEffectLowPassFilter audioEffectLowPassFilter = AudioServer.GetBusEffect(AudioServer.GetBusIndex("BGM"), 0) as AudioEffectLowPassFilter;
-		tween.TweenProperty(audioEffectLowPassFilter, "cutoff_hz", BGMFilterFrequency, BGMFilterTime).SetTrans(Tween.TransitionType.Sine).SetEase(Tween.EaseType.InOut);
+		tween.TweenProperty(audioEffectLowPassFilter, "cutoff_hz", BGMFilterFrequency, time).SetTrans(Tween.TransitionType.Sine).SetEase(Tween.EaseType.InOut);
 		await ToSignal(tween, Tween.SignalName.Finished);
 	}
 
-	public async Task UnfilterBGM()
+	public async Task UnfilterBGM(float time = 1f)
 	{
 		Tween tween = CreateTween();
 		AudioEffectLowPassFilter audioEffectLowPassFilter = AudioServer.GetBusEffect(AudioServer.GetBusIndex("BGM"), 0) as AudioEffectLowPassFilter;
-		tween.TweenProperty(audioEffectLowPassFilter, "cutoff_hz", 22000f, BGMFilterTime).SetTrans(Tween.TransitionType.Sine).SetEase(Tween.EaseType.InOut);
+		tween.TweenProperty(audioEffectLowPassFilter, "cutoff_hz", 22000f, time).SetTrans(Tween.TransitionType.Sine).SetEase(Tween.EaseType.InOut);
 		await ToSignal(tween, Tween.SignalName.Finished);
 		AudioServer.SetBusBypassEffects(AudioServer.GetBusIndex("BGM"), true);
 	}

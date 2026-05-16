@@ -144,6 +144,7 @@ public partial class EndMenu : Control
 		RestartButton.MouseEntered += () =>
 		{
 			_isHovered = true;
+			AudioManager.Instance.PlaySFX("hover");
 			TweenButtonScale(HoverScale);
 		};
 		RestartButton.MouseExited += () =>
@@ -159,6 +160,8 @@ public partial class EndMenu : Control
 			{
 				return;
 			}
+			AudioManager.Instance.PlaySFX("click_button");
+			_ = AudioManager.Instance.UnfilterBGM(3);
 			_ = SceneManager.Instance.ChangeSceneToFileAsync(StartMenuPath);
 			TweenPressedScale();
 		};

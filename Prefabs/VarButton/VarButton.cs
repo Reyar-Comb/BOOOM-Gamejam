@@ -50,8 +50,9 @@ public partial class VarButton : Control
 
 		// Hover 回调
 		button.MouseEntered += () => OnHoverEnter?.Invoke();
+		button.MouseEntered += () => AudioManager.Instance.PlaySFX("hover");
 		button.MouseExited  += () => OnHoverLeave?.Invoke();
-
+		button.Pressed += () => AudioManager.Instance.PlaySFX("click_button");
 		this.SizeFlagsVertical = (int)SizeFlags.ShrinkBegin;
 	}
 

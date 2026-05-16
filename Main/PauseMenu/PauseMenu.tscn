@@ -1,5 +1,20 @@
 [gd_scene format=3 uid="uid://drrfoflcm125e"]
 
+[ext_resource type="Script" uid="uid://c5uge0kg5bl6n" path="res://Main/PauseMenu/PauseMenu.cs" id="1_6yo3g"]
+[ext_resource type="Texture2D" uid="uid://blandjxb85p4m" path="res://assets/Image/PauseMenu/PauseContinue.svg" id="2_6yo3g"]
+[ext_resource type="Shader" uid="uid://ql424av8n4oq" path="res://Shaders/Blur2.gdshader" id="2_7sc3c"]
+[ext_resource type="Texture2D" uid="uid://eyntm5w32ta7" path="res://assets/Image/PauseMenu/PauseOption.svg" id="3_6yo3g"]
+[ext_resource type="StyleBox" uid="uid://dyx8a0o3afs0h" path="res://Main/PauseMenu/PauseMenuButtonStyleBox.tres" id="3_dv6h3"]
+[ext_resource type="Texture2D" uid="uid://bssvc03hswriu" path="res://assets/Image/PauseMenu/PauseQuit.svg" id="4_6yo3g"]
+[ext_resource type="PackedScene" path="res://Main/OptionMenu/OptionMenu.tscn" id="5_option"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_dv6h3"]
+shader = ExtResource("2_7sc3c")
+shader_parameter/blur_type = 0
+shader_parameter/blur_amount = 12
+shader_parameter/blur_radius = 1.0
+shader_parameter/blur_direction = Vector2(1, 1)
+
 [node name="PauseMenu" type="Control" unique_id=1882377035]
 layout_mode = 3
 anchors_preset = 15
@@ -7,3 +22,98 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+script = ExtResource("1_6yo3g")
+
+[node name="GaussianBlurLayer" type="ColorRect" parent="." unique_id=776985033]
+material = SubResource("ShaderMaterial_dv6h3")
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="DimLayer" type="ColorRect" parent="." unique_id=1737494989]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0, 0, 0, 0.42)
+
+[node name="CenterContainer" type="CenterContainer" parent="." unique_id=626402011]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CenterContainer" unique_id=1288729958]
+layout_mode = 2
+theme_override_constants/separation = 89
+alignment = 1
+
+[node name="ContinuePanel" type="PanelContainer" parent="CenterContainer/VBoxContainer" unique_id=2058250888]
+custom_minimum_size = Vector2(180, 180)
+layout_mode = 2
+size_flags_vertical = 3
+mouse_default_cursor_shape = 2
+theme_override_styles/panel = ExtResource("3_dv6h3")
+
+[node name="ContinueButton" type="TextureRect" parent="CenterContainer/VBoxContainer/ContinuePanel" unique_id=1816747245]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(140, 140)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+mouse_filter = 2
+mouse_default_cursor_shape = 2
+texture = ExtResource("2_6yo3g")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="OptionPanel" type="PanelContainer" parent="CenterContainer/VBoxContainer" unique_id=75205146]
+custom_minimum_size = Vector2(180, 180)
+layout_mode = 2
+size_flags_vertical = 3
+mouse_default_cursor_shape = 2
+theme_override_styles/panel = ExtResource("3_dv6h3")
+
+[node name="OptionButton" type="TextureRect" parent="CenterContainer/VBoxContainer/OptionPanel" unique_id=1757109331]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(140, 140)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+mouse_filter = 2
+mouse_default_cursor_shape = 2
+texture = ExtResource("3_6yo3g")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="QuitPanel" type="PanelContainer" parent="CenterContainer/VBoxContainer" unique_id=1818756360]
+custom_minimum_size = Vector2(180, 180)
+layout_mode = 2
+size_flags_vertical = 3
+mouse_default_cursor_shape = 2
+theme_override_styles/panel = ExtResource("3_dv6h3")
+
+[node name="QuitButton" type="TextureRect" parent="CenterContainer/VBoxContainer/QuitPanel" unique_id=1390654227]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(140, 140)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+mouse_filter = 2
+mouse_default_cursor_shape = 2
+texture = ExtResource("4_6yo3g")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="OptionMenu" parent="." instance=ExtResource("5_option")]
+visible = false
+layout_mode = 1

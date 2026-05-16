@@ -1,6 +1,9 @@
 extends SubViewportContainer
 
 func _process(_delta):
+	if material == null:
+		return
+
 	# 获取鼠标在当前节点内的局部坐标 (像素)
 	var m_pos = get_local_mouse_position()
 	# 获取节点的尺寸

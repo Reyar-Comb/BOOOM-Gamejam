@@ -3,16 +3,21 @@ using System;
 
 public partial class TokenManager : Node
 {
+	public enum EndReason
+	{
+		Token,
+		Patience,
+		Victory
+	}
 	private GameData _gameData = null!;
 	[Export] public BarController BarController { get; private set; } = null!;
-
 	public void ApplyTokenCost(TokenOperationInfo info)
 	{
 		ApplyTokenOperationModifiers(info);
 		int cost = info.TokenCost;
 		if (_gameData.NumericData.Get("Token") <= cost)
 		{
-			BattleManager.Instance.OnDie();
+			BattleManager.Instance.EndBattle(EndReason.Token);
 			return;
 		}
 		int rest = _gameData.NumericData.Get("Token") - cost;
@@ -98,7 +103,7 @@ public partial class TokenManager : Node
 		int patience = _gameData.NumericData.Get("Patience");
 		if (patience <= 0)
 		{
-			BattleManager.Instance.OnDie();
+			BattleManager.Instance.EndBattle(EndReason.Patience);
 		}
 		patience -= (int)(delta * _gameData.NumericData.Get("PatienceDecayRate"));
 		_gameData.NumericData.Set("Patience", patience);
@@ -124,7 +129,7 @@ public partial class TokenManager : Node
 		int patienceEx = Math.Max(0, _gameData.NumericData.Get("PatienceExchangeAmount") - _gameData.NumericData.Get("TokenRequestPatienceCostReduction"));
 		if (patience - patienceEx <= 0)
 		{
-			BattleManager.Instance.OnDie();
+			BattleManager.Instance.EndBattle(EndReason.Patience);
 			return;
 		}
 		_gameData.NumericData.Set("Token", Math.Min(token + tokenEx, _gameData.NumericData.Get("MaxToken")));

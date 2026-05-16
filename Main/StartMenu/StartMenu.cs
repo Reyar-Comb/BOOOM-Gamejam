@@ -15,6 +15,7 @@ public partial class StartMenu : Control
     private TextureRect StartButton => field ??= GetNode<TextureRect>("%Start");
     private TextureRect OptionButton => field ??= GetNode<TextureRect>("%Option");
     private TextureRect QuitButton => field ??= GetNode<TextureRect>("%Quit");
+    private OptionMenu OptionMenu => field ??= GetNode<OptionMenu>("OptionMenu");
     private Dictionary<TextureRect, bool> _isHovered = new();
     private Dictionary<TextureRect, Tween> _buttonTweens = new();
     private bool _isStarting;
@@ -44,6 +45,7 @@ public partial class StartMenu : Control
     private void BindHoverFeedback(TextureRect button)
     {
         _buttonTweens[button] = null;
+        _isHovered[button] = false;
         button.PivotOffset = button.Size / 2;
         button.MouseEntered += () =>
         {
@@ -111,6 +113,7 @@ public partial class StartMenu : Control
         }
         TriggerClickRippleAtMouse();
         TweenPressedScale(OptionButton);
+        OptionMenu.Open();
     }
     private void OnQuitPressed(InputEvent inputEvent = null)
     {

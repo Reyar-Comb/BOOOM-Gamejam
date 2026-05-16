@@ -3,9 +3,11 @@
 [ext_resource type="Shader" uid="uid://cmtfcbu6k5nsn" path="res://Shaders/CardScene.gdshader" id="1_byatl"]
 [ext_resource type="PackedScene" uid="uid://d0xq4j2ohsk2q" path="res://Main/GameScene/GameScene.tscn" id="1_k72b0"]
 [ext_resource type="Script" uid="uid://dxmg6qq286ydp" path="res://Main/MainGame/SubView/sub_viewport_container.gd" id="2_i30qx"]
+[ext_resource type="Script" uid="uid://b7xnvrep5jklh" path="res://Main/MainGame/MainGame.cs" id="2_r6g4v"]
 [ext_resource type="Shader" uid="uid://0nm2jqery7f5" path="res://Shaders/ScanningLine.gdshader" id="4_i30qx"]
 [ext_resource type="Shader" uid="uid://bnphvjwxdwlee" path="res://Shaders/AlertBorder.gdshader" id="5_57a1t"]
 [ext_resource type="Script" uid="uid://dciy3eckmbbh3" path="res://Main/AlertBorder/AlertBorder.cs" id="5_iyuwi"]
+[ext_resource type="PackedScene" uid="uid://cmtfsuk02ce2g" path="res://Main/EndMenu/EndMenu.tscn" id="8_endmenu"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_byatl"]
 shader = ExtResource("1_byatl")
@@ -38,8 +40,33 @@ shader_parameter/glow_color = Color(1, 0.15, 0.1, 1)
 shader_parameter/corner_radius = 0.02
 
 [node name="MainGame" type="Node2D" unique_id=67133812]
+script = ExtResource("2_r6g4v")
 
 [node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=1860306869]
+
+[node name="EndMenuRoot" type="Control" parent="CanvasLayer" unique_id=1491975620]
+visible = false
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="EndMenu" parent="CanvasLayer/EndMenuRoot" instance=ExtResource("8_endmenu")]
+visible = false
+layout_mode = 1
+
+[node name="GameOverSnapshot" type="TextureRect" parent="CanvasLayer" unique_id=1675272134]
+visible = false
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+expand_mode = 1
+stretch_mode = 5
 
 [node name="SubViewportContainer" type="SubViewportContainer" parent="CanvasLayer" unique_id=2120081323]
 material = SubResource("ShaderMaterial_byatl")

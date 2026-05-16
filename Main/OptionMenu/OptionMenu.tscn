@@ -1,0 +1,157 @@
+[gd_scene format=3 uid="uid://cjh53k7g0eboy"]
+
+[ext_resource type="Script" uid="uid://eyc1qkeqxfh3" path="res://Main/OptionMenu/OptionMenu.cs" id="1_option"]
+[ext_resource type="PackedScene" uid="uid://dhd46rm8iamsn" path="res://Prefabs/WindowPanel/WindowPanel.tscn" id="2_window"]
+[ext_resource type="FontFile" uid="uid://cbst7pqnmxosu" path="res://assets/Fonts/Hack-Regular.ttf" id="4_regular"]
+[ext_resource type="Texture2D" uid="uid://baaeisabixm4f" path="res://Main/OptionMenu/SliderGrabber.svg" id="5_grabber"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_slider"]
+content_margin_top = 8.0
+content_margin_bottom = 8.0
+bg_color = Color(0.08, 0.085, 0.11, 0.9)
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_grabber_area"]
+content_margin_top = 8.0
+content_margin_bottom = 8.0
+bg_color = Color(0.22000003, 1, 0.3110001, 1)
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
+
+[node name="OptionMenu" type="Control" unique_id=1626335586]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_option")
+
+[node name="DimLayer" type="ColorRect" parent="." unique_id=265161853]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0, 0, 0, 0.42)
+
+[node name="CenterContainer" type="CenterContainer" parent="." unique_id=1978499326]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="WindowPanel" parent="CenterContainer" unique_id=1358247214 instance=ExtResource("2_window")]
+custom_minimum_size = Vector2(720, 320)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+mouse_filter = 2
+
+[node name="Panel" parent="CenterContainer/WindowPanel" index="0" unique_id=517038730]
+mouse_filter = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="CenterContainer/WindowPanel" unique_id=186105000]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/margin_left = 58
+theme_override_constants/margin_top = 52
+theme_override_constants/margin_right = 58
+theme_override_constants/margin_bottom = 52
+
+[node name="Rows" type="VBoxContainer" parent="CenterContainer/WindowPanel/MarginContainer" unique_id=1681727516]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 38
+
+[node name="BgmRow" type="HBoxContainer" parent="CenterContainer/WindowPanel/MarginContainer/Rows" unique_id=1245519243]
+custom_minimum_size = Vector2(0, 80)
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 24
+alignment = 1
+
+[node name="BgmLabel" type="Label" parent="CenterContainer/WindowPanel/MarginContainer/Rows/BgmRow" unique_id=674769877]
+custom_minimum_size = Vector2(190, 0)
+layout_mode = 2
+theme_override_fonts/font = ExtResource("4_regular")
+theme_override_font_sizes/font_size = 34
+text = "BGM音量"
+vertical_alignment = 1
+
+[node name="BgmSlider" type="HSlider" parent="CenterContainer/WindowPanel/MarginContainer/Rows/BgmRow" unique_id=1957422826]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(340, 44)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+theme_override_constants/center_grabber = 1
+theme_override_icons/grabber = ExtResource("5_grabber")
+theme_override_icons/grabber_highlight = ExtResource("5_grabber")
+theme_override_styles/slider = SubResource("StyleBoxFlat_slider")
+theme_override_styles/grabber_area = SubResource("StyleBoxFlat_grabber_area")
+theme_override_styles/grabber_area_highlight = SubResource("StyleBoxFlat_grabber_area")
+value = 100.0
+rounded = true
+
+[node name="BgmValueLabel" type="Label" parent="CenterContainer/WindowPanel/MarginContainer/Rows/BgmRow" unique_id=2065423178]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(72, 0)
+layout_mode = 2
+theme_override_fonts/font = ExtResource("4_regular")
+theme_override_font_sizes/font_size = 34
+text = "100"
+horizontal_alignment = 2
+vertical_alignment = 1
+
+[node name="SfxRow" type="HBoxContainer" parent="CenterContainer/WindowPanel/MarginContainer/Rows" unique_id=1245483227]
+custom_minimum_size = Vector2(0, 80)
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 24
+alignment = 1
+
+[node name="SfxLabel" type="Label" parent="CenterContainer/WindowPanel/MarginContainer/Rows/SfxRow" unique_id=1923943796]
+custom_minimum_size = Vector2(190, 0)
+layout_mode = 2
+theme_override_fonts/font = ExtResource("4_regular")
+theme_override_font_sizes/font_size = 34
+text = "音效音量"
+vertical_alignment = 1
+
+[node name="SfxSlider" type="HSlider" parent="CenterContainer/WindowPanel/MarginContainer/Rows/SfxRow" unique_id=799119387]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(340, 44)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+theme_override_constants/center_grabber = 1
+theme_override_icons/grabber = ExtResource("5_grabber")
+theme_override_icons/grabber_highlight = ExtResource("5_grabber")
+theme_override_styles/slider = SubResource("StyleBoxFlat_slider")
+theme_override_styles/grabber_area = SubResource("StyleBoxFlat_grabber_area")
+theme_override_styles/grabber_area_highlight = SubResource("StyleBoxFlat_grabber_area")
+value = 100.0
+rounded = true
+
+[node name="SfxValueLabel" type="Label" parent="CenterContainer/WindowPanel/MarginContainer/Rows/SfxRow" unique_id=629374902]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(72, 0)
+layout_mode = 2
+theme_override_fonts/font = ExtResource("4_regular")
+theme_override_font_sizes/font_size = 34
+text = "100"
+horizontal_alignment = 2
+vertical_alignment = 1
+
+[editable path="CenterContainer/WindowPanel"]

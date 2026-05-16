@@ -30,6 +30,11 @@ public enum BattleState
 public partial class BattleManager : Node
 {
 	private const int VarUnlockChoiceWaveLimit = 5;
+	private const int VictoryWave = 15;
+
+	[Signal] public delegate void GameOverEventHandler();
+
+	public event Action<BattleState> StateChanged;
 
 	public static BattleManager Instance { get; private set; } = null!;
 	[Export] public int TickRate = 20;
@@ -62,7 +67,30 @@ public partial class BattleManager : Node
 
 	public int CurrentWave { get; private set; } = 0;
 
-	public BattleState State { get; private set; } = BattleState.Running;
+	public int CompletedWaveCount { get; private set; } = 0;
+
+	public int CreatedFriendlyVarCount { get; private set; } = 0;
+
+	public int RepairedEnemyCount { get; private set; } = 0;
+
+	private BattleState _state = BattleState.Running;
+
+	public BattleState State
+	{
+		get => _state;
+		private set
+		{
+			if (_state == value)
+			{
+				return;
+			}
+
+			_state = value;
+			StateChanged?.Invoke(_state);
+		}
+	}
+
+	public bool CanOpenPauseMenu => State != BattleState.BeforeWaveEnd && State != BattleState.Choice;
 
 	public double TickInterval => 1.0 / TickRate;
 
@@ -90,6 +118,7 @@ public partial class BattleManager : Node
 
 	private WaveConfigProvider _waveConfigProvider = new();
 
+	private TokenManager.EndReason _pendingEndReason = TokenManager.EndReason.Token;
 	private VarStats.VarType[] _spawnableTypes = [
 		VarStats.VarType.Int,
 		VarStats.VarType.Float,
@@ -169,8 +198,15 @@ public partial class BattleManager : Node
 		_isWaveTransitioning = true;
 		_accumulator = 0.0;
 		State = BattleState.BeforeWaveEnd;
+		CompletedWaveCount = Math.Max(CompletedWaveCount, CurrentWave);
 		_ = AudioManager.Instance.FilterBGM();
 		await FinishWave();
+
+		if (CurrentWave >= VictoryWave)
+		{
+			EndBattle(TokenManager.EndReason.Victory);
+			return;
+		}
 		State = BattleState.Choice;
 		await ChooseUpgrades();
 
@@ -191,21 +227,34 @@ public partial class BattleManager : Node
 		await ToSignal(GetTree().CreateTimer(seconds), SceneTreeTimer.SignalName.Timeout);
 	}
 
-	public void OnDie()
+	public void EndBattle(TokenManager.EndReason reason)
 	{
+		if (State == BattleState.End)
+		{
+			return;
+		}
 		State = BattleState.End;
+		_pendingEndReason = reason;
+		EmitSignal(SignalName.GameOver);
 		GD.Print("Game Over!");
 	}
 
 	public void TogglePause()
 	{
+		if (!CanOpenPauseMenu)
+		{
+			return;
+		}
+
 		if (State == BattleState.Running)
 		{
 			State = BattleState.Paused;
+			_ = AudioManager.Instance.FilterBGM();
 		}
 		else if (State == BattleState.Paused)
 		{
 			State = BattleState.Running;
+			_ = AudioManager.Instance.UnfilterBGM();
 		}
 	}
 
@@ -213,6 +262,17 @@ public partial class BattleManager : Node
 	{
 		TimeSpan timeSpan = TimeSpan.FromMilliseconds(GameTime);
 		return timeSpan.ToString(@"mm\:ss");
+	}
+
+	public void ApplyStatsToEndMenu(EndMenu endMenu)
+	{
+		if (endMenu == null)
+		{
+			return;
+		}
+
+		endMenu.SetBattleStats(this);
+		endMenu.StartSettlementDisplay(_pendingEndReason);
 	}
 
 	private void OnLogCreated(Log log)
@@ -229,7 +289,7 @@ public partial class BattleManager : Node
 		if (log is LocationAck || log is MoveCompletedAck)
 		{
 			VarRenderer.AddOrUpdatePiece(actor, actor.Stats.Position);
-		} 
+		}
 		else if (log is DetectedWarning || log is AttackedWarning || log is CreateAck)
 		{
 			VarRenderer.AddOrUpdatePiece(objective, objective.Stats.Position);
@@ -417,6 +477,14 @@ public partial class BattleManager : Node
 		}
 
 		VarManager.AddVar(var, team == VarStats.Team.Friendly);
+		if (team == VarStats.Team.Friendly)
+		{
+			CreatedFriendlyVarCount++;
+		}
+		else if (team == VarStats.Team.Hostile)
+		{
+			var.Stats.OnDeath += () => OnHostileVarDie(var);
+		}
 
 		Color color = GetRenderColor(type, team);
 		VarRenderer.AddVar(var, color);
@@ -425,16 +493,17 @@ public partial class BattleManager : Node
 		// GD.Print($"Registered var of type {type} at position {position}");
 		return var;
 	}
-	private void OnEnemyDie(Var enemy)
+	private void OnHostileVarDie(Var enemy)
 	{
-		if (enemy.Stats.Type != VarStats.VarType.Bug) return;
-
-		_isWaveFinished = true;
+		RepairedEnemyCount++;
+		if (enemy.Stats.Type == VarStats.VarType.Bug)
+		{
+			_isWaveFinished = true;
+		}
 	}
 	public Var SpawnEnemy(VarStats.VarType type, Vector2I position)
 	{
 		var enemy = RegisterVar(type, position, VarStats.Team.Hostile);
-		enemy.Stats.OnDeath += () => OnEnemyDie(enemy);
 		return enemy;
 	}
 	private int GetRandomSpawnRegionId(WaveConfig config)
@@ -520,47 +589,49 @@ public partial class BattleManager : Node
 
 	public override async void _Input(InputEvent @event)
 	{
-		if (@event is InputEventKey keyEvent)
-		{
-			if (keyEvent.Pressed)
-			{
-				if (keyEvent.Keycode == Key.Escape)
-				{
-					TogglePause();
-					if (State == BattleState.Paused)
-					{
-						await AudioManager.Instance.FilterBGM();
-					}
-					else
-					{
-						await AudioManager.Instance.UnfilterBGM();
-					}
-					return;
-				}
-				if (keyEvent.Keycode == Key.O)
-				{
-					ExchangeToken();
-					return;
-				}
-				if (keyEvent.Keycode == Key.P)
-				{
-					ExchangeToken(isHovering: true);
-					return;
-				}
-				if (keyEvent.Keycode == Key.L)
-				{
-					ClearCostRef();
-					return;
-				}
-			}
-		}
+		if (@event is not InputEventKey keyEvent) return;
 
+		if (!keyEvent.Pressed) return;
+
+		if (keyEvent.Keycode == Key.Escape)
+		{
+			if (!CanOpenPauseMenu)
+			{
+				return;
+			}
+
+			TogglePause();
+			if (State == BattleState.Paused)
+			{
+				await AudioManager.Instance.FilterBGM();
+			}
+			else
+			{
+				await AudioManager.Instance.UnfilterBGM();
+			}
+			return;
+		}
+		if (keyEvent.Keycode == Key.O)
+		{
+			ExchangeToken();
+			return;
+		}
+		if (keyEvent.Keycode == Key.P)
+		{
+			ExchangeToken(isHovering: true);
+			return;
+		}
+		if (keyEvent.Keycode == Key.L)
+		{
+			ClearCostRef();
+			return;
+		}
 	}
 
 	public async void InitAlertBorder()
 	{
 		await ToSignal(GetTree().CurrentScene, Node.SignalName.Ready);
-		
+
 		AlertBorder alertBorder = GetTree().Root.GetNode<AlertBorder>("MainGame/CanvasLayer/AlertBorder");
 		alertBorder.GameData = _gameData;
 	}

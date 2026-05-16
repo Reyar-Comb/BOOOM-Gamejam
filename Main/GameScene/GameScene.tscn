@@ -31,6 +31,7 @@
 [ext_resource type="Resource" path="res://GameData/InitialSkills.tres" id="26_27xwp"]
 [ext_resource type="PackedScene" uid="uid://ckubueh7x4v6i" path="res://Main/ChoicePanel/ChoicePanel.tscn" id="27_mwq4y"]
 [ext_resource type="PackedScene" uid="uid://bj1tfgf84h0vb" path="res://Main/DeletePanel/DeletePanel.tscn" id="29_lvrp5"]
+[ext_resource type="PackedScene" uid="uid://drrfoflcm125e" path="res://Main/PauseMenu/PauseMenu.tscn" id="30_pa3wa"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_e7wme"]
 bg_color = Color(0.6, 0.6, 0.6, 0.41960785)
@@ -1299,6 +1300,12 @@ ChoicePanel = NodePath("../ChoicePanelLayer/ChoicePanel")
 DeletePanel = NodePath("../ChoicePanelLayer/DeletePanel")
 InitialSkills = ExtResource("26_27xwp")
 SkillCardList = NodePath("../MarginContainer/HBoxContainer/MarginContainer/VBoxContainer/HBoxContainer/WindowPanel2/MarginContainer/SkillCardList")
+
+[node name="PauseMenuLayer" type="CanvasLayer" parent="." unique_id=1449396539]
+layer = 40
+
+[node name="PauseMenu" parent="PauseMenuLayer" unique_id=1882377035 instance=ExtResource("30_pa3wa")]
+layout_mode = 3
 
 [editable path="MarginContainer/HBoxContainer/MarginContainer2/VBoxContainer/WindowPanel2"]
 [editable path="MarginContainer/HBoxContainer/MarginContainer2/VBoxContainer/WindowPanel"]

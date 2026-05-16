@@ -108,14 +108,23 @@ public partial class AudioManager : Node
 
 	public void SetBGMVolume(float volume)
 	{
-		BGMPlayer.VolumeDb = volume;
+		SetBusVolume("BGM", volume);
 	}
 
 	public void SetSFXVolume(float volume)
 	{
-		foreach (var sfxPlayer in SFXPlayers)
+		SetBusVolume("SFX", volume);
+	}
+
+	private static void SetBusVolume(string busName, float volume)
+	{
+		int busIndex = AudioServer.GetBusIndex(busName);
+		if (busIndex == -1)
 		{
-			sfxPlayer.VolumeDb = volume;
+			GD.PushWarning($"Audio bus '{busName}' not found.");
+			return;
 		}
+
+		AudioServer.SetBusVolumeDb(busIndex, volume);
 	}
 }

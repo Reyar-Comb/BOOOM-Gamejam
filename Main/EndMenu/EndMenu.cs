@@ -113,7 +113,7 @@ public partial class EndMenu : Control
 		return reason switch
 		{
 			TokenManager.EndReason.Token => FormatLog("ERROR", _errorColor, "System", "Token 耗尽，运行终止。", _errorColor),
-			TokenManager.EndReason.Patience => FormatLog("ERROR", _errorColor, "System", "耐心值耗尽，运行终止。", _errorColor),
+			TokenManager.EndReason.Patience => FormatLog("ERROR", _errorColor, "System", "用户耐心值耗尽，运行终止。", _errorColor),
 			TokenManager.EndReason.Victory => FormatLog("INFO", _infoColor, "System", "成功修复所有 Bug！", _infoColor),
 			_ => "未知原因"
 		};

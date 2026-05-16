@@ -122,6 +122,7 @@ public partial class PPTScene : Control
 			else
 			{
 				SceneManager.Instance.IsTutorialPlayed = true;
+				_ = AudioManager.Instance.UnfilterBGM(3);
 				await SceneManager.Instance.ChangeSceneToFileAsync(GameScenePath);
 				return;
 			}

@@ -120,6 +120,7 @@ public partial class StartMenu : Control
         await DelaySeconds(0.35);
         if (!SceneManager.Instance.IsTutorialPlayed)
         {
+            _ = AudioManager.Instance.FilterBGM(3);
             await SceneManager.Instance.ChangeSceneToFileAsync(PPTScenePath);
         }
         else

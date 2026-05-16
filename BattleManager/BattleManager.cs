@@ -328,6 +328,8 @@ public partial class BattleManager : Node
 	}
 	public void StartWave()
 	{
+		PanelNavigator.GoToRoot();
+		
 		WaveConfig waveConfig = AdvanceWave();
 		State = BattleState.Running;
 

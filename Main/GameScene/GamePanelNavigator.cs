@@ -19,6 +19,8 @@ public partial class GamePanelNavigator : PanelNavigator
 	private List<PackedScene> _varButtons = new List<PackedScene>();
 
 	private PackedScene _buttonScene;
+	private Var _selectedVar;
+	private Callable _selectedVarDeathCallable;
 
 	public override string CurrentVarName { get;
 		set
@@ -199,6 +201,15 @@ public partial class GamePanelNavigator : PanelNavigator
 	// 		_gameData.SkillManager.CreationAvailabilityChanged -= RedrawAddButton;
 	// 	}
 	// }
+	public override void _ExitTree()
+	{
+		UnbindSelectedVarDeath();
+		if (_gameData?.SkillManager != null)
+		{
+			_gameData.SkillManager.CreationAvailabilityChanged -= RedrawAddButton;
+		}
+		base._ExitTree();
+	}
 	public void RedrawAddButton()
 	{
 		foreach (var kvp in _addButtonsByVarType)
@@ -302,8 +313,28 @@ public partial class GamePanelNavigator : PanelNavigator
 			{
 				CurrentVarName = var.Stats.Name;
 				CurrentVarType = var.Stats.Type;
+				BindSelectedVarDeath(var);
 				GD.Print($"Selected var: {CurrentVarName} of type {CurrentVarType}");
 			}
 		);
+	}
+
+	private void BindSelectedVarDeath(Var var)
+	{
+		UnbindSelectedVarDeath();
+		_selectedVar = var;
+		_selectedVarDeathCallable = Callable.From(() => CallDeferred(nameof(GoToRoot)));
+		_selectedVar.Stats.Connect(VarStats.SignalName.OnDeath, _selectedVarDeathCallable);
+	}
+
+	private void UnbindSelectedVarDeath()
+	{
+		if (_selectedVar?.Stats != null && _selectedVar.Stats.IsConnected(VarStats.SignalName.OnDeath, _selectedVarDeathCallable))
+		{
+			_selectedVar.Stats.Disconnect(VarStats.SignalName.OnDeath, _selectedVarDeathCallable);
+		}
+
+		_selectedVar = null;
+		_selectedVarDeathCallable = default;
 	}
 }

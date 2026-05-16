@@ -96,6 +96,9 @@ public class WaveConfigProvider
 				GetFloat(dict, "enemyBaseSpawnProbability", WaveConfig.DefaultEnemyBaseSpawnProbability),
 				0.0f,
 				1.0f),
+			CommonSkillChance = Math.Max(GetFloat(dict, "commonSkillChance", WaveConfig.DefaultCommonSkillChance), 0.0f),
+			UncommonSkillChance = Math.Max(GetFloat(dict, "uncommonSkillChance", WaveConfig.DefaultUncommonSkillChance), 0.0f),
+			RareSkillChance = Math.Max(GetFloat(dict, "rareSkillChance", WaveConfig.DefaultRareSkillChance), 0.0f),
 			EnemyTypeProbabilities = ParseEnemyTypeProbabilities(dict)
 		};
 		return true;

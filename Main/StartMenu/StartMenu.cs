@@ -1,4 +1,5 @@
 using Godot;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 public partial class StartMenu : Control
@@ -9,111 +10,82 @@ public partial class StartMenu : Control
     private const float PressedScale = 0.96f;
     private const double ScaleTweenDuration = 0.08;
 
-    private VarRenderer _background = null!;
-    private Control _menuRoot = null!;
-    private TextureRect _title = null!;
-    private TextureButton _startButton = null!;
-    private TextureButton _optionButton = null!;
-    private TextureButton _quitButton = null!;
+    private VarRenderer Background => field ??= GetNode<VarRenderer>("VarRendererBackground");
+    private TextureRect Title => field ??= GetNode<TextureRect>("%Title");
+    private TextureRect StartButton => field ??= GetNode<TextureRect>("%Start");
+    private TextureRect OptionButton => field ??= GetNode<TextureRect>("%Option");
+    private TextureRect QuitButton => field ??= GetNode<TextureRect>("%Quit");
+    private Dictionary<TextureRect, bool> _isHovered = new();
+    private Dictionary<TextureRect, Tween> _buttonTweens = new();
     private bool _isStarting;
-
-    public override void _Ready()
+    private async Task FrameDelay(int frame = 3)
+    {
+        for (int i = 0; i < frame; i++)
+        {
+            await ToSignal(GetTree(), SceneTree.SignalName.ProcessFrame);
+        }
+    }
+    public override async void _Ready()
     {
         MouseFilter = MouseFilterEnum.Ignore;
 
-        _background = GetNode<VarRenderer>("VarRendererBackground");
-        _menuRoot = GetNode<Control>("MenuRoot");
-        _title = GetNode<TextureRect>("MenuRoot/Title");
-        _startButton = GetNode<TextureButton>("MenuRoot/Start");
-        _optionButton = GetNode<TextureButton>("MenuRoot/Option");
-        _quitButton = GetNode<TextureButton>("MenuRoot/Quit");
+        Background.Initialize(new MapData(96, 54));
 
-        _background.Initialize(new MapData(96, 54));
+        StartButton.GuiInput += OnStartPressed;
+        OptionButton.GuiInput += OnOptionPressed;
+        QuitButton.GuiInput += OnQuitPressed;
 
-        _startButton.Pressed += OnStartPressed;
-        _optionButton.Pressed += TriggerClickRippleAtMouse;
-        _quitButton.Pressed += OnQuitPressed;
-        BindButtonScaleFeedback(_startButton);
-        BindButtonScaleFeedback(_optionButton);
-        BindButtonScaleFeedback(_quitButton);
-
-        LayoutMenu();
+        await FrameDelay();
+        BindHoverFeedback(StartButton);
+        BindHoverFeedback(OptionButton);
+        BindHoverFeedback(QuitButton);
     }
 
-    public override void _Notification(int what)
+    private void BindHoverFeedback(TextureRect button)
     {
-        if (what == NotificationResized)
+        _buttonTweens[button] = null;
+        button.PivotOffset = button.Size / 2;
+        button.MouseEntered += () =>
         {
-            LayoutMenu();
-        }
-    }
-
-    private void LayoutMenu()
-    {
-        if (_menuRoot == null || Size == Vector2.Zero)
+            TweenButtonScale(button, HoverScale);
+            _isHovered[button] = true;
+        };
+        button.MouseExited += () =>
         {
-            return;
-        }
-
-        float titleWidth = Mathf.Clamp(Size.X * 0.36f, 520.0f, 760.0f);
-        float buttonWidth = Mathf.Clamp(titleWidth * 0.5f, 280.0f, 390.0f);
-        float buttonHeight = Mathf.Clamp(buttonWidth * 0.32f, 88.0f, 124.0f);
-        float left = Mathf.Clamp(Size.X * 0.115f, 80.0f, 260.0f);
-        float top = Mathf.Clamp(Size.Y * 0.11f, 76.0f, 140.0f);
-        float titleHeight = titleWidth * GetTextureAspectHeight(_title.Texture);
-        float gap = Mathf.Clamp(Size.Y * 0.035f, 28.0f, 52.0f);
-
-        _menuRoot.Position = new Vector2(left, top);
-        _menuRoot.Size = new Vector2(titleWidth, titleHeight + gap + buttonHeight * 3.0f + gap * 2.0f);
-
-        _title.Position = Vector2.Zero;
-        _title.Size = new Vector2(titleWidth, titleHeight);
-
-        float buttonLeft = titleWidth * 0.13f;
-        float y = titleHeight + gap;
-        LayoutButton(_startButton, buttonLeft, y, buttonWidth, buttonHeight);
-        y += buttonHeight + gap;
-        LayoutButton(_optionButton, buttonLeft, y, buttonWidth, buttonHeight);
-        y += buttonHeight + gap;
-        LayoutButton(_quitButton, buttonLeft, y, buttonWidth, buttonHeight);
+            TweenButtonScale(button, NormalScale);
+            _isHovered[button] = false;
+        };
+        // button.ButtonDown += () => TweenButtonScale(button, PressedScale);
+        // button.ButtonUp += () => TweenButtonScale(button, _isHovered[button] ? HoverScale : NormalScale);
     }
 
-    private static void LayoutButton(TextureButton button, float x, float y, float width, float height)
+    private void TweenButtonScale(TextureRect button, float targetScale)
     {
-        button.Position = new Vector2(x, y);
-        button.Size = new Vector2(width, height);
-        button.CustomMinimumSize = button.Size;
-        button.PivotOffset = button.Size * 0.5f;
-    }
-
-    private void BindButtonScaleFeedback(TextureButton button)
-    {
-        button.MouseEntered += () => TweenButtonScale(button, HoverScale);
-        button.MouseExited += () => TweenButtonScale(button, NormalScale);
-        button.ButtonDown += () => TweenButtonScale(button, PressedScale);
-        button.ButtonUp += () => TweenButtonScale(button, button.IsHovered() ? HoverScale : NormalScale);
-    }
-
-    private void TweenButtonScale(TextureButton button, float targetScale)
-    {
-        Tween tween = CreateTween();
+        Tween tween = _buttonTweens[button];
+        tween?.Kill();
+        tween = CreateTween();
         tween.SetTrans(Tween.TransitionType.Sine);
         tween.SetEase(Tween.EaseType.Out);
         tween.TweenProperty(button, "scale", Vector2.One * targetScale, ScaleTweenDuration);
     }
 
-    private static float GetTextureAspectHeight(Texture2D texture)
+    private void TweenPressedScale(TextureRect button)
     {
-        if (texture == null || texture.GetWidth() <= 0)
+        Tween tween = _buttonTweens[button];
+        tween?.Kill();
+        tween = CreateTween();
+        tween.SetTrans(Tween.TransitionType.Sine);
+        tween.SetEase(Tween.EaseType.Out);
+        tween.TweenProperty(button, "scale", Vector2.One * PressedScale, ScaleTweenDuration / 2);
+        tween.TweenProperty(button, "scale", Vector2.One * (_isHovered[button] ? HoverScale : NormalScale), ScaleTweenDuration / 2);
+    }
+    private async void OnStartPressed(InputEvent inputEvent = null)
+    {
+        if (inputEvent is not InputEventMouseButton mouseEvent || mouseEvent.ButtonIndex != MouseButton.Left || !mouseEvent.Pressed)
         {
-            return 0.35f;
+            return;
         }
 
-        return texture.GetHeight() / (float)texture.GetWidth();
-    }
-
-    private async void OnStartPressed()
-    {
         if (_isStarting)
         {
             return;
@@ -121,14 +93,38 @@ public partial class StartMenu : Control
 
         _isStarting = true;
         TriggerBigRippleAtMouse();
-
+        TweenPressedScale(StartButton);
         await DelaySeconds(0.35);
         GetTree().ChangeSceneToFile(GameScenePath);
     }
 
-    private void OnQuitPressed()
+    private void OnOptionPressed(InputEvent inputEvent = null)
     {
+        if (inputEvent is not InputEventMouseButton mouseEvent || mouseEvent.ButtonIndex != MouseButton.Left || !mouseEvent.Pressed)
+        {
+            return;
+        }
+
+        if (_isStarting)
+        {
+            return;
+        }
         TriggerClickRippleAtMouse();
+        TweenPressedScale(OptionButton);
+    }
+    private void OnQuitPressed(InputEvent inputEvent = null)
+    {
+        if (inputEvent is not InputEventMouseButton mouseEvent || mouseEvent.ButtonIndex != MouseButton.Left || !mouseEvent.Pressed)
+        {
+            return;
+        }
+
+        if (_isStarting)
+        {
+            return;
+        }
+        TriggerClickRippleAtMouse();
+        TweenPressedScale(QuitButton);
         GetTree().Quit();
     }
 
@@ -137,7 +133,7 @@ public partial class StartMenu : Control
         Vector2I? cell = GetMouseGridCell();
         if (cell.HasValue)
         {
-            _background.AddRipple(cell.Value);
+            Background.AddRipple(cell.Value);
         }
     }
 
@@ -146,19 +142,19 @@ public partial class StartMenu : Control
         Vector2I? cell = GetMouseGridCell();
         if (cell.HasValue)
         {
-            _background.AddBugDeathRipple(cell.Value);
+            Background.AddBugDeathRipple(cell.Value);
         }
     }
 
     private Vector2I? GetMouseGridCell()
     {
-        Vector2 localMouse = _background.GetLocalMousePosition();
-        if (!new Rect2(Vector2.Zero, _background.Size).HasPoint(localMouse))
+        Vector2 localMouse = Background.GetLocalMousePosition();
+        if (!new Rect2(Vector2.Zero, Background.Size).HasPoint(localMouse))
         {
             return null;
         }
 
-        return Grid.WorldToGrid(_background.ScreenToWorld(localMouse));
+        return Grid.WorldToGrid(Background.ScreenToWorld(localMouse));
     }
 
     private async Task DelaySeconds(double seconds)

@@ -77,6 +77,7 @@ visible = true
 texture = null
 
 [node name="ScanningLine" type="ColorRect" parent="CanvasLayer" unique_id=416830409]
+visible = false
 z_index = 10
 material = SubResource("ShaderMaterial_iyuwi")
 anchors_preset = 15

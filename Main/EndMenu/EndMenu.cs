@@ -122,7 +122,7 @@ public partial class EndMenu : Control
 	{
 		yield return GetReasonText(reason);
 		yield return FormatLog("INFO", _infoColor, "System", $"本次运行时长：{TimeText}", _infoColor);
-		yield return FormatLog("INFO", _infoColor, "System", $"已完成波次：{CompletedWaveCount}", _infoColor);
+		yield return FormatLog("INFO", _infoColor, "System", $"已修复 Bug 数量：{CompletedWaveCount}", _infoColor);
 		yield return FormatLog("INFO", _infoColor, "System", $"创建过的变量个数：{CreatedVarCount}", _infoColor);
 		yield return FormatLog("INFO", _infoColor, "System", $"修复的异常变量个数：{RepairedEnemyCount}", _infoColor);
 	}

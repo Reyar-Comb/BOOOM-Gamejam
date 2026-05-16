@@ -260,3 +260,16 @@ public class EnemyRepairedInfo : Log
 		return $"{_infoText} {_timeText} {_actorText}: {_messageText}";
 	}
 }
+
+public class WaveStartAck : Log
+{
+	public WaveStartAck(int waveNumber) : base(LogType.Info, "System")
+	{
+		Message = $"======== 正在处理 15 个 Bug 中的第 {waveNumber} 个 ========";
+	}
+
+	protected override string FormatMessage()
+	{
+		return $"{_infoText} {_timeText} {_actorText}: {_messageText}";
+	}
+}

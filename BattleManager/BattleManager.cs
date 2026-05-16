@@ -331,6 +331,7 @@ public partial class BattleManager : Node
 		PanelNavigator.GoToRoot();
 		
 		WaveConfig waveConfig = AdvanceWave();
+		ConsoleManager.AddLog(new WaveStartAck(CurrentWave));
 		State = BattleState.Running;
 
 		Refresh();

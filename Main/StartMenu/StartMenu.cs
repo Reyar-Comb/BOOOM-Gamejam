@@ -97,7 +97,7 @@ public partial class StartMenu : Control
         TriggerBigRippleAtMouse();
         TweenPressedScale(StartButton);
         await DelaySeconds(0.35);
-        GetTree().ChangeSceneToFile(GameScenePath);
+        await SceneManager.Instance.ChangeSceneToFileAsync(GameScenePath);
     }
 
     private void OnOptionPressed(InputEvent inputEvent = null)

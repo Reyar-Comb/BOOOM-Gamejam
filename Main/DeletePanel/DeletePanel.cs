@@ -48,7 +48,10 @@ public partial class DeletePanel : Control
 			await ToSignal(GetTree(), SceneTree.SignalName.ProcessFrame);
 		}
 	}
-
+	private void SetVisibility(bool visible)
+	{
+		Modulate = Modulate with { A = visible ? 1f : 0f };
+	}
 	public override async void _Ready()
 	{
 		CaptureCards();
@@ -66,6 +69,7 @@ public partial class DeletePanel : Control
 
 	public async void ShowPanel()
 	{
+		SetVisibility(true);
 		EnableInputBlock();
 		await ShowPanelAsync();
 	}
@@ -74,6 +78,7 @@ public partial class DeletePanel : Control
 	{
 		await ClosePanelAsync();
 		DisableInputBlock();
+		SetVisibility(false);
 	}
 
 	/// <summary>
@@ -111,7 +116,7 @@ public partial class DeletePanel : Control
 		await EnsureLayoutCapturedAsync();
 		StopActiveTween();
 
-		Visible = true;
+		SetVisibility(true);
 		SetBackgroundAlpha(0.0f);
 		PrepareCardsForShow();
 		ResetCardVisuals();

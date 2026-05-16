@@ -7,6 +7,8 @@
 [ext_resource type="FontFile" uid="uid://cd6jbow8csp81" path="res://assets/Fonts/Hack-Italic.ttf" id="5_8oyud"]
 [ext_resource type="FontFile" uid="uid://jky4nd5a8wec" path="res://assets/Fonts/Hack-BoldItalic.ttf" id="6_8oyud"]
 [ext_resource type="Shader" uid="uid://tkbbfvw0fyg1" path="res://Shaders/EndMenuVignette.gdshader" id="7_vignette"]
+[ext_resource type="StyleBox" uid="uid://dyx8a0o3afs0h" path="res://Main/PauseMenu/PauseMenuButtonStyleBox.tres" id="7_x4kwa"]
+[ext_resource type="Texture2D" uid="uid://da17octxjsehi" path="res://assets/Image/EndMenu/Restart.svg" id="8_x4kwa"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_8oyud"]
 shader = ExtResource("2_8oyud")
@@ -82,6 +84,35 @@ theme_override_font_sizes/mono_font_size = 24
 bbcode_enabled = true
 scroll_following = true
 vertical_alignment = 1
+
+[node name="MarginContainer2" type="MarginContainer" parent="." unique_id=1579239032]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_bottom = 108
+
+[node name="RestartPanel" type="PanelContainer" parent="MarginContainer2" unique_id=180898774]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(130, 130)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 10
+mouse_default_cursor_shape = 2
+theme_override_styles/panel = ExtResource("7_x4kwa")
+
+[node name="RestartButton" type="TextureRect" parent="MarginContainer2/RestartPanel" unique_id=465319236]
+custom_minimum_size = Vector2(100, 100)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+mouse_filter = 2
+mouse_default_cursor_shape = 2
+texture = ExtResource("8_x4kwa")
+expand_mode = 1
+stretch_mode = 5
 
 [node name="VignetteOverlay" type="ColorRect" parent="." unique_id=1846532015]
 material = SubResource("ShaderMaterial_vignette")

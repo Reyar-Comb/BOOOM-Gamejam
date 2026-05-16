@@ -154,7 +154,7 @@ public partial class PauseMenu : Control
     {
         await DelaySeconds(ScaleTweenDuration);
         _ = AudioManager.Instance.UnfilterBGM();
-        GetTree().ChangeSceneToFile(StartMenuPath);
+        await SceneManager.Instance.ChangeSceneToFileAsync(StartMenuPath);
     }
 
     private async Task DelaySeconds(double seconds)

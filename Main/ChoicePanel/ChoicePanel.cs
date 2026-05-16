@@ -62,9 +62,13 @@ public partial class ChoicePanel : Control
 			SetHiddenState();
 		}
 	}
-
+	private void SetVisibility(bool visible)
+	{
+		Modulate = Modulate with { A = visible ? 1f : 0f };
+	}
 	public async void ShowPanel()
 	{
+		SetVisibility(true);
 		EnableInputBlock();
 		await ShowPanelAsync();
 	}
@@ -73,6 +77,7 @@ public partial class ChoicePanel : Control
 	{
 		await ClosePanelAsync();
 		DisableInputBlock();
+		SetVisibility(false);
 	}
 
 	public async Task<Upgrade> ChooseUpgradeAsync(IReadOnlyList<Upgrade> choices)
@@ -106,7 +111,7 @@ public partial class ChoicePanel : Control
 		await EnsureLayoutCapturedAsync();
 		StopActiveTween();
 
-		Visible = true;
+		SetVisibility(true);
 		SetBackgroundAlpha(0.0f);
 		PrepareCardsForShow();
 		ResetCardVisuals();

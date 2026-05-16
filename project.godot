@@ -10,10 +10,10 @@ config_version=5
 
 [application]
 
-config/name="booom"
+config/name="BLACK::BOXXX"
 run/main_scene="uid://c8wjvuv5krl63"
 config/features=PackedStringArray("4.6", "C#", "Mobile")
-config/icon="res://icon.svg"
+config/icon="uid://b1u8ykxj7dahv"
 
 [autoload]
 

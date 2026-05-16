@@ -264,7 +264,7 @@ public partial class BattleManager : Node
 	public string GetTimeString()
 	{
 		TimeSpan timeSpan = TimeSpan.FromMilliseconds(GameTime);
-		return timeSpan.ToString(@"mm\:ss");
+		return timeSpan.ToString(@"h\:mm\:ss");
 	}
 
 	public void ApplyStatsToEndMenu(EndMenu endMenu)

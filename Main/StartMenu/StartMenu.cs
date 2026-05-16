@@ -19,6 +19,9 @@ public partial class StartMenu : Control
     private Dictionary<TextureRect, bool> _isHovered = new();
     private Dictionary<TextureRect, Tween> _buttonTweens = new();
     private bool _isStarting;
+    private float _elapsedTime = 0f;
+    private const float RippleDelay = 0.05f;
+    private RandomNumberGenerator _rg = new();
     private async Task FrameDelay(int frame = 3)
     {
         for (int i = 0; i < frame; i++)
@@ -26,6 +29,18 @@ public partial class StartMenu : Control
             await ToSignal(GetTree(), SceneTree.SignalName.ProcessFrame);
         }
     }
+    public override void _Process(double delta)
+    {
+        _elapsedTime -= (float)delta;
+        if (_elapsedTime <= 0f)
+        {
+            _elapsedTime = RippleDelay;
+            int x = _rg.RandiRange(43, 93);
+            int y = _rg.RandiRange(21, 50);
+            TriggerRippleAt(new Vector2I(x, y));
+        }
+    }
+
     public override async void _Ready()
     {
         MouseFilter = MouseFilterEnum.Ignore;
@@ -137,10 +152,14 @@ public partial class StartMenu : Control
         TweenPressedScale(QuitButton);
         GetTree().Quit();
     }
-
+    private void TriggerRippleAt(Vector2I cell)
+    {
+        Background.AddRipple(cell, false);
+    }
     private void TriggerClickRippleAtMouse()
     {
         Vector2I? cell = GetMouseGridCell();
+        
         if (cell.HasValue)
         {
             Background.AddRipple(cell.Value);
@@ -163,8 +182,8 @@ public partial class StartMenu : Control
         {
             return null;
         }
-
-        return Grid.WorldToGrid(Background.ScreenToWorld(localMouse));
+        Vector2I result = Grid.WorldToGrid(Background.ScreenToWorld(localMouse));
+        return result;
     }
 
     private async Task DelaySeconds(double seconds)

@@ -36,7 +36,7 @@ internal sealed partial class VarRippleRenderer : Control
         QueueRedraw();
     }
 
-    public void AddRipple(Vector2I origin)
+    public void AddRipple(Vector2I origin, bool playSFX = true)
     {
         if (!_config.RenderClickRipple)
         {
@@ -54,8 +54,12 @@ internal sealed partial class VarRippleRenderer : Control
             Color = _config.ClickRippleColor,
             OutlineColor = _config.ClickRippleOutlineColor,
         });
-        AudioManager.Instance.PlaySFX("click_map");
+        if (playSFX)
+        {
+            AudioManager.Instance.PlaySFX("click_map");
+        }
         QueueRedraw();
+        // GD.Print(origin);
     }
 
     public void AddBugDeathRipple(Vector2I origin)

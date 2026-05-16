@@ -234,9 +234,9 @@ public partial class VarRenderer : Control, IVarRenderer
         _rippleRenderer.AddLogRipple(cell, logType);
     }
 
-    public void AddRipple(Vector2I cell)
+    public void AddRipple(Vector2I cell, bool playSFX = true)
     {
-        _rippleRenderer.AddRipple(cell);
+        _rippleRenderer.AddRipple(cell, playSFX);
     }
 
     public void AddBugDeathRipple(Vector2I cell)

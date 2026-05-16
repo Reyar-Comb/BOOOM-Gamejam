@@ -134,7 +134,7 @@ vertical_alignment = 1
 autowrap_mode = 3
 
 [node name="DescriptionLabel" type="Label" parent="SafeArea/CardCenter/Cards/SkillCard1/MarginContainer/Content" unique_id=415313694]
-custom_minimum_size = Vector2(0, 145)
+custom_minimum_size = Vector2(0, 235)
 layout_mode = 2
 size_flags_vertical = 3
 theme_override_colors/font_color = Color(1, 1, 1, 0.78)
@@ -200,7 +200,7 @@ vertical_alignment = 1
 autowrap_mode = 3
 
 [node name="DescriptionLabel" type="Label" parent="SafeArea/CardCenter/Cards/SkillCard2/MarginContainer/Content" unique_id=212272421]
-custom_minimum_size = Vector2(0, 145)
+custom_minimum_size = Vector2(0, 235)
 layout_mode = 2
 size_flags_vertical = 3
 theme_override_colors/font_color = Color(1, 1, 1, 0.78)
@@ -266,13 +266,12 @@ vertical_alignment = 1
 autowrap_mode = 3
 
 [node name="DescriptionLabel" type="Label" parent="SafeArea/CardCenter/Cards/SkillCard3/MarginContainer/Content" unique_id=2051932240]
-custom_minimum_size = Vector2(0, 145)
+custom_minimum_size = Vector2(0, 235)
 layout_mode = 2
 size_flags_vertical = 3
 theme_override_colors/font_color = Color(1, 1, 1, 0.78)
 theme_override_fonts/font = ExtResource("5_regular")
 theme_override_font_sizes/font_size = 23
-text = "Reduces token cost when querying or commanding vars by a fixed amount."
 horizontal_alignment = 1
 vertical_alignment = 1
 autowrap_mode = 3

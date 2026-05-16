@@ -72,6 +72,8 @@ public partial class GamePanelNavigator : PanelNavigator
 		base._Ready();
 
 		BackButton.Pressed += GoBack;
+		BackButton.MouseEntered += () => AudioManager.Instance.PlaySFX("hover");
+		BackButton.Pressed += () => AudioManager.Instance.PlaySFX("click_button");
 
 		VarManager.VarListUpdated += RefreshVarList;
 

@@ -617,21 +617,21 @@ public partial class BattleManager : Node
 			}
 			return;
 		}
-		if (keyEvent.Keycode == Key.O)
-		{
-			ExchangeToken();
-			return;
-		}
-		if (keyEvent.Keycode == Key.P)
-		{
-			ExchangeToken(isHovering: true);
-			return;
-		}
-		if (keyEvent.Keycode == Key.L)
-		{
-			ClearCostRef();
-			return;
-		}
+		// if (keyEvent.Keycode == Key.O)
+		// {
+		// 	ExchangeToken();
+		// 	return;
+		// }
+		// if (keyEvent.Keycode == Key.P)
+		// {
+		// 	ExchangeToken(isHovering: true);
+		// 	return;
+		// }
+		// if (keyEvent.Keycode == Key.L)
+		// {
+		// 	ClearCostRef();
+		// 	return;
+		// }
 	}
 
 	public async void InitAlertBorder()

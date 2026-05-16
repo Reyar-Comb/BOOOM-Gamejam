@@ -91,14 +91,14 @@ public partial class VarManager : Node
 			DisconnectSignals(var);
 			RemoveFromTeamLists(var);
 			Vars.Remove(var);
-			if (var.Stats.VarTeam == VarStats.Team.Friendly)
-			{
-				_friendlyVarTypeCounts[var.Stats.Type]--;
-			}
-			else if (var.Stats.VarTeam == VarStats.Team.Hostile)
-			{
-				_hostileVarTypeCounts[var.Stats.Type]--;
-			}
+			// if (var.Stats.VarTeam == VarStats.Team.Friendly)
+			// {
+			// 	_friendlyVarTypeCounts[var.Stats.Type]--;
+			// }
+			// else if (var.Stats.VarTeam == VarStats.Team.Hostile)
+			// {
+			// 	_hostileVarTypeCounts[var.Stats.Type]--;
+			// }
 			var.Cleanup();
 			EmitSignal(SignalName.VarListUpdated);
 		}

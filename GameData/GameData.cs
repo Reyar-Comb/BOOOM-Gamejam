@@ -32,10 +32,17 @@ public class GameData
         VarStats.VarType.Float,
         VarStats.VarType.Char
     };
+    private void InitSkillRarityWeights()
+    {
+        SkillRarityWeights[Skill.RarityLevel.Common] = NumericData.Get("CommonSkillWeight");
+        SkillRarityWeights[Skill.RarityLevel.Uncommon] = NumericData.Get("UncommonSkillWeight");
+        SkillRarityWeights[Skill.RarityLevel.Rare] = NumericData.Get("RareSkillWeight");
+    }
     public GameData()
     {
         NumericData = new NumericData();
         SkillManager = new SkillManager();
+        InitSkillRarityWeights();
     }
     public void Reset()
     {

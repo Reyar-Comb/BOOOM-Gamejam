@@ -25,6 +25,9 @@ Data = Dictionary[String, int]({
 "Token": 100,
 "TokenExchangeAmount": 50,
 "TokenRequestGainBonus": 0,
-"TokenRequestPatienceCostReduction": 0
+"TokenRequestPatienceCostReduction": 0,
+"CommonSkillWeight": 60,
+"UncommonSkillWeight": 30,
+"RareSkillWeight": 10
 })
 metadata/_custom_type_script = "uid://cg6o6txvgp36k"

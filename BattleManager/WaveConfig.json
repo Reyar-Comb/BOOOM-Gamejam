@@ -1,7 +1,10 @@
 [
-  {
-	"wave": 1,
-	"enemyTypeProbabilities": {
+	{
+		"wave": 1,
+		"commonSkillChance": 60,
+		"uncommonSkillChance": 30,
+		"rareSkillChance": 10,
+		"enemyTypeProbabilities": {
 	  "Int": 0.20,
 	  "Float": 0.00,
 	  "Bool": 0.30,
@@ -14,9 +17,12 @@
 	"enemyCount": 8,
 	"enemyBaseSpawnProbability": 0.5
   },
-  {
-	"wave": 2,
-	"enemyTypeProbabilities": {
+	{
+		"wave": 2,
+		"commonSkillChance": 60,
+		"uncommonSkillChance": 30,
+		"rareSkillChance": 10,
+		"enemyTypeProbabilities": {
 	  "Int": 0.25,
 	  "Float": 0.15,
 	  "Bool": 0.15,
@@ -29,9 +35,12 @@
 	"enemyCount": 8,
 	"enemyBaseSpawnProbability": 0.45
   },
-  {
-	"wave": 3,
-	"enemyTypeProbabilities": {
+	{
+		"wave": 3,
+		"commonSkillChance": 60,
+		"uncommonSkillChance": 30,
+		"rareSkillChance": 10,
+		"enemyTypeProbabilities": {
 	  "Int": 0.35,
 	  "Float": 0.15,
 	  "Bool": 0.10,
@@ -44,9 +53,12 @@
 	"enemyCount": 8,
 	"enemyBaseSpawnProbability": 0.4
   },
-  {
-	"wave": 4,
-	"enemyTypeProbabilities": {
+	{
+		"wave": 4,
+		"commonSkillChance": 60,
+		"uncommonSkillChance": 30,
+		"rareSkillChance": 10,
+		"enemyTypeProbabilities": {
 	  "Int": 0.40,
 	  "Float": 0.20,
 	  "Bool": 0.10,
@@ -59,9 +71,12 @@
 	"enemyCount": 8,
 	"enemyBaseSpawnProbability": 0.4
   },
-  {
-	"wave": 5,
-	"enemyTypeProbabilities": {
+	{
+		"wave": 5,
+		"commonSkillChance": 60,
+		"uncommonSkillChance": 30,
+		"rareSkillChance": 10,
+		"enemyTypeProbabilities": {
 	  "Int": 0.50,
 	  "Float": 0.20,
 	  "Bool": 0.00,
@@ -74,9 +89,12 @@
 	"enemyCount": 9,
 	"enemyBaseSpawnProbability": 0.4
   },
-  {
-	"wave": 6,
-	"enemyTypeProbabilities": {
+	{
+		"wave": 6,
+		"commonSkillChance": 60,
+		"uncommonSkillChance": 30,
+		"rareSkillChance": 10,
+		"enemyTypeProbabilities": {
 	  "Int": 0.50,
 	  "Float": 0.30,
 	  "Bool": 0.00,
@@ -89,9 +107,12 @@
 	"enemyCount": 9,
 	"enemyBaseSpawnProbability": 0.4
   },
-  {
-	"wave": 7,
-	"enemyTypeProbabilities": {
+	{
+		"wave": 7,
+		"commonSkillChance": 60,
+		"uncommonSkillChance": 30,
+		"rareSkillChance": 10,
+		"enemyTypeProbabilities": {
 	  "Int": 0.40,
 	  "Float": 0.20,
 	  "Bool": 0.00,
@@ -104,9 +125,12 @@
 	"enemyCount": 9,
 	"enemyBaseSpawnProbability": 0.4
   },
-  {
-	"wave": 8,
-	"enemyTypeProbabilities": {
+	{
+		"wave": 8,
+		"commonSkillChance": 60,
+		"uncommonSkillChance": 30,
+		"rareSkillChance": 10,
+		"enemyTypeProbabilities": {
 	  "Int": 0.30,
 	  "Float": 0.20,
 	  "Bool": 0.10,
@@ -119,9 +143,12 @@
 	"enemyCount": 9,
 	"enemyBaseSpawnProbability": 0.4
   },
-  {
-	"wave": 9,
-	"enemyTypeProbabilities": {
+	{
+		"wave": 9,
+		"commonSkillChance": 60,
+		"uncommonSkillChance": 30,
+		"rareSkillChance": 10,
+		"enemyTypeProbabilities": {
 	  "Int": 0.20,
 	  "Float": 0.20,
 	  "Bool": 0.00,
@@ -134,9 +161,12 @@
 	"enemyCount": 9,
 	"enemyBaseSpawnProbability": 0.4
   },
-  {
-	"wave": 10,
-	"enemyTypeProbabilities": {
+	{
+		"wave": 10,
+		"commonSkillChance": 60,
+		"uncommonSkillChance": 30,
+		"rareSkillChance": 10,
+		"enemyTypeProbabilities": {
 	  "Int": 0.20,
 	  "Float": 0.20,
 	  "Bool": 0.00,
@@ -149,9 +179,12 @@
 	"enemyCount": 10,
 	"enemyBaseSpawnProbability": 0.4
   },
-  {
-	"wave": 11,
-	"enemyTypeProbabilities": {
+	{
+		"wave": 11,
+		"commonSkillChance": 60,
+		"uncommonSkillChance": 30,
+		"rareSkillChance": 10,
+		"enemyTypeProbabilities": {
 	  "Int": 0.10,
 	  "Float": 0.20,
 	  "Bool": 0.00,
@@ -164,9 +197,12 @@
 	"enemyCount": 11,
 	"enemyBaseSpawnProbability": 0.4
   },
-  {
-	"wave": 12,
-	"enemyTypeProbabilities": {
+	{
+		"wave": 12,
+		"commonSkillChance": 60,
+		"uncommonSkillChance": 30,
+		"rareSkillChance": 10,
+		"enemyTypeProbabilities": {
 	  "Int": 0.10,
 	  "Float": 0.20,
 	  "Bool": 0.00,
@@ -179,9 +215,12 @@
 	"enemyCount": 11,
 	"enemyBaseSpawnProbability": 0.4
   },
-  {
-	"wave": 13,
-	"enemyTypeProbabilities": {
+	{
+		"wave": 13,
+		"commonSkillChance": 60,
+		"uncommonSkillChance": 30,
+		"rareSkillChance": 10,
+		"enemyTypeProbabilities": {
 	  "Int": 0.10,
 	  "Float": 0.20,
 	  "Bool": 0.00,
@@ -194,9 +233,12 @@
 	"enemyCount": 10,
 	"enemyBaseSpawnProbability": 0.4
   },
-  {
-	"wave": 14,
-	"enemyTypeProbabilities": {
+	{
+		"wave": 14,
+		"commonSkillChance": 60,
+		"uncommonSkillChance": 30,
+		"rareSkillChance": 10,
+		"enemyTypeProbabilities": {
 	  "Int": 0.10,
 	  "Float": 0.20,
 	  "Bool": 0.20,
@@ -209,9 +251,12 @@
 	"enemyCount": 10,
 	"enemyBaseSpawnProbability": 0.4
   },
-  {
-	"wave": 15,
-	"enemyTypeProbabilities": {
+	{
+		"wave": 15,
+		"commonSkillChance": 60,
+		"uncommonSkillChance": 30,
+		"rareSkillChance": 10,
+		"enemyTypeProbabilities": {
 	  "Int": 0.00,
 	  "Float": 0.00,
 	  "Bool": 0.20,

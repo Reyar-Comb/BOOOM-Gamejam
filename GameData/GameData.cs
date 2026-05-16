@@ -16,33 +16,25 @@ public class GameData
         VarStats.VarType.Char,
         VarStats.VarType.Bool,
     ];
-    private static readonly Dictionary<Skill.RarityLevel, int> SkillRarityWeights = new()
-    {
-        { Skill.RarityLevel.Common, 60 },
-        { Skill.RarityLevel.Uncommon, 30 },
-        { Skill.RarityLevel.Rare, 10 },
-    };
     private static readonly List<SkillData> AllSkillData = LoadAllSkillData();
 
     public NumericData NumericData;
     public SkillManager SkillManager;
+    private WaveConfigProvider _waveConfigProvider;
     public HashSet<VarStats.VarType> UnlockedVarTypes { get; private set; } = new()
     {
         VarStats.VarType.Int,
         VarStats.VarType.Float,
         VarStats.VarType.Char
     };
-    private void InitSkillRarityWeights()
+    public void SetWaveConfigProvider(WaveConfigProvider waveConfigProvider)
     {
-        SkillRarityWeights[Skill.RarityLevel.Common] = NumericData.Get("CommonSkillWeight");
-        SkillRarityWeights[Skill.RarityLevel.Uncommon] = NumericData.Get("UncommonSkillWeight");
-        SkillRarityWeights[Skill.RarityLevel.Rare] = NumericData.Get("RareSkillWeight");
+        _waveConfigProvider = waveConfigProvider;
     }
     public GameData()
     {
         NumericData = new NumericData();
         SkillManager = new SkillManager();
-        InitSkillRarityWeights();
     }
     public void Reset()
     {
@@ -50,14 +42,15 @@ public class GameData
         SkillManager.Reset();
     }
 
-    public List<Upgrade> GetRandomSkillChoices()
+    public List<Upgrade> GetRandomSkillChoices(int wave)
     {
         List<SkillData> availableSkillData = AllSkillData.ToList();
+        WaveConfig waveConfig = _waveConfigProvider?.GetConfig(wave) ?? new WaveConfig { Wave = wave };
 
         List<Upgrade> choices = new List<Upgrade>();
         for (int i = 0; i < SkillChoiceCount && availableSkillData.Count > 0; i++)
         {
-            Skill skill = CreateWeightedRandomSkill(availableSkillData);
+            Skill skill = CreateWeightedRandomSkill(availableSkillData, waveConfig);
             choices.Add(new SkillUpgrade(skill));
             availableSkillData.RemoveAll(skillData => skillData.Type == skill.GetType());
         }
@@ -65,9 +58,9 @@ public class GameData
         return choices;
     }
 
-    public List<Upgrade> GetRandomUpgradeChoices()
+    public List<Upgrade> GetRandomUpgradeChoices(int wave)
     {
-        List<Upgrade> choices = GetRandomSkillChoices();
+        List<Upgrade> choices = GetRandomSkillChoices(wave);
 
         VarStats.VarType? varType = GetRandomLockedVarType();
         if (varType != null)
@@ -102,24 +95,36 @@ public class GameData
         return lockedVarTypes[Random.Shared.Next(lockedVarTypes.Count)];
     }
 
-    private static Skill CreateWeightedRandomSkill(List<SkillData> availableSkillData)
+    private static Skill CreateWeightedRandomSkill(List<SkillData> availableSkillData, WaveConfig waveConfig)
     {
         Dictionary<Skill.RarityLevel, List<SkillData>> dataByRarity = availableSkillData
             .GroupBy(skillData => skillData.Rarity)
             .ToDictionary(group => group.Key, group => group.ToList());
 
-        int totalWeight = dataByRarity.Keys.Sum(rarity => SkillRarityWeights.GetValueOrDefault(rarity, 0));
-        int selectedWeight = Random.Shared.Next(totalWeight);
-        int currentWeight = 0;
+        Dictionary<Skill.RarityLevel, float> rarityWeights = waveConfig.GetSkillRarityWeights();
+        float totalWeight = dataByRarity.Keys.Sum(rarity => rarityWeights.GetValueOrDefault(rarity, 0.0f));
+        if (totalWeight <= 0.0f)
+        {
+            return CreateSkill(availableSkillData[Random.Shared.Next(availableSkillData.Count)].Type);
+        }
 
-        foreach (Skill.RarityLevel rarity in SkillRarityWeights.Keys)
+        float selectedWeight = (float)Random.Shared.NextDouble() * totalWeight;
+        float currentWeight = 0.0f;
+
+        foreach (Skill.RarityLevel rarity in rarityWeights.Keys)
         {
             if (!dataByRarity.TryGetValue(rarity, out List<SkillData> skillDataList))
             {
                 continue;
             }
 
-            currentWeight += SkillRarityWeights[rarity];
+            float rarityWeight = rarityWeights[rarity];
+            if (rarityWeight <= 0.0f)
+            {
+                continue;
+            }
+
+            currentWeight += rarityWeight;
             if (selectedWeight < currentWeight)
             {
                 return CreateSkill(skillDataList[Random.Shared.Next(skillDataList.Count)].Type);

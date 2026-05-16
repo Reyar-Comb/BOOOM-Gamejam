@@ -137,6 +137,7 @@ public partial class BattleManager : Node
 		_waveConfigProvider.Load();
 		_mapData = new MapData(80, 46);
 		_gameData = new GameData();
+		_gameData.SetWaveConfigProvider(_waveConfigProvider);
 		_colorData = new ColorData();
 
 		VarManager.Initialize(_mapData, _gameData);
@@ -384,8 +385,8 @@ public partial class BattleManager : Node
 		await WaitSeconds(SkillChoiceDelay);
 
 		List<Upgrade> choices = CurrentWave <= VarUnlockChoiceWaveLimit
-			? _gameData.GetRandomUpgradeChoices()
-			: _gameData.GetRandomSkillChoices();
+			? _gameData.GetRandomUpgradeChoices(CurrentWave)
+			: _gameData.GetRandomSkillChoices(CurrentWave);
 		// List<Upgrade> choices = _gameData.GetRandomSkillChoices();
 		if (choices.Count == 0)
 		{

@@ -7,12 +7,28 @@ public class WaveConfig
 	public const int DefaultRegionCount = 6;
 	public const int DefaultEnemyCount = 8;
 	public const float DefaultEnemyBaseSpawnProbability = 0.5f;
+	public const float DefaultCommonSkillChance = 60.0f;
+	public const float DefaultUncommonSkillChance = 30.0f;
+	public const float DefaultRareSkillChance = 10.0f;
 
 	public int Wave { get; init; }
 	public int RegionCount { get; init; } = DefaultRegionCount;
 	public int EnemyCount { get; init; } = DefaultEnemyCount;
 	public float EnemyBaseSpawnProbability { get; init; } = DefaultEnemyBaseSpawnProbability;
+	public float CommonSkillChance { get; init; } = DefaultCommonSkillChance;
+	public float UncommonSkillChance { get; init; } = DefaultUncommonSkillChance;
+	public float RareSkillChance { get; init; } = DefaultRareSkillChance;
 	public Dictionary<VarStats.VarType, float> EnemyTypeProbabilities { get; init; } = new();
+
+	public Dictionary<Skill.RarityLevel, float> GetSkillRarityWeights()
+	{
+		return new Dictionary<Skill.RarityLevel, float>
+		{
+			{ Skill.RarityLevel.Common, Math.Max(0.0f, CommonSkillChance) },
+			{ Skill.RarityLevel.Uncommon, Math.Max(0.0f, UncommonSkillChance) },
+			{ Skill.RarityLevel.Rare, Math.Max(0.0f, RareSkillChance) },
+		};
+	}
 
 	public VarStats.VarType GetRandomEnemyType(RandomNumberGenerator random, IReadOnlyList<VarStats.VarType> fallbackTypes)
 	{

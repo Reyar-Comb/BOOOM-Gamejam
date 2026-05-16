@@ -50,7 +50,7 @@ public partial class DeletePanel : Control
 	}
 	private void SetVisibility(bool visible)
 	{
-		Modulate = Modulate with { A = visible ? 1f : 0f };
+		Modulate = Modulate with { A = visible ? 1f : 0.01f };
 	}
 	public override async void _Ready()
 	{

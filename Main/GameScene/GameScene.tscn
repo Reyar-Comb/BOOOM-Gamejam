@@ -1282,13 +1282,13 @@ disabled = true
 [node name="ChoicePanelLayer" type="CanvasLayer" parent="." unique_id=686820624]
 
 [node name="ChoicePanel" parent="ChoicePanelLayer" unique_id=1654918493 instance=ExtResource("27_mwq4y")]
-modulate = Color(1, 1, 1, 0)
+modulate = Color(1, 1, 1, 0.003921569)
 custom_minimum_size = Vector2(1920, 1080)
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
 [node name="DeletePanel" parent="ChoicePanelLayer" unique_id=54318289 instance=ExtResource("29_lvrp5")]
-modulate = Color(1, 1, 1, 0)
+modulate = Color(1, 1, 1, 0.003921569)
 
 [node name="BattleManager" type="Node" parent="." unique_id=1363842359 node_paths=PackedStringArray("VarManager", "ConsoleManager", "PanelNavigator", "VarRenderer", "TokenManager", "ChoicePanel", "DeletePanel", "SkillCardList")]
 script = ExtResource("4_8oyud")

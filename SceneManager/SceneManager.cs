@@ -12,6 +12,8 @@ public partial class SceneManager : CanvasLayer
 	private ShaderMaterial _transitionMaterial = null!;
 	private Tween _activeTween;
 	private bool _isTransitioning;
+	
+	public bool IsTutorialPlayed { get; set; } = false;
 
 	public override void _Ready()
 	{

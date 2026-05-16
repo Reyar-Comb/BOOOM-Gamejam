@@ -5,6 +5,7 @@ using System.Collections.Generic;
 public partial class EndMenu : Control
 {
 	[Export] public RichTextLabel LogDisplay { get; private set; } = null!;
+	[Export] public RichTextLabel LogDisplay2 { get; private set; } = null!;
 	[Export] public float LogLineIntervalSeconds { get; private set; } = 0.35f;
 	private const string StartMenuPath = "res://Main/StartMenu/StartMenu.tscn";
 	private const float NormalScale = 1.0f;
@@ -87,7 +88,9 @@ public partial class EndMenu : Control
 
 		int runId = ++_settlementDisplayRunId;
 		List<string> logs = new(CreateSettlementLogs(reason));
+		List<string> staffLogs = new(CreateStaffLogs());
 		LogDisplay.Clear();
+		LogDisplay2.Clear();
 		for (int i = 0; i < logs.Count; i++)
 		{
 			if (runId != _settlementDisplayRunId)
@@ -101,12 +104,27 @@ public partial class EndMenu : Control
 				await ToSignal(GetTree().CreateTimer(LogLineIntervalSeconds), SceneTreeTimer.SignalName.Timeout);
 			}
 		}
+		await ToSignal(GetTree().CreateTimer(LogLineIntervalSeconds), SceneTreeTimer.SignalName.Timeout);
+		for (int i = 0; i < staffLogs.Count; i++)
+		{
+			if (runId != _settlementDisplayRunId)
+			{
+				return;
+			}
+
+			LogDisplay2.AppendText(staffLogs[i] + "\n");
+			if (i < staffLogs.Count - 1 && LogLineIntervalSeconds > 0.0f)
+			{
+				await ToSignal(GetTree().CreateTimer(LogLineIntervalSeconds), SceneTreeTimer.SignalName.Timeout);
+			}
+		}
 	}
 
 	public void ClearLogs()
 	{
 		_settlementDisplayRunId++;
 		LogDisplay?.Clear();
+		LogDisplay2?.Clear();
 	}
 	private string GetReasonText(TokenManager.EndReason reason)
 	{
@@ -126,7 +144,14 @@ public partial class EndMenu : Control
 		yield return FormatLog("INFO", _infoColor, "System", $"创建过的变量个数：{CreatedVarCount}", _infoColor);
 		yield return FormatLog("INFO", _infoColor, "System", $"修复的异常变量个数：{RepairedEnemyCount}", _infoColor);
 	}
-
+	private IEnumerable<string> CreateStaffLogs()
+	{
+		yield return FormatLog("INFO", _infoColor, "System", $"游玩岛国音游被抓队 制作", _infoColor);
+		yield return FormatLog("INFO", _infoColor, "System", $"MrSHeEp 策划", _infoColor);
+		yield return FormatLog("INFO", _infoColor, $"System", $"Astra_OwO Reyar 程序", _infoColor);
+		yield return FormatLog("INFO", _infoColor, $"System", $"Reyar 音乐", _infoColor);
+		yield return FormatLog("INFO", _infoColor, $"System", $"Jazz 美术", _infoColor);
+	}
 	private string FormatLog(string typeText, Color typeColor, string actor, string message, Color messageColor)
 	{
 		return $"[b]{ColoredText(typeText, typeColor)}[/b] {ColoredText($"[{TimeText}]", _timeColor)} {ColoredText(actor, _actorColor)}: {ColoredText(message, messageColor)}";

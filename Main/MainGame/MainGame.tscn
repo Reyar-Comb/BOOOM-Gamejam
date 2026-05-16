@@ -46,6 +46,7 @@ script = ExtResource("2_r6g4v")
 
 [node name="EndMenuRoot" type="Control" parent="CanvasLayer" unique_id=1491975620]
 visible = false
+layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -53,7 +54,7 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 
-[node name="EndMenu" parent="CanvasLayer/EndMenuRoot" instance=ExtResource("8_endmenu")]
+[node name="EndMenu" parent="CanvasLayer/EndMenuRoot" unique_id=1952603228 instance=ExtResource("8_endmenu")]
 visible = false
 layout_mode = 1
 
@@ -104,7 +105,6 @@ visible = true
 texture = null
 
 [node name="ScanningLine" type="ColorRect" parent="CanvasLayer" unique_id=416830409]
-visible = false
 z_index = 10
 material = SubResource("ShaderMaterial_iyuwi")
 anchors_preset = 15

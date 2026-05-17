@@ -133,7 +133,7 @@ public partial class VarRenderer : Control, IVarRenderer
         {
             return;
         }
-        GD.Print("Adding var to renderer: ");
+        Debug.Print("Adding var to renderer: ");
         _renderedVars.Add(var);
         _varLayerRenderer.SetDefaultStyle(var);
         QueueRenderersRedraw();
@@ -220,7 +220,7 @@ public partial class VarRenderer : Control, IVarRenderer
         _mapRenderer.UpdateReveal(delta);
         _rippleRenderer.UpdateRipples(delta);
         QueueRenderersRedraw();
-        // GD.Print(Zoom);
+        // Debug.Print(Zoom);
     }
 
     public void ResetView()
@@ -513,3 +513,4 @@ public partial class VarRenderer : Control, IVarRenderer
         return (VarRendererConfig)source.Duplicate();
     }
 }
+

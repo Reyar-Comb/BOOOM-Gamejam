@@ -172,7 +172,7 @@ public partial class PanelNavigator : Control
 			if (VarRenderer.GetGlobalRect().HasPoint(VarRenderer.GetGlobalMousePosition()))
 			{
 				LastClickedGrid = _cachedHoveredCell;
-				GD.Print($"Clicked grid: {LastClickedGrid}");
+				Debug.Print($"Clicked grid: {LastClickedGrid}");
 			}
 		}
 	}
@@ -403,3 +403,4 @@ public partial class PanelNavigator : Control
 			AutoRegisterButtonsIn(kv.Value);
 	}
 }
+

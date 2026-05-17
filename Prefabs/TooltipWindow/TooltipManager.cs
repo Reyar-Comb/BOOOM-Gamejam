@@ -38,7 +38,7 @@ public partial class TooltipManager : Node
 
 		if (!TooltipContents.TryGetValue(tooltipId, out var content))
 		{
-			GD.PrintErr($"Tooltip ID '{tooltipId}' not found!");
+			Debug.PrintErr($"Tooltip ID '{tooltipId}' not found!");
 			return;
 		}
 
@@ -91,7 +91,7 @@ public partial class TooltipManager : Node
 
 		if (!FileAccess.FileExists(path))
 		{
-			GD.PrintErr($"Tooltip content file not found: {path}");
+			Debug.PrintErr($"Tooltip content file not found: {path}");
 			return;
 		}
 
@@ -102,14 +102,14 @@ public partial class TooltipManager : Node
 		var error = json.Parse(jsonText);
 		if (error != Error.Ok)
 		{
-			GD.PrintErr($"Failed to parse tooltip JSON: {error}");
+			Debug.PrintErr($"Failed to parse tooltip JSON: {error}");
 			return;
 		}
 
 		var data = json.Data;
 		if (data.VariantType != Variant.Type.Array)
 		{
-			GD.PrintErr("Tooltip JSON root must be an array.");
+			Debug.PrintErr("Tooltip JSON root must be an array.");
 			return;
 		}
 
@@ -129,6 +129,7 @@ public partial class TooltipManager : Node
 			};
 		}
 
-		GD.Print($"Loaded {TooltipContents.Count} tooltip entries from JSON.");
+		Debug.Print($"Loaded {TooltipContents.Count} tooltip entries from JSON.");
 	}
 }
+

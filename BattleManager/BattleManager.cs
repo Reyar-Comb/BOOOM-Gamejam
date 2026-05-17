@@ -239,7 +239,7 @@ public partial class BattleManager : Node
 		State = BattleState.End;
 		_pendingEndReason = reason;
 		EmitSignal(SignalName.GameOver);
-		GD.Print("Game Over!");
+		Debug.Print("Game Over!");
 	}
 
 	public void TogglePause()
@@ -348,7 +348,7 @@ public partial class BattleManager : Node
 		_gameData.SkillManager.ApplyOwnedSkills(_gameData);
 		_gameData.SkillManager.OnWaveStarted();
 
-		GD.Print($"Wave {CurrentWave} started.");
+		Debug.Print($"Wave {CurrentWave} started.");
 		SpawnEnemies(waveConfig);
 
 		PanelNavigator.RedrawAddButton();
@@ -365,7 +365,7 @@ public partial class BattleManager : Node
 		foreach (Skill skill in InitialSkills.CreateSkills())
 		{
 			_gameData.SkillManager.OwnedSkills.Add(skill);
-			GD.Print($"Added initial skill: {skill.Name}");
+			Debug.Print($"Added initial skill: {skill.Name}");
 		}
 	}
 
@@ -395,7 +395,7 @@ public partial class BattleManager : Node
 
 		if (ChoicePanel == null)
 		{
-			GD.PushError("Cannot present upgrade choices because BattleManager.ChoicePanel is not assigned.");
+			Debug.PushError("Cannot present upgrade choices because BattleManager.ChoicePanel is not assigned.");
 			return;
 		}
 
@@ -413,10 +413,10 @@ public partial class BattleManager : Node
 			if (skillToDelete != null)
 			{
 				_gameData.SkillManager.OwnedSkills.Remove(skillToDelete);
-				GD.Print($"Deleted skill: {skillToDelete.Name}");
+				Debug.Print($"Deleted skill: {skillToDelete.Name}");
 			}
 		}
-		GD.Print($"Wave finished. Applied upgrade: {upgrade.Name}");
+		Debug.Print($"Wave finished. Applied upgrade: {upgrade.Name}");
 	}
 
 	private Color GetRenderColor(VarStats.VarType type, VarStats.Team team)
@@ -444,13 +444,13 @@ public partial class BattleManager : Node
 	{
 		// if (team == VarStats.Team.Friendly && !_gameData.IsVarTypeUnlocked(type))
 		// {
-		// 	GD.Print($"Cannot register locked var type: {type}");
+		// 	Debug.Print($"Cannot register locked var type: {type}");
 		// 	return null;
 		// }
 
 		// if (team == VarStats.Team.Friendly && !_gameData.SkillManager.CanCreateVar(type))
 		// {
-		// 	GD.Print($"Cannot register var type disabled by skills: {type}");
+		// 	Debug.Print($"Cannot register var type disabled by skills: {type}");
 		// 	TokenManager.ClearCostRef();
 		// 	return null;
 		// }
@@ -496,7 +496,7 @@ public partial class BattleManager : Node
 		VarRenderer.AddVar(var, color);
 
 		ConsoleManager?.RegisterVar(var);
-		// GD.Print($"Registered var of type {type} at position {position}");
+		// Debug.Print($"Registered var of type {type} at position {position}");
 		return var;
 	}
 	private void OnHostileVarDie(Var enemy)
@@ -647,3 +647,4 @@ public partial class BattleManager : Node
 		SkillCardList.SkillManager = _gameData.SkillManager;
 	}
 }
+

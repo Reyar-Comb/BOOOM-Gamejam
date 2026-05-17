@@ -17,7 +17,8 @@ public partial class SkillResource : Resource
             return value;
         }
 
-        GD.PushError($"SkillResource '{ResourcePath}': Value '{key}' not found.");
+        Debug.PushError($"SkillResource '{ResourcePath}': Value '{key}' not found.");
         return fallback;
     }
 }
+

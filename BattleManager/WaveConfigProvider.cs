@@ -24,13 +24,13 @@ public class WaveConfigProvider
 		Error error = json.Parse(jsonText);
 		if (error != Error.Ok)
 		{
-			GD.PushError($"Failed to parse wave config JSON: {error}");
+			Debug.PushError($"Failed to parse wave config JSON: {error}");
 			return;
 		}
 
 		if (json.Data.VariantType != Variant.Type.Array)
 		{
-			GD.PushError("Wave config JSON root must be an array.");
+			Debug.PushError("Wave config JSON root must be an array.");
 			return;
 		}
 
@@ -49,7 +49,7 @@ public class WaveConfigProvider
 		}
 
 		_configs.Sort((a, b) => a.Wave.CompareTo(b.Wave));
-		GD.Print($"Loaded {_configs.Count} wave configs.");
+		Debug.Print($"Loaded {_configs.Count} wave configs.");
 	}
 
 	public WaveConfig GetConfig(int wave)
@@ -150,3 +150,4 @@ public class WaveConfigProvider
 		return probabilities;
 	}
 }
+

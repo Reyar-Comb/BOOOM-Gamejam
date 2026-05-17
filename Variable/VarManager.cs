@@ -36,6 +36,8 @@ public partial class VarManager : Node
 	public readonly List<Var> Vars = new();
 	private readonly List<Var> _friendlyVars = new();
 	private readonly List<Var> _hostileVars = new();
+	private readonly Dictionary<Vector2I, Var> _friendlyVarsByCell = new();
+	private readonly Dictionary<Vector2I, Var> _hostileVarsByCell = new();
 	private readonly Dictionary<Var, Callable> _onDeathCallablesByVar = new();
 	private readonly Dictionary<Var, Callable> _onDamageReceivedCallablesByVar = new();
 	private ReadOnlyCollection<Var> ReadOnlyVars => field ??= Vars.AsReadOnly();
@@ -55,6 +57,8 @@ public partial class VarManager : Node
 		_sharedBlackboard.Set("MapData", _mapData);
 		_sharedBlackboard.Set("Vars", ReadOnlyVars);
 		_sharedBlackboard.Set("GameData", _gameData);
+		_sharedBlackboard.Set("FriendlyVarsByCell", (IReadOnlyDictionary<Vector2I, Var>)_friendlyVarsByCell);
+		_sharedBlackboard.Set("HostileVarsByCell", (IReadOnlyDictionary<Vector2I, Var>)_hostileVarsByCell);
 
 		AStarPathfinder pathfinder = AStarPathfinder.CreateBuilder()
 			.SetMapData(_mapData)
@@ -76,6 +80,7 @@ public partial class VarManager : Node
 	public void Tick(double delta)
 	{
 		List<Var> varsToRemove = VarListPool.Get();
+		RebuildVarsByCell();
 		foreach (var var in Vars)
 		{
 			if (var.IsDead)
@@ -87,7 +92,6 @@ public partial class VarManager : Node
 		}
 		foreach (var var in varsToRemove)
 		{
-			GD.Print($"Removing var {var.Stats.Name} of type {var.Stats.Type} from VarManager.");
 			DisconnectSignals(var);
 			RemoveFromTeamLists(var);
 			Vars.Remove(var);
@@ -106,6 +110,24 @@ public partial class VarManager : Node
 		UpdateDynamicRegionStates();
 
 	}
+	private void RebuildVarsByCell()
+	{
+		_friendlyVarsByCell.Clear();
+		_hostileVarsByCell.Clear();
+
+		foreach (var var in Vars)
+		{
+			if (var == null || var.IsDead || var.Stats == null)
+			{
+				continue;
+			}
+
+			Dictionary<Vector2I, Var> targetMap = var.Stats.VarTeam == VarStats.Team.Friendly
+				? _friendlyVarsByCell
+				: _hostileVarsByCell;
+			targetMap.TryAdd(Grid.WorldToGrid(var.Stats.Position), var);
+		}
+	}
 	private void BroadcastTeam(VarStats.Team team, VarStats.VarType type, Vector2I fromCell)
 	{
 		List<Var> targetList = team switch
@@ -120,15 +142,8 @@ public partial class VarManager : Node
 			{
 				continue;
 			}
-			// GD.Print($"Broadcasting to var {var.Stats.Name} of type {var.Stats.Type} at cell {Grid.WorldToGrid(var.Stats.Position)}");
+			// Debug.Print($"Broadcasting to var {var.Stats.Name} of type {var.Stats.Type} at cell {Grid.WorldToGrid(var.Stats.Position)}");
 			var.OnBroadcastReceived(type, fromCell);
-		}
-	}
-	public override void _Process(double delta)
-	{
-		foreach (var var in Vars)
-		{
-			var.FrameUpdate(delta);
 		}
 	}
 	public void AddVar(Var var, bool applyGameData = true)
@@ -153,7 +168,7 @@ public partial class VarManager : Node
 		UpdateDynamicRegionStates();
 		var.NotifyRegionEntryIfNeeded(Grid.WorldToGrid(var.Stats.Position));
 
-		//Cheat(var);
+		// Cheat(var);
 	}
 	private void Cheat(Var var)
 	{
@@ -287,7 +302,6 @@ public partial class VarManager : Node
 		Dictionary<VarStats.VarType, int> varTypeCounts = team == VarStats.Team.Friendly ? _friendlyVarTypeCounts : _hostileVarTypeCounts;
 		int count = varTypeCounts.GetValueOrDefault(type, 0) + 1;
 		varTypeCounts[type] = count;
-		GD.Print("Type " + type + "Team" + team + " count: " + count);
 		return $"{type}_{count}";
 	}
 
@@ -303,3 +317,4 @@ public partial class VarManager : Node
 		return null!;
 	}
 }
+

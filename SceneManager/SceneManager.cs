@@ -35,7 +35,7 @@ public partial class SceneManager : CanvasLayer
 		Error error = GetTree().ChangeSceneToFile(scenePath);
 		if (error != Error.Ok)
 		{
-			GD.PushError($"SceneManager failed to change scene to '{scenePath}': {error}");
+			Debug.PushError($"SceneManager failed to change scene to '{scenePath}': {error}");
 			await RevealInternalAsync(revealDuration);
 			_isTransitioning = false;
 			return;
@@ -152,3 +152,4 @@ public partial class SceneManager : CanvasLayer
 		_activeTween = null;
 	}
 }
+

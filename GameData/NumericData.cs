@@ -25,7 +25,7 @@ public class NumericData
         {
             return value;
         }
-        GD.PushError($"NumericData: Key '{key}' not found.");
+        Debug.PushError($"NumericData: Key '{key}' not found.");
         return 0;
     }
     public int Set(string key, int value)
@@ -34,3 +34,4 @@ public class NumericData
         return value;
     }
 }
+

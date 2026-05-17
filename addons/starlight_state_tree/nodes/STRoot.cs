@@ -31,7 +31,7 @@ public partial class STRoot : STNode, ICleanable
         RegisterStateRecursively(this);
         if (string.IsNullOrEmpty(InitialState))
         {
-            GD.PushError($"InitialState is not set in {Name}.");
+            Debug.PushError($"InitialState is not set in {Name}.");
             return;
         }
         EnterInitialStateChain();
@@ -43,7 +43,7 @@ public partial class STRoot : STNode, ICleanable
 
         if (!_statesByName.TryAdd(state.Name, state))
         {
-            GD.PushError($"Duplicate state name '{state.Name}' found. State names must be unique under root '{Name}'.");
+            Debug.PushError($"Duplicate state name '{state.Name}' found. State names must be unique under root '{Name}'.");
             state.TransitionRequested -= OnStateTransitionRequested;
             return;
         }
@@ -85,7 +85,7 @@ public partial class STRoot : STNode, ICleanable
     {
         if (!_statesByName.TryGetValue(targetStateName, out STNode nextState))
         {
-            GD.PushError($"State '{targetStateName}' not found in {Name}.");
+            Debug.PushError($"State '{targetStateName}' not found in {Name}.");
             return;
         }
 
@@ -130,7 +130,7 @@ public partial class STRoot : STNode, ICleanable
         Stack<STNode> stateStack = new();
         if (!_statesByName.TryGetValue(InitialState, out STNode initialState))
         {
-            GD.PushError($"Initial state '{InitialState}' not found in {Name}.");
+            Debug.PushError($"Initial state '{InitialState}' not found in {Name}.");
             return;
         }
 
@@ -173,3 +173,4 @@ public partial class STRoot : STNode, ICleanable
         TransitionTo(targetStateName);
     }
 }
+

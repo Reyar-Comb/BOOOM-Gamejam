@@ -13,13 +13,14 @@ public partial class TooltipTrigger : Node
 		if (parent is Control control)
 		{
 			control.MouseEntered += () => {
-				// GD.Print($"Showing tooltip: {TooltipId}");
+				// Debug.Print($"Showing tooltip: {TooltipId}");
 				TooltipManager.Instance.ShowTooltip(TooltipId, HideOnClick);
 			};
 			control.MouseExited  += () => {
-				// GD.Print($"Hiding tooltip: {TooltipId}");
+				// Debug.Print($"Hiding tooltip: {TooltipId}");
 				TooltipManager.Instance.HideTooltip();
 			};
 		}
 	}
 }
+

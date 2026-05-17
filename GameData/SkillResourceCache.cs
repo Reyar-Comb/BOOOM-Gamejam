@@ -25,7 +25,7 @@ public static class SkillResourceCache
         resource = ResourceLoader.Load<SkillResource>(path);
         if (resource == null)
         {
-            GD.PushError($"SkillResourceCache: Resource '{path}' not found.");
+            Debug.PushError($"SkillResourceCache: Resource '{path}' not found.");
             resource = new SkillResource { Name = skillName };
         }
 
@@ -50,3 +50,4 @@ public static class SkillResourceCache
         return builder.ToString();
     }
 }
+

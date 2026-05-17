@@ -150,7 +150,7 @@ public class MapData
         int regionIndex = regionId - 1;
         if (regionIndex < 0 || regionIndex >= _regionStates.Length)
         {
-            GD.PushError("Region id must match an existing region.");
+            Debug.PushError("Region id must match an existing region.");
             return;
         }
 
@@ -175,7 +175,7 @@ public class MapData
         int regionIndex = regionId - 1;
         if (regionIndex < 0 || regionIndex >= _regionExplored.Length)
         {
-            GD.PushError("Region id must match an existing region.");
+            Debug.PushError("Region id must match an existing region.");
             return;
         }
 
@@ -452,17 +452,18 @@ public class MapData
         int regionIndex = regionId - 1;
         if (regionIndex < 0 || regionIndex >= _regionTiles.Count)
         {
-            GD.PushError("Region id must match an existing region.");
+            Debug.PushError("Region id must match an existing region.");
             return Vector2I.Zero;
         }
 
         List<Vector2I> tiles = _regionTiles[regionIndex];
         if (tiles.Count == 0)
         {
-            GD.PushError($"Region {regionId} has no tiles.");
+            Debug.PushError($"Region {regionId} has no tiles.");
             return Vector2I.Zero;
         }
 
         return tiles[_rg.RandiRange(0, tiles.Count - 1)];
     }
 }
+

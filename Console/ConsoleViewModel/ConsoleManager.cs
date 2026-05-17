@@ -40,7 +40,7 @@ public partial class ConsoleManager : Node
 	public void AddLog(Log log)
 	{
 		Logs.Add(log);
-		// GD.Print($"Added log: {log.ToString()}");
+		// Debug.Print($"Added log: {log.ToString()}");
 		LogCreated?.Invoke(log);
 		AudioManager.Instance.PlaySFX("log");
 		EmitSignal(SignalName.LogAdded, log.ToString());
@@ -170,7 +170,7 @@ public partial class ConsoleManager : Node
 
 	public void OnVarMoveCompleted(Var v)
 	{
-		GD.Print($"Var {v.Stats.Name} move completed at position {v.Stats.Position}");
+		Debug.Print($"Var {v.Stats.Name} move completed at position {v.Stats.Position}");
 		if (v == null) return;
 		AddLog(new MoveCompletedAck(v));
 	}
@@ -205,3 +205,4 @@ public partial class ConsoleManager : Node
 	// }
 
 }
+

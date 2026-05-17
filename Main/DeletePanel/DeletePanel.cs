@@ -91,7 +91,7 @@ public partial class DeletePanel : Control
 		{
 			return null;
 		}
-		GD.Print($"Presenting {ownedSkills.Count} owned skills for deletion choice.");
+		Debug.Print($"Presenting {ownedSkills.Count} owned skills for deletion choice.");
 		_skillCompletionSource = new TaskCompletionSource<Skill>();
 		_isSelecting = true;
 		_skillSelected = false;
@@ -338,7 +338,7 @@ public partial class DeletePanel : Control
 		if (nameLabel != null)
 		{
 			nameLabel.Text = skill.Name;
-			GD.Print($"Setting card name to: {skill.Name}");
+			Debug.Print($"Setting card name to: {skill.Name}");
 		}
 
 		if (descriptionLabel != null)
@@ -461,7 +461,7 @@ public partial class DeletePanel : Control
 			return;
 		}
 		AudioManager.Instance.PlaySFX("hover");
-		GD.Print("Mouse entered card: " + card.Name);
+		Debug.Print("Mouse entered card: " + card.Name);
 		TweenCardScale(card, Vector2.One * CardHoverScale, CardHoverDuration);
 	}
 
@@ -471,7 +471,7 @@ public partial class DeletePanel : Control
 		{
 			return;
 		}
-		GD.Print("Mouse exited card: " + card.Name);
+		Debug.Print("Mouse exited card: " + card.Name);
 		TweenCardScale(card, Vector2.One, CardHoverDuration);
 	}
 
@@ -522,10 +522,11 @@ public partial class DeletePanel : Control
 		{
 			return;
 		}
-		GD.Print("Skill card clicked for deletion: " + _currentSkills[skillIndex].Name);
+		Debug.Print("Skill card clicked for deletion: " + _currentSkills[skillIndex].Name);
 		AudioManager.Instance.PlaySFX("select_skill");
 		_skillSelected = true;
 		await PlayCardSelectedAsync(card);
 		_skillCompletionSource.SetResult(_currentSkills[skillIndex]);
 	}
 }
+

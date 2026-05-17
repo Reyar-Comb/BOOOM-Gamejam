@@ -74,7 +74,7 @@ public partial class AudioManager : Node
 		}
 		else
 		{
-			GD.PrintErr($"SFX '{sfxName}' not found in AudioManager.");
+			Debug.PrintErr($"SFX '{sfxName}' not found in AudioManager.");
 		}
 	}
 
@@ -131,3 +131,4 @@ public partial class AudioManager : Node
 		AudioServer.SetBusVolumeDb(busIndex, volume);
 	}
 }
+

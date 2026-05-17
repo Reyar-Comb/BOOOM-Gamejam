@@ -139,7 +139,7 @@ internal sealed partial class VarPieceRenderer : Control
     {
         if (!_config.VarTypeTextures.TryGetValue(var.Stats.Type, out var texture))
         {
-            GD.PrintErr($"No texture found for VarType {var.Stats.Type}");
+            Debug.PrintErr($"No texture found for VarType {var.Stats.Type}");
             return;
         }
 

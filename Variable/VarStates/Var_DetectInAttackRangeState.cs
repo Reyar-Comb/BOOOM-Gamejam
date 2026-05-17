@@ -19,6 +19,17 @@ public partial class Var_DetectInAttackRange : STNode
         get => _blackboard.Get<IReadOnlyList<Var>>("Vars");
     }
 
+    private IReadOnlyDictionary<Vector2I, Var> EnemyVarsByCell
+    {
+        get
+        {
+            string key = Stats.VarTeam == VarStats.Team.Friendly
+                ? "HostileVarsByCell"
+                : "FriendlyVarsByCell";
+            return _blackboard.Get<IReadOnlyDictionary<Vector2I, Var>>(key);
+        }
+    }
+
     private GameData GameData => _blackboard.Get<GameData>("GameData");
 
     private Var CurrentAttackTarget
@@ -45,17 +56,8 @@ public partial class Var_DetectInAttackRange : STNode
             return;
         }
 
-        Dictionary<Vector2I, Var> enemiesByCell = new();
-        foreach (var var in Vars)
-        {
-            if (var == null || var.IsDead) continue;
-            if (var.Stats.VarTeam == Stats.VarTeam) continue;
-
-            Vector2I enemyCell = Grid.WorldToGrid(var.Stats.Position);
-            enemiesByCell.TryAdd(enemyCell, var);
-        }
-
-        _blackboard.Set("EnemiesByCell", enemiesByCell.AsReadOnly());
+        IReadOnlyDictionary<Vector2I, Var> enemiesByCell = EnemyVarsByCell;
+        _blackboard.Set("EnemiesByCell", enemiesByCell);
         if (Stats.Type == VarStats.VarType.Bool)
         {
             CurrentAttackTarget = null;

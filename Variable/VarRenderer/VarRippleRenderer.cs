@@ -59,7 +59,7 @@ internal sealed partial class VarRippleRenderer : Control
             AudioManager.Instance.PlaySFX("click_map");
         }
         QueueRedraw();
-        // GD.Print(origin);
+        // Debug.Print(origin);
     }
 
     public void AddBugDeathRipple(Vector2I origin)
@@ -213,3 +213,4 @@ internal sealed partial class VarRippleRenderer : Control
         DrawRect(cellRect, outlineColor, false, Mathf.Max(1.0f, ripple.OutlineWidth * _config.Zoom));
     }
 }
+

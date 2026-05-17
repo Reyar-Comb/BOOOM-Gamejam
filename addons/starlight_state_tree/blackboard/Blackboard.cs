@@ -16,7 +16,7 @@ public class Blackboard : ICleanable
 		}
 		if (current == null)
 		{
-			GD.PushError($"Cannot set key '{key}' at parent level {parentLevel} because it exceeds the hierarchy.");
+			Debug.PushError($"Cannot set key '{key}' at parent level {parentLevel} because it exceeds the hierarchy.");
 			return;
 		}
 		current._data[key] = value;
@@ -32,11 +32,11 @@ public class Blackboard : ICleanable
 		{
 			string actualType = rawValue?.GetType().FullName ?? "null";
 			string expectedType = typeof(T).FullName ?? typeof(T).Name;
-			GD.PushError($"Key '{key}' exists in blackboard but cannot be read as type '{expectedType}'. Actual value type: '{actualType}'.");
+			Debug.PushError($"Key '{key}' exists in blackboard but cannot be read as type '{expectedType}'. Actual value type: '{actualType}'.");
 			return default;
 		}
 
-		GD.PushError($"Key '{key}' not found in blackboard or any parent blackboard.");
+		Debug.PushError($"Key '{key}' not found in blackboard or any parent blackboard.");
 		return default;
 	}
 
@@ -98,3 +98,4 @@ public class Blackboard : ICleanable
 		ParentBlackboard = null;
 	}
 }
+

@@ -172,7 +172,7 @@ public partial class Var : RefCounted, ICleanable
         _currentCell = reachedCell;
         _currentRegionId = reachedRegion;
         GameData.SkillManager.OnRegionEntered(info);
-        // GD.Print($"Var {Stats.Name} entered region {reachedRegion} at cell {reachedCell}");
+        // Debug.Print($"Var {Stats.Name} entered region {reachedRegion} at cell {reachedCell}");
     }
     public void ReceiveDamage(AttackInfo atkInfo)
     {
@@ -349,7 +349,7 @@ public partial class Var : RefCounted, ICleanable
 
     public void MarkMoveAsCommand()
     {
-        GD.Print($"Var {Stats.Name} marked move as command");
+        Debug.Print($"Var {Stats.Name} marked move as command");
         _blackboard.Set("IsMoveCommandPath", true);
     }
 
@@ -362,3 +362,4 @@ public partial class Var : RefCounted, ICleanable
         }
     }
 }
+

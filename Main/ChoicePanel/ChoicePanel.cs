@@ -86,7 +86,7 @@ public partial class ChoicePanel : Control
 		{
 			return null;
 		}
-		GD.Print($"Presenting {choices.Count} upgrade choices to the player.");
+		Debug.Print($"Presenting {choices.Count} upgrade choices to the player.");
 		_choiceCompletionSource = new TaskCompletionSource<Upgrade>();
 		_isChoosing = true;
 		_choiceSelected = false;
@@ -331,7 +331,7 @@ public partial class ChoicePanel : Control
 		if (nameLabel != null)
 		{
 			nameLabel.Text = upgrade.Name;
-			GD.Print($"Setting card name to: {upgrade.Name}");
+			Debug.Print($"Setting card name to: {upgrade.Name}");
 		}
 
 		if (descriptionLabel != null)
@@ -452,7 +452,7 @@ public partial class ChoicePanel : Control
 		{
 			return;
 		}
-		GD.Print("Mouse entered card: " + card.Name);
+		Debug.Print("Mouse entered card: " + card.Name);
 		AudioManager.Instance.PlaySFX("hover");
 		TweenCardScale(card, Vector2.One * CardHoverScale, CardHoverDuration);
 	}
@@ -463,7 +463,7 @@ public partial class ChoicePanel : Control
 		{
 			return;
 		}
-		GD.Print("Mouse exited card: " + card.Name);
+		Debug.Print("Mouse exited card: " + card.Name);
 		TweenCardScale(card, Vector2.One, CardHoverDuration);
 	}
 
@@ -514,7 +514,7 @@ public partial class ChoicePanel : Control
 		{
 			return;
 		}
-		GD.Print("Choice card clicked: " + _currentChoices[choiceIndex].Name);
+		Debug.Print("Choice card clicked: " + _currentChoices[choiceIndex].Name);
 		AudioManager.Instance.PlaySFX("select_skill");
 		_choiceSelected = true;
 		await PlayCardSelectedAsync(card);

@@ -104,15 +104,15 @@ public partial class GamePanelNavigator : PanelNavigator
 		RegisterButton(placeBtn, "",
 			onPressed: () =>
 			{
-				GD.Print($"Placing var at {LastClickedGrid}");
+				Debug.Print($"Placing var at {LastClickedGrid}");
 				if (CurrentVarType == null)
 				{
-					GD.PrintErr("No var type selected for placement!");
+					Debug.PrintErr("No var type selected for placement!");
 					return;
 				}
 				if (!_mapData.IsRegionOccupied(_mapData.GetRegion(LastClickedGrid.X, LastClickedGrid.Y)))
 				{
-					// GD.PrintErr($"Cannot place var at {LastClickedGrid} because the region is not occupied!");
+					// Debug.PrintErr($"Cannot place var at {LastClickedGrid} because the region is not occupied!");
 					BattleManager.Instance.ConsoleManager?.AddLog(new CreateBlockedError(LastClickedGrid));
 					return;
 				}
@@ -123,12 +123,12 @@ public partial class GamePanelNavigator : PanelNavigator
 			onHoverEnter: () =>
 			{
 				if (CurrentVarType == null) return;
-				GD.Print($"Hovering");
+				Debug.Print($"Hovering");
 				BattleManager.Instance.RegisterVar(CurrentVarType.Value, LastClickedGrid, isHovering: true);
 			},
 			onHoverLeave: () =>
 			{
-				GD.Print($"Hover leave");
+				Debug.Print($"Hover leave");
 				BattleManager.Instance.ClearCostRef();
 			}
 		);
@@ -184,7 +184,7 @@ public partial class GamePanelNavigator : PanelNavigator
 	}
 	public void RefreshVarList()
 	{
-		// GD.Print("Refreshing var list in UI...");
+		// Debug.Print("Refreshing var list in UI...");
 		var children = _varListContainer.GetChildren();
 		foreach (Node child in children)		{
 			child.QueueFree();
@@ -231,7 +231,7 @@ public partial class GamePanelNavigator : PanelNavigator
 		QueueRedraw();
 		// foreach (var kvp in _addButtonsByVarType)
 		// {
-		// 	GD.Print(kvp.Value.Name + " visibility: " + kvp.Value.Visible);
+		// 	Debug.Print(kvp.Value.Name + " visibility: " + kvp.Value.Visible);
 		// }
 	}
 	public void InitAddButton()
@@ -241,7 +241,7 @@ public partial class GamePanelNavigator : PanelNavigator
 			onPressed: () =>
 			{
 				CurrentVarType = VarStats.VarType.Int;
-				GD.Print($"Selected var type: {CurrentVarType}");
+				Debug.Print($"Selected var type: {CurrentVarType}");
 			}
 		);
 
@@ -250,7 +250,7 @@ public partial class GamePanelNavigator : PanelNavigator
 			onPressed: () =>
 			{
 				CurrentVarType = VarStats.VarType.Float;
-				GD.Print($"Selected var type: {CurrentVarType}");
+				Debug.Print($"Selected var type: {CurrentVarType}");
 			}
 		);
 
@@ -259,7 +259,7 @@ public partial class GamePanelNavigator : PanelNavigator
 			onPressed: () =>
 			{
 				CurrentVarType = VarStats.VarType.Double;
-				GD.Print($"Selected var type: {CurrentVarType}");
+				Debug.Print($"Selected var type: {CurrentVarType}");
 			}
 		);	
 
@@ -268,7 +268,7 @@ public partial class GamePanelNavigator : PanelNavigator
 			onPressed: () =>
 			{
 				CurrentVarType = VarStats.VarType.Long;
-				GD.Print($"Selected var type: {CurrentVarType}");
+				Debug.Print($"Selected var type: {CurrentVarType}");
 			}
 		);
 
@@ -277,7 +277,7 @@ public partial class GamePanelNavigator : PanelNavigator
 			onPressed: () =>
 			{
 				CurrentVarType = VarStats.VarType.LongDouble;
-				GD.Print($"Selected var type: {CurrentVarType}");
+				Debug.Print($"Selected var type: {CurrentVarType}");
 			}
 		);
 
@@ -286,7 +286,7 @@ public partial class GamePanelNavigator : PanelNavigator
 			onPressed: () =>
 			{
 				CurrentVarType = VarStats.VarType.Bool;
-				GD.Print($"Selected var type: {CurrentVarType}");
+				Debug.Print($"Selected var type: {CurrentVarType}");
 			}
 		);
 
@@ -295,7 +295,7 @@ public partial class GamePanelNavigator : PanelNavigator
 			onPressed: () =>
 			{
 				CurrentVarType = VarStats.VarType.Char;
-				GD.Print($"Selected var type: {CurrentVarType}");
+				Debug.Print($"Selected var type: {CurrentVarType}");
 			}
 		);
 
@@ -319,7 +319,7 @@ public partial class GamePanelNavigator : PanelNavigator
 				CurrentVarName = var.Stats.Name;
 				CurrentVarType = var.Stats.Type;
 				BindSelectedVarDeath(var);
-				GD.Print($"Selected var: {CurrentVarName} of type {CurrentVarType}");
+				Debug.Print($"Selected var: {CurrentVarName} of type {CurrentVarType}");
 			}
 		);
 	}
@@ -343,3 +343,4 @@ public partial class GamePanelNavigator : PanelNavigator
 		_selectedVarDeathCallable = default;
 	}
 }
+

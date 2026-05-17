@@ -25,7 +25,8 @@ public class ColorData
 		{
 			return value;
 		}
-		GD.PushError($"ColorData: Key '{key}' not found.");
+		Debug.PushError($"ColorData: Key '{key}' not found.");
 		return Colors.White;
 	}
 }
+

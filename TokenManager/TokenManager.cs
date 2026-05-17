@@ -22,7 +22,7 @@ public partial class TokenManager : Node
 		}
 		int rest = _gameData.NumericData.Get("Token") - cost;
 		_gameData.NumericData.Set("Token", rest);
-		GD.Print($"Applied token cost: {cost}, remaining tokens: {rest}");
+		Debug.Print($"Applied token cost: {cost}, remaining tokens: {rest}");
 		BarController.ApplyTokenCost((float)rest / _gameData.NumericData.Get("MaxToken"));
 	}
 
@@ -37,7 +37,7 @@ public partial class TokenManager : Node
 		int token = Math.Min(_gameData.NumericData.Get("Token") + amount, maxToken);
 		_gameData.NumericData.Set("Token", token);
 		BarController.ApplyTokenCost((float)token / maxToken);
-		GD.Print($"Added {amount} tokens. Current token: {token}");
+		Debug.Print($"Added {amount} tokens. Current token: {token}");
 	}
 
 	public float GetTokenCostRefPercent(TokenOperationInfo info)
@@ -136,7 +136,7 @@ public partial class TokenManager : Node
 		_gameData.NumericData.Set("Patience", patience - patienceEx);
 		BarController.ApplyTokenCost((float)_gameData.NumericData.Get("Token") / _gameData.NumericData.Get("MaxToken"));
 		BarController.ApplyPatienceCost((float)_gameData.NumericData.Get("Patience") / _gameData.NumericData.Get("MaxPatience"));
-		GD.Print($"Exchanged {patienceEx} patience for {tokenEx} tokens. Current token: {_gameData.NumericData.Get("Token")}, current patience: {_gameData.NumericData.Get("Patience")}");
+		Debug.Print($"Exchanged {patienceEx} patience for {tokenEx} tokens. Current token: {_gameData.NumericData.Get("Token")}, current patience: {_gameData.NumericData.Get("Patience")}");
 	}
 
 	public void OnHoverExchangeToken()
@@ -244,3 +244,4 @@ public partial class TokenManager : Node
 		ApplyTokenCost(info);
 	}
 }
+

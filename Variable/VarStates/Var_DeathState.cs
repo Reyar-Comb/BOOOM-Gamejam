@@ -25,6 +25,7 @@ public partial class Var_DeathState : STNode
 
     protected override void OnEnter()
     {
-        GD.Print("Var has died.");
+        Debug.Print("Var has died.");
     }
 }
+

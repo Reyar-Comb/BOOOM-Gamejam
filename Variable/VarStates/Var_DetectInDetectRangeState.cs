@@ -10,6 +10,8 @@ public partial class Var_DetectInDetectRangeState : STNode
 
     private readonly List<int> _detectionOrder = new();
     private readonly HashSet<int> _seenEnemyIds = new();
+    private readonly List<(Var enemy, Vector2I cell)> _found = new();
+    private readonly HashSet<int> _foundIds = new();
     private VarStats Stats
     {
         get => _blackboard.Get<VarStats>("Stats");
@@ -57,8 +59,8 @@ public partial class Var_DetectInDetectRangeState : STNode
 
         Vector2I selfCell = Grid.WorldToGrid(Stats.Position);
 
-        var found = new List<(Var enemy, Vector2I cell)>();
-        var foundIds = new HashSet<int>();
+        _found.Clear();
+        _foundIds.Clear();
 
         foreach (Vector2I targetCell in Stats.DetectRange.EnumerateTargetCells(selfCell, Stats.Direction))
         {
@@ -67,14 +69,13 @@ public partial class Var_DetectInDetectRangeState : STNode
             if (enemy == null || enemy.IsDead) continue;
 
             int id = (int)enemy.GetInstanceId();
-            if (!foundIds.Contains(id))
+            if (_foundIds.Add(id))
             {
-                found.Add((enemy, targetCell));
-                foundIds.Add(id);
+                _found.Add((enemy, targetCell));
             }
         }
 
-        foreach (var (enemy, cell) in found)
+        foreach (var (enemy, cell) in _found)
         {
             int id = (int)enemy.GetInstanceId();
             if (_seenEnemyIds.Contains(id)) continue;
@@ -93,7 +94,7 @@ public partial class Var_DetectInDetectRangeState : STNode
             Self.EmitSignal(Var.SignalName.OnDetected, info);
         }
 
-        _detectionOrder.RemoveAll(id => !foundIds.Contains(id));
+        _detectionOrder.RemoveAll(id => !_foundIds.Contains(id));
 
         if (Stats.Type == VarStats.VarType.Bool)
         {
@@ -104,7 +105,7 @@ public partial class Var_DetectInDetectRangeState : STNode
         var currentTarget = CurrentAttackTarget;
         if (currentTarget != null)
         {
-            if (currentTarget.IsDead || !foundIds.Contains((int)currentTarget.GetInstanceId()))
+            if (currentTarget.IsDead || !_foundIds.Contains((int)currentTarget.GetInstanceId()))
             {
                 CurrentAttackTarget = null;
             }
@@ -113,7 +114,7 @@ public partial class Var_DetectInDetectRangeState : STNode
         {
             foreach (int id in _detectionOrder)
             {
-                var tuple = found.Find(t => (int)t.enemy.GetInstanceId() == id);
+                var tuple = _found.Find(t => (int)t.enemy.GetInstanceId() == id);
                 if (tuple.enemy != null)
                 {
                     CurrentAttackTarget = tuple.enemy;

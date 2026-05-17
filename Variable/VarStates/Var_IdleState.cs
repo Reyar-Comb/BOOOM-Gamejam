@@ -62,7 +62,7 @@ public partial class Var_IdleState : STNode
 
         if (IsBugAttacked && (CurrentPath == null || CurrentPath.Count == 0) && !_stopMovingToBug)
         {
-            GD.Print("Move to bug");
+            Debug.Print("Move to bug");
             int region = MapData.GetRegion(selfCell.X, selfCell.Y);
             List<Vector2I> path = Pathfinder.Run(selfCell, bugCell, region);
             if (path.Count != 0) path.RemoveAt(path.Count - 1);
@@ -143,3 +143,4 @@ public partial class Var_IdleState : STNode
         EnemyRandomMoveTimeRemaining = EnemyRandomMoveInterval;
     }
 }
+
